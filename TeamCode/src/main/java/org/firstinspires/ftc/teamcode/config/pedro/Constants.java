@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.config.pedro;
 
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -13,12 +14,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(6)
+            .forwardZeroPowerAcceleration(-32.2447)
+            .lateralZeroPowerAcceleration(-44.5312)
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(.2,0,.02,.015))
+            .translationalPIDFCoefficients(new PIDFCoefficients(.1,0,.01,0))
             .useSecondaryDrivePIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true);
 
     public static MecanumConstants mecanumConstants = new MecanumConstants()
             .useBrakeModeInTeleOp(true)
+            .xVelocity(94.86)
+            .yVelocity(76.1968)
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
