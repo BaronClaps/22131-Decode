@@ -71,7 +71,7 @@ public class Shooter extends SubsystemBase {
     private void periodic_turret() {
         double error = t_turret - getTurret();
         p_turret.updateError(error);
-        double power = p_turret.runPIDF();
+        double power = p_turret.run();
         m_turret.set(power);
     }
 
