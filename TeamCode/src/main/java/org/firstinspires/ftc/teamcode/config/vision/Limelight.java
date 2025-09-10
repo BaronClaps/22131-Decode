@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.config.vision;
 
+import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -26,7 +27,7 @@ public class Limelight extends SubsystemBase {
         l.stop();
     }
 
-    public double distanceFromTag(double tagID) {
+    public Vector distanceFromTag(double tagID) {
         switchToShoot();
         List<LLResultTypes.FiducialResult> r = l.getLatestResult().getFiducialResults();
         LLResultTypes.FiducialResult target = null;
@@ -41,17 +42,19 @@ public class Limelight extends SubsystemBase {
             double x = target.getCameraPoseTargetSpace().getPosition().x; // right/left from tag
             double z = target.getCameraPoseTargetSpace().getPosition().z; // forward/back from tag
 
-            return (Math.sqrt((x * x) + (z * z)));
+            Vector e = new Vector();
+            e.setOrthogonalComponents(x, z);
+            return e;
         }
 
-        return 0;
+        return new Vector();
     }
 
-    public double distanceFromBlue() {
+    public Vector distanceFromBlue() {
         return distanceFromTag(20);
     }
 
-    public double distanceFromRed() {
+    public Vector distanceFromRed() {
         return distanceFromTag(24);
     }
 

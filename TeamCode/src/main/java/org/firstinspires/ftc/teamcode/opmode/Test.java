@@ -1,0 +1,105 @@
+package org.firstinspires.ftc.teamcode.opmode;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Rotation;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.bylazar.configurables.PanelsConfigurables;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.ftc.FTCCoordinates;
+import com.pedropathing.ftc.PoseConverter;
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.config.pedro.Constants;
+import org.firstinspires.ftc.teamcode.config.util.DecodeCoordinates;
+import org.psilynx.psikit.Logger;
+import org.psilynx.psikit.io.RLOGServer;
+import org.psilynx.psikit.wpi.Pose2d;
+import org.psilynx.psikit.wpi.Rotation2d;
+
+@TeleOp
+@Config
+public class Test extends OpMode {
+    TelemetryManager telemetryM;
+    MultipleTelemetry multipleTelemetry;
+
+    Follower follower;
+    private DcMotor i;
+
+    @Override
+    public void init() {
+        follower = Constants.createFollower(hardwareMap);
+        PanelsConfigurables.INSTANCE.refreshClass(this);
+
+        follower.setStartingPose(new Pose());
+        i = hardwareMap.dcMotor.get("i");
+
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+
+        Logger.addDataReceiver(new RLOGServer());
+        Logger.start();
+
+    }
+
+    /** This initializes the PoseUpdater, the mecanum drive motors, and the Panels telemetry. */
+    @Override
+    public void init_loop() {
+        telemetryM.debug("This will print your robot's position to telemetry while "
+                + "allowing robot control through a basic mecanum drive on gamepad 1.");
+        telemetryM.update(telemetry);
+        follower.update();
+    }
+
+    @Override
+    public void start() {
+        follower.startTeleopDrive();
+        follower.update();
+    }
+
+    /**
+     * This updates the robot's pose estimate, the simple mecanum drive, and updates the
+     * Panels telemetry with the robot's position as well as draws the robot's position.
+     */
+    @Override
+    public void loop() {
+        follower.setTeleOpDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+        follower.update();
+
+        Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
+        Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
+
+        if (gamepad1.a) {
+            i.setPower(1);
+        } else if (gamepad1.b) {
+            i.setPower(-1);
+        } else {
+            i.setPower(0);
+        }
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
+        packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
+        packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+        telemetryM.debug("x:" + follower.getPose().getX());
+        telemetryM.debug("y:" + follower.getPose().getY());
+        telemetryM.debug("heading:" + follower.getPose().getHeading());
+        telemetryM.debug("total heading:" + follower.getTotalHeading());
+        telemetryM.update(telemetry);
+    }
+
+    @Override
+    public void stop() {
+        Logger.end();
+    }
+}

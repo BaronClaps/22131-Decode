@@ -26,10 +26,10 @@ public class Constants {
             .useBrakeModeInTeleOp(true)
             .xVelocity(94.86)
             .yVelocity(76.1968)
-            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
     public static PinpointConstants pinpointConstants = new PinpointConstants()
             .forwardPodY(0)
             .strafePodX(-2.5)
