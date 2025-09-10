@@ -18,6 +18,14 @@ public class Limelight extends SubsystemBase {
         l.stop();
     }
 
+    public void start() {
+        l.start();
+    }
+
+    public void stop() {
+        l.stop();
+    }
+
     public double distanceFromTag(double tagID) {
         switchToShoot();
         List<LLResultTypes.FiducialResult> r = l.getLatestResult().getFiducialResults();
