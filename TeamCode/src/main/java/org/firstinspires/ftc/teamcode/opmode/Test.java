@@ -11,7 +11,9 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.FTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -32,6 +34,7 @@ public class Test extends OpMode {
     MultipleTelemetry multipleTelemetry;
 
     Follower follower;
+    boolean am = false;
     private DcMotor i;
 
     @Override
@@ -39,7 +42,7 @@ public class Test extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         PanelsConfigurables.INSTANCE.refreshClass(this);
 
-        follower.setStartingPose(new Pose());
+        follower.setStartingPose(new Pose(8, 8.25));
         i = hardwareMap.dcMotor.get("i");
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -50,7 +53,9 @@ public class Test extends OpMode {
 
     }
 
-    /** This initializes the PoseUpdater, the mecanum drive motors, and the Panels telemetry. */
+    /**
+     * This initializes the PoseUpdater, the mecanum drive motors, and the Panels telemetry.
+     */
     @Override
     public void init_loop() {
         telemetryM.debug("This will print your robot's position to telemetry while "
@@ -71,7 +76,12 @@ public class Test extends OpMode {
      */
     @Override
     public void loop() {
-        follower.setTeleOpDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+        if ((!follower.isBusy() && am) || (!follower.isBusy() && am && (Math.abs(gamepad1.left_stick_y) > 0.05 || Math.abs(gamepad1.left_stick_x) > 0.05 || Math.abs(gamepad1.right_stick_x) > 0.05))) {
+            follower.startTeleopDrive();
+        }
+
+        if (!am)
+            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
 
         Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
@@ -83,6 +93,15 @@ public class Test extends OpMode {
             i.setPower(-1);
         } else {
             i.setPower(0);
+        }
+
+        if (gamepad1.yWasPressed()) {
+            am = !am;
+            if (am) {
+                Path pa = new Path(new BezierLine(follower.getPose(), new Pose(85, 15, Math.toRadians(0))));
+                pa.setLinearHeadingInterpolation(follower.getHeading(), Math.toRadians(0));
+                follower.followPath(pa);
+            }
         }
 
         TelemetryPacket packet = new TelemetryPacket();

@@ -30,8 +30,10 @@ dependencies {
     implementation "org.solverslib:core:SNAPSHOT-7cdcc66"
     implementation "org.solverslib:pedroPathing:SNAPSHOT-7cdcc66"
 
-    implementation"page.j5155.AdvantageScope:lite:v26.0.0"
-    implementation'com.acmerobotics.dashboard:dashboard:0.5.0'
+    // implementation"page.j5155.AdvantageScope:lite:v26.0.0"
+    implementation 'dev.frozenmilk.sinister:Sloth:0.2.4'
+    // implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
+    implementation 'com.acmerobotics.slothboard:dashboard:0.2.4+0.4.17'
     implementation 'org.psilynx:psikit:0.0.4'
     implementation 'com.bylazar:fullpanels:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'

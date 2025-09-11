@@ -18,7 +18,7 @@ public class Shooter extends SubsystemBase {
     public static double limit_yaw = 0.55;
     public static double zero_pitch = 0.1;
     public static double limit_pitch = 0.65;
-    public static double range_pitch = 60; // degrees between limits
+    public static double range_pitch = 20; // degrees between limits
 
     private static final double g = -386.0885; // in/s^2
 
