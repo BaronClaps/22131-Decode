@@ -21,7 +21,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
+import org.firstinspires.ftc.teamcode.config.subsystem.Turret;
+import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.util.DecodeCoordinates;
+import org.firstinspires.ftc.teamcode.config.vision.Limelight;
 import org.psilynx.psikit.Logger;
 import org.psilynx.psikit.io.RLOGServer;
 import org.psilynx.psikit.wpi.Pose2d;
@@ -34,7 +37,9 @@ public class Test extends OpMode {
     MultipleTelemetry multipleTelemetry;
 
     Follower follower;
-    boolean am = false;
+    Turret turret;
+    Limelight limelight;
+    boolean am = false, tm = false;
     private DcMotor i;
 
     @Override
@@ -44,6 +49,8 @@ public class Test extends OpMode {
 
         follower.setStartingPose(new Pose(8, 8.25));
         i = hardwareMap.dcMotor.get("i");
+        turret = new Turret(hardwareMap);
+        limelight = new Limelight(hardwareMap, Alliance.BLUE);
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -68,6 +75,7 @@ public class Test extends OpMode {
     public void start() {
         follower.startTeleopDrive();
         follower.update();
+        turret.reset();
     }
 
     /**
@@ -76,6 +84,7 @@ public class Test extends OpMode {
      */
     @Override
     public void loop() {
+        turret.periodic();
         if ((!follower.isBusy() && am) || (!follower.isBusy() && am && (Math.abs(gamepad1.left_stick_y) > 0.05 || Math.abs(gamepad1.left_stick_x) > 0.05 || Math.abs(gamepad1.right_stick_x) > 0.05))) {
             follower.startTeleopDrive();
         }
@@ -94,6 +103,19 @@ public class Test extends OpMode {
         } else {
             i.setPower(0);
         }
+
+        if (gamepad1.xWasPressed()) {
+            tm = !tm;
+        }
+
+        if (tm) {
+            turret.addYaw(limelight.angleFromShoot());
+        } else {
+            turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
+        }
+
+        if (gamepad1.dpadDownWasPressed())
+            turret.reset();
 
         if (gamepad1.yWasPressed()) {
             am = !am;
