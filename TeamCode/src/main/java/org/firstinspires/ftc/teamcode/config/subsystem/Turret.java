@@ -48,7 +48,7 @@ public class Turret {
 
     public void periodic() {
         p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
-        error = Math.toRadians(getTurretTarget()) - getTurret();
+        error = getTurretTarget() - getTurret();
         p.updateError(error);
         power = p.run();
         m.setPower(power);
