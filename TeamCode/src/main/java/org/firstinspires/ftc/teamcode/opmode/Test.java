@@ -76,6 +76,7 @@ public class Test extends OpMode {
         follower.startTeleopDrive();
         follower.update();
         turret.reset();
+        limelight.start();
     }
 
     /**
@@ -84,7 +85,7 @@ public class Test extends OpMode {
      */
     @Override
     public void loop() {
-        turret.periodic();
+
         if ((!follower.isBusy() && am) || (!follower.isBusy() && am && (Math.abs(gamepad1.left_stick_y) > 0.05 || Math.abs(gamepad1.left_stick_x) > 0.05 || Math.abs(gamepad1.right_stick_x) > 0.05))) {
             follower.startTeleopDrive();
         }
@@ -96,26 +97,17 @@ public class Test extends OpMode {
         Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
         Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
-        if (gamepad1.a) {
-            i.setPower(1);
-        } else if (gamepad1.b) {
-            i.setPower(-1);
-        } else {
-            i.setPower(0);
-        }
+        i.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
         if (gamepad1.xWasPressed()) {
             tm = !tm;
         }
 
         if (tm) {
-            turret.addYaw(limelight.angleFromShoot());
-        } else {
-            turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
-        }
-
-        if (gamepad1.dpadDownWasPressed())
-            turret.reset();
+            turret.setYaw(turret.getYaw() + limelight.angleFromShoot());
+        } //else {
+          //  turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
+      //  }
 
         if (gamepad1.yWasPressed()) {
             am = !am;
@@ -126,17 +118,21 @@ public class Test extends OpMode {
             }
         }
 
+        turret.periodic();
+
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
         packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
         packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
         packet.put("Turret Angle", turret.getYaw());
-        packet.put("Turret Target", turret.getTurretTarget());
+        packet.put("Turret Target", Math.toRadians(turret.getTurretTarget()));
         packet.put("Turret Auto Aim", tm);
         packet.put("Limelight Distance", limelight.distanceFromShoot());
-        packet.put("Limelight Angle", limelight.angleFromShoot());
+        packet.put("Limelight Angle", Math.toRadians(limelight.angleFromShoot()));
         packet.put("Turret kp", Turret.kp);
         packet.put("Turret kd", Turret.kd);
+        packet.put("Turret Error", Turret.error);
+        packet.put("Turret Power", Turret.power);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("x:" + follower.getPose().getX());
