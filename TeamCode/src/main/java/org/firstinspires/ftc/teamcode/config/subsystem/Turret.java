@@ -12,7 +12,6 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 @Config
 public class Turret {
     public static double zero_yaw = 0;
-    public static double limit_yaw = 200;
     public static double error = 0, power = 0;
     public static double rpt = 0.008660489741;
 
@@ -29,24 +28,22 @@ public class Turret {
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
     }
 
-    private void setTurretTarget(double degrees) {
-        t = degrees;
+    private void setTurretTarget(double ticks) {
+        t = ticks;
     }
 
-    /** degrees */
+    /** ticks */
     public double getTurretTarget() {
         return t;
     }
 
-    /** degrees */
-    private void incrementTurretTarget(double degrees) {
-        t += degrees;
-        t = MathFunctions.clamp(t, zero_yaw - limit_yaw, zero_yaw + limit_yaw);
+    /** ticks */
+    private void incrementTurretTarget(double ticks) {
+        t += ticks;
     }
 
     private double getTurret() {
-        double angle = m.getCurrentPosition() * rpt;
-        return MathFunctions.normalizeAngle(-angle);
+        return m.getCurrentPosition();
     }
 
     public void periodic() {
@@ -59,15 +56,11 @@ public class Turret {
 
     /** Return yaw in radians */
     public double getYaw() {
-        return getTurret();
+        return getTurret() * rpt;
     }
 
-    public void setYaw(double degrees) {
-        setTurretTarget(degrees);
-    }
-
-    public void addYaw(double degrees) {
-        incrementTurretTarget(degrees);
+    public void setYaw(double radians) {
+        setTurretTarget(radians * (1 / rpt));
     }
 
     public void reset() {

@@ -13,6 +13,7 @@ import com.pedropathing.ftc.FTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.MathFunctions;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -39,6 +40,8 @@ public class Test extends OpMode {
     Follower follower;
     Turret turret;
     Limelight limelight;
+
+    Pose target = new Pose(144-5, 5);
     boolean am = false, tm = false;
     private DcMotor i;
 
@@ -104,7 +107,12 @@ public class Test extends OpMode {
         }
 
         if (tm) {
-            turret.setYaw(turret.getYaw() + limelight.angleFromShoot());
+
+            double ttg = Math.atan2(target.getY() - follower.getPose().getY(), target.getX() - follower.getPose().getX());
+            double ttl = MathFunctions.normalizeAngle(ttg - follower.getHeading());
+            double tt = turret.getYaw();
+            double error = MathFunctions.normalizeAngle(ttl - tt);
+            turret.setYaw(error);
         } //else {
           //  turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
       //  }
