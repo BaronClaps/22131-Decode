@@ -11,7 +11,6 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 @Config
 public class Turret {
-    public static double zero_yaw = 0;
     public static double error = 0, power = 0;
     public static double rpt = 0.008660489741;
 

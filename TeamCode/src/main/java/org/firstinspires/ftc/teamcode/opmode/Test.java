@@ -110,9 +110,7 @@ public class Test extends OpMode {
 
             double ttg = Math.atan2(target.getY() - follower.getPose().getY(), target.getX() - follower.getPose().getX());
             double ttl = MathFunctions.normalizeAngle(ttg - follower.getHeading());
-            double tt = turret.getYaw();
-            double error = MathFunctions.normalizeAngle(ttl - tt);
-            turret.setYaw(error);
+            turret.setYaw(ttl);
         } //else {
           //  turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
       //  }

@@ -7,6 +7,9 @@ import static org.firstinspires.ftc.teamcode.config.pedro.Tuning.follower;
 import static org.firstinspires.ftc.teamcode.config.pedro.Tuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.config.pedro.Tuning.telemetryM;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.config.ValueProvider;
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
@@ -15,6 +18,7 @@ import com.bylazar.field.PanelsField;
 import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.*;
 import com.pedropathing.math.*;
@@ -34,6 +38,7 @@ import java.util.List;
  * @version 1.0, 6/26/2025
  */
 @Configurable
+@Config
 @TeleOp(name = "Tuning", group = "Pedro Pathing")
 public class Tuning extends SelectableOpMode {
     public static Follower follower;
@@ -72,6 +77,18 @@ public class Tuning extends SelectableOpMode {
                 p.add("Triangle", Triangle::new);
                 p.add("Circle", Circle::new);
             });
+        });
+
+        FtcDashboard.getInstance().addConfigVariable("Tuning", "Heading PIDF", new ValueProvider<PIDFCoefficients>() {
+            @Override
+            public PIDFCoefficients get() {
+                return follower.constants.getCoefficientsHeadingPIDF();
+            }
+
+            @Override
+            public void set(PIDFCoefficients value) {
+                follower.setConstants(follower.constants.headingPIDFCoefficients(value));
+            }
         });
     }
 
