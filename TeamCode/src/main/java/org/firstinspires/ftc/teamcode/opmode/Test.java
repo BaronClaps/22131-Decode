@@ -130,6 +130,13 @@ public class Test extends OpMode {
         packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
         packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
         packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
+        packet.put("Turret Angle", turret.getYaw());
+        packet.put("Turret Target", turret.getTurretTarget());
+        packet.put("Turret Auto Aim", tm);
+        packet.put("Limelight Distance", limelight.distanceFromShoot());
+        packet.put("Limelight Angle", limelight.angleFromShoot());
+        packet.put("Turret kp", Turret.kp);
+        packet.put("Turret kd", Turret.kd);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("x:" + follower.getPose().getX());

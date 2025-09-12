@@ -36,7 +36,7 @@ public class Turret extends SubsystemBase {
     }
 
     /** degrees */
-    private double getTurretTarget() {
+    public double getTurretTarget() {
         return t;
     }
 
