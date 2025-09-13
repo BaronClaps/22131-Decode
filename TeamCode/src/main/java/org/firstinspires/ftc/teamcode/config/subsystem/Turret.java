@@ -17,7 +17,7 @@ public class Turret {
     private DcMotorEx m;
     private PIDFController p; // pidf controller for turret
     public static double t = 0; // target for turret
-    public static double kp = 0.01, kf = 0.0, kd = 0.05;
+    public static double kp = 0.005, kf = 0.0, kd = 0.0;
 
     public Turret(HardwareMap hardwareMap) {
         m = hardwareMap.get(DcMotorEx.class, "t");

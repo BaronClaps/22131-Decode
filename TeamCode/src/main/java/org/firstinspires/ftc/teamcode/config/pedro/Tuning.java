@@ -78,18 +78,6 @@ public class Tuning extends SelectableOpMode {
                 p.add("Circle", Circle::new);
             });
         });
-
-        FtcDashboard.getInstance().addConfigVariable("Tuning", "Heading PIDF", new ValueProvider<PIDFCoefficients>() {
-            @Override
-            public PIDFCoefficients get() {
-                return follower.constants.getCoefficientsHeadingPIDF();
-            }
-
-            @Override
-            public void set(PIDFCoefficients value) {
-                follower.setConstants(follower.constants.headingPIDFCoefficients(value));
-            }
-        });
     }
 
     @Override
@@ -106,6 +94,18 @@ public class Tuning extends SelectableOpMode {
         poseHistory = follower.getPoseHistory();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
+        FtcDashboard.getInstance().addConfigVariable("Tuning", "Heading PIDF", new ValueProvider<PIDFCoefficients>() {
+            @Override
+            public PIDFCoefficients get() {
+                return follower.constants.getCoefficientsHeadingPIDF();
+            }
+
+            @Override
+            public void set(PIDFCoefficients value) {
+                follower.setConstants(follower.constants.headingPIDFCoefficients(value));
+            }
+        });
     }
 
     @Override
