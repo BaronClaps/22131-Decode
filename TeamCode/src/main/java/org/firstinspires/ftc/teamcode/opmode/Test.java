@@ -116,16 +116,17 @@ public class Test extends OpMode {
         double ttl = 0;
         double dy = 0;
         double dx = 0;
-        if (tm) {
-            dy = target.getY() - follower.getPose().getY();
-            dx = target.getX() - follower.getPose().getX();
-            ttg = Math.atan2(dy , dx );
-            telemetryM.addData("ttg", ttg);
-            telemetry.addData("ttg", ttg);
-            ttl = MathFunctions.normalizeAngle(ttg - follower.getHeading());
-            telemetryM.addData("ttl", ttl);
-            telemetry.addData("ttl", ttl);
-            turret.setYaw(ttl);
+        if (gamepad1.dpadUpWasPressed() || tm) {
+            turret.setYaw(turret.getYaw() + Math.toRadians(limelight.angleFromBlue()));
+//            dy = target.getY() - follower.getPose().getY();
+//            dx = target.getX() - follower.getPose().getX();
+//            ttg = Math.atan2(dy , dx );
+//            telemetryM.addData("ttg", ttg);
+//            telemetry.addData("ttg", ttg);
+//            ttl = MathFunctions.normalizeAngle(ttg + follower.getHeading());
+//            telemetryM.addData("ttl", ttl);
+//            telemetry.addData("ttl", ttl);
+//            turret.setYaw(ttl);
         } else {
             turret.setYaw(turret.getYaw() + ((gamepad1.right_trigger - gamepad1.left_trigger) / 5));
         }

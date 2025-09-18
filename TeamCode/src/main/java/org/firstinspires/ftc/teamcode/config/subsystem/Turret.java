@@ -17,7 +17,8 @@ public class Turret {
     private DcMotorEx m;
     private PIDFController p; // pidf controller for turret
     public static double t = 0; // target for turret
-    public static double kp = 0.01, kf = 0.0, kd = 0.0001;
+    public static double kp = .02, kf = 0.0, kd = 0.0004;
+    public static double limitDegrees = 220;
 
     public Turret(HardwareMap hardwareMap) {
         m = hardwareMap.get(DcMotorEx.class, "t");
@@ -41,7 +42,7 @@ public class Turret {
         t += ticks;
     }
 
-    private double getTurret() {
+    public double getTurret() {
         return m.getCurrentPosition();
     }
 
@@ -55,11 +56,18 @@ public class Turret {
 
     /** Return yaw in radians */
     public double getYaw() {
-        return getTurret() * rpt;
+        return MathFunctions.normalizeAngle(getTurret() * rpt);
     }
 
     public void setYaw(double radians) {
-        setTurretTarget(radians * (1 / rpt));
+        radians = MathFunctions.normalizeAngle(radians);
+
+        if ((radians > Math.toRadians(limitDegrees)) || radians < Math.toRadians(-limitDegrees))
+          //  if (true)
+           // else
+                radians = -((2*Math.PI)-radians);
+
+        setTurretTarget(radians/rpt);
     }
 
     public void reset() {
