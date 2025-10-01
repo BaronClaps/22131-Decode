@@ -90,6 +90,7 @@ public class Test extends OpMode {
     public void loop() {
 
         if ((!follower.isBusy() && am) || (!follower.isBusy() && am && (Math.abs(gamepad1.left_stick_y) > 0.05 || Math.abs(gamepad1.left_stick_x) > 0.05 || Math.abs(gamepad1.right_stick_x) > 0.05))) {
+            am = false;
             follower.startTeleopDrive();
         }
 
@@ -100,20 +101,35 @@ public class Test extends OpMode {
         Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
         Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
-        i.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        if (gamepad1.right_bumper)
+            i.setPower(1);
+        else if (gamepad1.left_bumper)
+            i.setPower(-1);
+        else
+            i.setPower(.1);
 
         if (gamepad1.xWasPressed()) {
             tm = !tm;
         }
 
-        if (tm) {
-
-            double ttg = Math.atan2(target.getY() - follower.getPose().getY(), target.getX() - follower.getPose().getX());
-            double ttl = MathFunctions.normalizeAngle(ttg - follower.getHeading());
-            turret.setYaw(ttl);
-        } //else {
-          //  turret.addYaw((gamepad1.right_trigger - gamepad1.left_trigger) * 5);
-      //  }
+        double ttg = 0;
+        double ttl = 0;
+        double dy = 0;
+        double dx = 0;
+        if (gamepad1.dpadUpWasPressed() || tm) {
+            turret.setYaw(turret.getYaw() + Math.toRadians(limelight.angleFromBlue()));
+//            dy = target.getY() - follower.getPose().getY();
+//            dx = target.getX() - follower.getPose().getX();
+//            ttg = Math.atan2(dy , dx );
+//            telemetryM.addData("ttg", ttg);
+//            telemetry.addData("ttg", ttg);
+//            ttl = MathFunctions.normalizeAngle(ttg + follower.getHeading());
+//            telemetryM.addData("ttl", ttl);
+//            telemetry.addData("ttl", ttl);
+//            turret.setYaw(ttl);
+        } else {
+            turret.setYaw(turret.getYaw() + ((gamepad1.right_trigger - gamepad1.left_trigger) / 5));
+        }
 
         if (gamepad1.yWasPressed()) {
             am = !am;
@@ -139,12 +155,20 @@ public class Test extends OpMode {
         packet.put("Turret kd", Turret.kd);
         packet.put("Turret Error", Turret.error);
         packet.put("Turret Power", Turret.power);
+        packet.put("Turret Target Goal", ttg);
+        packet.put("Turret Target Local", ttl);
+        packet.put("Dy", dy);
+        packet.put("Dx", dx);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("x:" + follower.getPose().getX());
         telemetryM.debug("y:" + follower.getPose().getY());
         telemetryM.debug("heading:" + follower.getPose().getHeading());
         telemetryM.debug("total heading:" + follower.getTotalHeading());
+        telemetryM.debug(dx);
+        telemetryM.debug(dy);
+        telemetryM.debug("ttg: " + ttg);
+        telemetryM.debug("ttl: " + ttl);
         telemetryM.update(telemetry);
     }
 
