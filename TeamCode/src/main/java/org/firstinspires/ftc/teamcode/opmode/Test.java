@@ -18,10 +18,14 @@ import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
+import org.firstinspires.ftc.teamcode.config.subsystem.Intake;
+import org.firstinspires.ftc.teamcode.config.subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.config.subsystem.Turret;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.util.DecodeCoordinates;
@@ -39,11 +43,18 @@ public class Test extends OpMode {
 
     Follower follower;
     Turret turret;
+    public static double shooterPower = 0;
+    public static double shooterPowerHigh = 1;
+    public static double flipUp = 0.1;
+    public static double flipDown = 0;
     Limelight limelight;
+    //Shooter shooter;
+    Intake intake;
+    DcMotorEx sl;
+    Servo flip;
 
     Pose target = new Pose(144-5, 5);
     boolean am = false, tm = false;
-    private DcMotor i;
 
     @Override
     public void init() {
@@ -51,9 +62,12 @@ public class Test extends OpMode {
         PanelsConfigurables.INSTANCE.refreshClass(this);
 
         follower.setStartingPose(new Pose(8, 8.25));
-        i = hardwareMap.dcMotor.get("i");
+        intake = new Intake(hardwareMap);
         turret = new Turret(hardwareMap);
-        limelight = new Limelight(hardwareMap, Alliance.BLUE);
+       // shooter = new Shooter(hardwareMap);
+       // limelight = new Limelight(hardwareMap, Alliance.BLUE);
+        sl = hardwareMap.get(DcMotorEx.class, "sl");
+        flip = hardwareMap.get(Servo.class, "f");
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -79,7 +93,7 @@ public class Test extends OpMode {
         follower.startTeleopDrive();
         follower.update();
         turret.reset();
-        limelight.start();
+      //  limelight.start();
     }
 
     /**
@@ -95,18 +109,18 @@ public class Test extends OpMode {
         }
 
         if (!am)
-            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         follower.update();
 
-        Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
-        Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
+    //    Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
+     //   Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
         if (gamepad1.right_bumper)
-            i.setPower(1);
+            intake.setPower(1);
         else if (gamepad1.left_bumper)
-            i.setPower(-1);
+            intake.setPower(-1);
         else
-            i.setPower(.1);
+            intake.setPower(.1);
 
         if (gamepad1.xWasPressed()) {
             tm = !tm;
@@ -117,7 +131,7 @@ public class Test extends OpMode {
         double dy = 0;
         double dx = 0;
         if (gamepad1.dpadUpWasPressed() || tm) {
-            turret.setYaw(turret.getYaw() + Math.toRadians(limelight.angleFromBlue()));
+        //    turret.setYaw(turret.getYaw() + Math.toRadians(limelight.angleFromBlue()));
 //            dy = target.getY() - follower.getPose().getY();
 //            dx = target.getX() - follower.getPose().getX();
 //            ttg = Math.atan2(dy , dx );
@@ -131,26 +145,35 @@ public class Test extends OpMode {
             turret.setYaw(turret.getYaw() + ((gamepad1.right_trigger - gamepad1.left_trigger) / 5));
         }
 
-        if (gamepad1.yWasPressed()) {
-            am = !am;
-            if (am) {
-                Path pa = new Path(new BezierLine(follower.getPose(), new Pose(85, 15, Math.toRadians(0))));
-                pa.setLinearHeadingInterpolation(follower.getHeading(), Math.toRadians(0));
-                follower.followPath(pa);
+        if (gamepad1.bWasPressed()) {
+            if (shooterPower == 0) {
+                shooterPower = shooterPowerHigh;
+            } else {
+                shooterPower = 0;
             }
         }
+
+        if (gamepad1.aWasPressed()) {
+            if (flip.getPosition() == flipDown) {
+                flip.setPosition(flipUp);
+            } else {
+                flip.setPosition(flipDown);
+            }
+        }
+
+        sl.setPower(shooterPower);
 
         turret.periodic();
 
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
-        packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
-        packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
+        //packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
+   //     packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
+  //      packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
         packet.put("Turret Angle", turret.getYaw());
         packet.put("Turret Target", Math.toRadians(turret.getTurretTarget()));
         packet.put("Turret Auto Aim", tm);
-        packet.put("Limelight Distance", limelight.distanceFromShoot());
-        packet.put("Limelight Angle", Math.toRadians(limelight.angleFromShoot()));
+      //  packet.put("Limelight Distance", limelight.distanceFromShoot());
+      //  packet.put("Limelight Angle", Math.toRadians(limelight.angleFromShoot()));
         packet.put("Turret kp", Turret.kp);
         packet.put("Turret kd", Turret.kd);
         packet.put("Turret Error", Turret.error);
