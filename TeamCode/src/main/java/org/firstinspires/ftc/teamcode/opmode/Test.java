@@ -45,12 +45,12 @@ public class Test extends OpMode {
     Turret turret;
     public static double shooterPower = 0;
     public static double shooterPowerHigh = 1;
-    public static double flipUp = 0.1;
-    public static double flipDown = 0;
+    public static double flipUp = 0.5;
+    public static double flipDown = 0.3;
     Limelight limelight;
     //Shooter shooter;
     Intake intake;
-    DcMotorEx sl;
+    DcMotor sl;
     Servo flip;
 
     Pose target = new Pose(144-5, 5);
@@ -66,7 +66,7 @@ public class Test extends OpMode {
         turret = new Turret(hardwareMap);
        // shooter = new Shooter(hardwareMap);
        // limelight = new Limelight(hardwareMap, Alliance.BLUE);
-        sl = hardwareMap.get(DcMotorEx.class, "sl");
+        sl = hardwareMap.get(DcMotor.class, "sl");
         flip = hardwareMap.get(Servo.class, "f");
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();

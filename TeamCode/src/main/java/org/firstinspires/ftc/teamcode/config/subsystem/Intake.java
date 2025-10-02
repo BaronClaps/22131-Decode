@@ -2,26 +2,25 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 @Config
 @Configurable
 public class Intake {
-    private final MotorEx i;
+    private final DcMotorEx i;
     public static double idle = 0.1;
     public static double in = 1;
     public static double out = -1;
 
     public Intake(HardwareMap hardwareMap) {
-        i = hardwareMap.get(MotorEx.class, "i");
+        i = hardwareMap.get(DcMotorEx.class, "i");
     }
 
     public void setPower(double power) {
-        i.set(power);
+        i.setPower(power);
     }
 
     public Command idle() {
