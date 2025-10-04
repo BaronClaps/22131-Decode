@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Rotation;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -9,31 +8,17 @@ import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.ftc.FTCCoordinates;
-import com.pedropathing.ftc.PoseConverter;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.MathFunctions;
-import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
 import org.firstinspires.ftc.teamcode.config.subsystem.Intake;
-import org.firstinspires.ftc.teamcode.config.subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.config.subsystem.Turret;
-import org.firstinspires.ftc.teamcode.config.util.Alliance;
-import org.firstinspires.ftc.teamcode.config.util.DecodeCoordinates;
 import org.firstinspires.ftc.teamcode.config.vision.Limelight;
 import org.psilynx.psikit.Logger;
 import org.psilynx.psikit.io.RLOGServer;
-import org.psilynx.psikit.wpi.Pose2d;
-import org.psilynx.psikit.wpi.Rotation2d;
 
 @TeleOp
 @Config
@@ -116,11 +101,11 @@ public class Test extends OpMode {
      //   Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
         if (gamepad1.right_bumper)
-            intake.setPower(1);
+            intake.set(1);
         else if (gamepad1.left_bumper)
-            intake.setPower(-1);
+            intake.set(-1);
         else
-            intake.setPower(.1);
+            intake.set(.1);
 
         if (gamepad1.xWasPressed()) {
             tm = !tm;

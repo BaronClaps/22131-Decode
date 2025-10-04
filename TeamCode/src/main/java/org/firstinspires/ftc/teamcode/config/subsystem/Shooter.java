@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.ServoEx;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
@@ -14,24 +15,26 @@ import org.firstinspires.ftc.teamcode.config.util.AbsoluteEncoder;
 import java.util.Arrays;
 
 public class Shooter extends SubsystemBase {
-    private static final double g = -386.0885; // in/s^2
-
+    private Servo f;
     private MotorEx l, r;
     private PIDFController p;
     private double t;
     public static double kp = 0.03, kd = 0.01;
     private boolean activated = false;
-    public static double max_v = ((2 * Math.PI)/28);
+
+    public static double flipUp = 0.5;
+    public static double flipDown = 0.3;
 
     public Shooter(HardwareMap hardwareMap) {
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, 0));
         l = hardwareMap.get(MotorEx.class, "sl");
         r = hardwareMap.get(MotorEx.class, "sr");
+        f = hardwareMap.get(Servo.class, "f");
         r.setInverted(true);
     }
 
     /** in/s */
-    public double getTargetVelocity() {
+    public double getTarget() {
         return t;
     }
 
@@ -63,7 +66,7 @@ public class Shooter extends SubsystemBase {
         return activated;
     }
 
-    public void setTargetVelocity(double velocity) {
+    public void setTarget(double velocity) {
         t = velocity;
     }
 
@@ -72,9 +75,17 @@ public class Shooter extends SubsystemBase {
         p.setCoefficients(new PIDFCoefficients(kp, 0, kd, 0));
 
         if (activated) {
-            p.updateError(getTargetVelocity() - getVelocity());
+            p.updateError(getTarget() - getVelocity());
             setPower(p.run());
         }
+    }
+
+    public void up() {
+        f.setPosition(flipUp);
+    }
+
+    public void down() {
+        f.setPosition(flipDown);
     }
 
 }

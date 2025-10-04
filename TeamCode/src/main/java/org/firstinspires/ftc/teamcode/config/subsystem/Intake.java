@@ -19,23 +19,23 @@ public class Intake {
         i = hardwareMap.get(DcMotorEx.class, "i");
     }
 
-    public void setPower(double power) {
+    public void set(double power) {
         i.setPower(power);
     }
 
     public Command idle() {
-        return new InstantCommand(() -> setPower(idle));
+        return new InstantCommand(() -> set(idle));
     }
 
     public Command in() {
-        return new InstantCommand(() -> setPower(in));
+        return new InstantCommand(() -> set(in));
     }
 
     public Command out() {
-        return new InstantCommand(() -> setPower(out));
+        return new InstantCommand(() -> set(out));
     }
 
     public Command stop() {
-        return new InstantCommand(() -> setPower(0));
+        return new InstantCommand(() -> set(0));
     }
 }
