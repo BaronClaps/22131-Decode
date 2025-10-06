@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -13,24 +17,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.util.AbsoluteEncoder;
 
 import java.util.Arrays;
+@Config
+@Configurable
 
 public class Shooter extends SubsystemBase {
     private Servo f;
-    private MotorEx l, r;
+    private DcMotorEx l, r;
     private PIDFController p;
     private double t;
     public static double kp = 0.03, kd = 0.01;
-    private boolean activated = false;
+    public static double close = 1200;
+    public static double far = 2000;
+    private boolean activated = true;
 
     public static double flipUp = 0.5;
     public static double flipDown = 0.3;
 
     public Shooter(HardwareMap hardwareMap) {
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, 0));
-        l = hardwareMap.get(MotorEx.class, "sl");
-        r = hardwareMap.get(MotorEx.class, "sr");
+        l = hardwareMap.get(DcMotorEx.class, "sl");
+        r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
-        r.setInverted(true);
+        r.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /** in/s */
@@ -44,8 +52,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setPower(double p) {
-        l.set(p);
-        r.set(p);
+        l.setPower(p);
+        r.setPower(p);
     }
 
     public void toggle() {
