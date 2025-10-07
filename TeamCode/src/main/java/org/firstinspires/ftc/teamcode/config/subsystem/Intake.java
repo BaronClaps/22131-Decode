@@ -11,7 +11,7 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 @Configurable
 public class Intake {
     private final DcMotorEx i;
-    public static double idle = 0.1;
+    public static double idle = 0.3;
     public static double in = 1;
     public static double out = -1;
 

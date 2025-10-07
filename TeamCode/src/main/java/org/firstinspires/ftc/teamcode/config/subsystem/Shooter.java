@@ -74,6 +74,16 @@ public class Shooter extends SubsystemBase {
         return activated;
     }
 
+    public void far() {
+        setTarget(far);
+        on();
+    }
+
+    public void close() {
+        setTarget(close);
+        on();
+    }
+
     public void setTarget(double velocity) {
         t = velocity;
     }
