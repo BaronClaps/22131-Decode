@@ -106,6 +106,13 @@ public class Shooter extends SubsystemBase {
         f.setPosition(flipDown);
     }
 
+    public void flip() {
+        if (f.getPosition() == flipDown)
+            up();
+        else
+            down();
+    }
+
     public boolean atTarget() {
         return Math.abs((getTarget()- getVelocity())) < 100;
     }

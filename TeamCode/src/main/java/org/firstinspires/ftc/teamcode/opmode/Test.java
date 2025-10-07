@@ -31,6 +31,7 @@ public class Test extends OpMode {
     Turret turret;
     public static double targetV = 1200;
     public boolean shoot = false;
+    public static double intakeOn = 0;
     public static double shooterPower = 0;
     public static double shooterPowerHigh = 1;
     public static double flipUp = 0.3;
@@ -60,6 +61,7 @@ public class Test extends OpMode {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
+        shooter.down();
         Logger.addDataReceiver(new RLOGServer());
         Logger.start();
 
@@ -103,12 +105,24 @@ public class Test extends OpMode {
     //    Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
      //   Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
-        if (gamepad1.right_bumper)
-            intake.set(1);
-        else if (gamepad1.left_bumper)
-            intake.set(-1);
+        if (gamepad1.rightBumperWasPressed())
+            if (intakeOn == 2 || intakeOn == 1)
+                intakeOn = 0;
+            else
+                intakeOn = 1;
+
+        if (gamepad1.leftBumperWasPressed())
+            if (intakeOn == 1 || intakeOn == 2)
+                intakeOn = 0;
+            else
+                intakeOn = 2;
+
+        if (intakeOn == 1)
+            intake.spinIn();
+        else if (intakeOn == 2)
+            intake.spinOut();
         else
-            intake.set(.1);
+            intake.spinIdle();
 
         if (gamepad1.xWasPressed()) {
             tm = !tm;
@@ -149,11 +163,7 @@ public class Test extends OpMode {
         }
 
         if (gamepad1.aWasPressed()) {
-            if (flip.getPosition() == flipDown) {
-                flip.setPosition(flipUp);
-            } else {
-                flip.setPosition(flipDown);
-            }
+            shooter.flip();
         }
 
         turret.periodic();
