@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 public class Artifact12 {
     private final Follower f;
 
-    public Pose start = new Pose(24.053, 119.310, Math.toRadians(90));
-    public Pose scoreEnd = new Pose(24.250, 85.250, Math.toRadians(-135));
-    public Pose line2Start = new Pose(24.250, 85.250, Math.toRadians(-135));
+    public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
+    public Pose scoreEnd = new Pose(48, 96, Math.toRadians(135));
+    public Pose line2Start = new Pose(20, 84, Math.toRadians(180));
     public Pose line2End = new Pose(48.750, 85.250, Math.toRadians(-135));
     public Pose line3End = new Pose(24.050, 60.050, Math.toRadians(-170));
     public Pose line4Start = new Pose(24.050, 60.050, Math.toRadians(-170));
@@ -66,6 +66,19 @@ public class Artifact12 {
                         )
                 )
                 .setLinearHeadingInterpolation(start.getHeading(), scoreEnd.getHeading())
+                .build();
+    }
+
+    public PathChain line1() {
+        return f.pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                scoreEnd,
+                                new Pose(50.000, 80.000),
+                                line2Start
+                        )
+                )
+                .setLinearHeadingInterpolation(scoreEnd.getHeading(), line2Start.getHeading(), 0.3)
                 .build();
     }
 
@@ -182,19 +195,20 @@ public class Artifact12 {
     public PathChain next() {
         switch (index++) {
             case 0: return score();
-            case 1: return line2();
-            case 2: return line3();
-            case 3: return line4();
-            case 4: return line5();
-            case 5: return line6();
-            case 6: return line7();
-            case 7: return line8();
-            case 8: return line9();
-            case 9: return line10();
-            case 10: return line11();
-            case 11: return line12();
-            case 12: return line13();
-            case 13: return line14();
+            case 1: return line1();
+            case 2: return line2();
+            case 3: return line3();
+            case 4: return line4();
+            case 5: return line5();
+            case 6: return line6();
+            case 7: return line7();
+            case 8: return line8();
+            case 9: return line9();
+            case 10: return line10();
+            case 11: return line11();
+            case 12: return line12();
+            case 13: return line13();
+            case 14: return line14();
             default: return null;
         }
     }

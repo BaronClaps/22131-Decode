@@ -20,6 +20,7 @@ public class BlueTwelve extends CommandOpMode {
         r = new Robot(hardwareMap, Alliance.BLUE);
         Artifact12 p = new Artifact12(r);
         r.f.setStartingPose(p.start);
+        r.s.down();
 
         schedule(
                 new RunCommand(r::periodic),
@@ -79,5 +80,10 @@ public class BlueTwelve extends CommandOpMode {
                                 )
                 )
         );
+    }
+
+    @Override
+    public void end() {
+        r.stop();
     }
 }

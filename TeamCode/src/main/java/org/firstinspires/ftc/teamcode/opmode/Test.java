@@ -29,12 +29,12 @@ public class Test extends OpMode {
 
     Follower follower;
     Turret turret;
-    public static double targetV = 0;
+    public static double targetV = 1200;
     public boolean shoot = false;
     public static double shooterPower = 0;
     public static double shooterPowerHigh = 1;
-    public static double flipUp = 0.5;
-    public static double flipDown = 0.3;
+    public static double flipUp = 0.3;
+    public static double flipDown = 0.5;
     Limelight limelight;
     Shooter shooter;
     Intake intake;

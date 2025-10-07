@@ -28,7 +28,7 @@ public class ShootFar extends CommandBase {
                 setState(1);
                 break;
             case 1:
-                if (t.getElapsedTime() > 1000 && !r.f.isBusy()) {
+                if (!r.f.isBusy() && r.s.atTarget()) {
                     r.i.idle();
                     r.s.up();
                     setState(-1);

@@ -25,13 +25,13 @@ public class Shooter extends SubsystemBase {
     private DcMotorEx l, r;
     private PIDFController p;
     private double t;
-    public static double kp = 0.03, kd = 0.01;
+    public static double kp = 0.03, kd = 0.0;
     public static double close = 1200;
     public static double far = 2000;
     private boolean activated = true;
 
-    public static double flipUp = 0.5;
-    public static double flipDown = 0.3;
+    public static double flipUp = 0.3;
+    public static double flipDown = 0.5;
 
     public Shooter(HardwareMap hardwareMap) {
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, 0));
@@ -104,6 +104,10 @@ public class Shooter extends SubsystemBase {
 
     public void down() {
         f.setPosition(flipDown);
+    }
+
+    public boolean atTarget() {
+        return Math.abs((getTarget()- getVelocity())) < 100;
     }
 
 }
