@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.commands.FollowPath;
-import org.firstinspires.ftc.teamcode.config.commands.IntakeIn;
 import org.firstinspires.ftc.teamcode.config.commands.ShootClose;
 import org.firstinspires.ftc.teamcode.config.paths.Artifact12;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
+import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 
 @Autonomous(name = "Blue 12", group = "Interesting")
-public class BlueTwelve extends CommandOpMode {
+public class BlueTwelve extends OpModeCommand {
     Robot r;
 
     @Override
@@ -20,39 +19,80 @@ public class BlueTwelve extends CommandOpMode {
         r = new Robot(hardwareMap, Alliance.BLUE);
         Artifact12 p = new Artifact12(r);
         r.f.setStartingPose(p.start);
+
         r.s.down();
 
         schedule(
                 new RunCommand(r::periodic),
                 new SequentialCommandGroup(
-                        new ShootClose(r)
+                        new FollowPath(r, p.next())
+                                .alongWith(
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
+                                )/*,
+                        new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
+                                ),
+                       new FollowPath(r, p.next())
+                                .alongWith(
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
                                 ),
                         new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
                                 ),
-                        new ShootClose(r)
+                       new FollowPath(r, p.next())
                                 .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new IntakeIn(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new ShootClose(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
                                 ),
                         new FollowPath(r, p.next()),
                         new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
                                 ),
-                        new ShootClose(r)
+                       new FollowPath(r, p.next())
+                                .alongWith(
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
+                                ),
+                        new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
+                                ),
+                       new FollowPath(r, p.next())
+                                .alongWith(
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
+                                ),
+                        new IntakeIn(r)
+                                .alongWith(
+                                        new FollowPath(r, p.next())
+                                ),
+                       new FollowPath(r, p.next())
+                                .alongWith(
+                                        new ShootClose(r)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
                                 ),
                         new IntakeIn(r)
                                 .alongWith(
@@ -61,29 +101,19 @@ public class BlueTwelve extends CommandOpMode {
                         new ShootClose(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
-                                ),
-                        new IntakeIn(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new ShootClose(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new IntakeIn(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new ShootClose(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                )
+                                )*/
                 )
         );
     }
 
     @Override
-    public void end() {
+    public void start() {
+        r.s.close();
+        r.i.spinIdle();
+    }
+
+    @Override
+    public void stop() {
         r.stop();
     }
 }
