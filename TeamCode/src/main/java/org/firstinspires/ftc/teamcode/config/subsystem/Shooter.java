@@ -23,18 +23,22 @@ import java.util.Arrays;
 public class Shooter extends SubsystemBase {
     private Servo f;
     private DcMotorEx l, r;
-    private PIDFController p;
-    private double t;
-    public static double kp = 0.03, kd = 0.0;
-    public static double close = 1200;
-    public static double far = 2000;
+    private PIDFController b, s;
+
+    private double t = 0;
+    public static double bp = 0.03, bd = 0.0, bf = 0.0, sp = 0.01, sd = 0.0001, sf = 0.0;
+
+    public static double pSwitch = 50;
     private boolean activated = true;
 
+    public static double close = 1200;
+    public static double far = 2000;
     public static double flipUp = 0.3;
     public static double flipDown = 0.5;
 
     public Shooter(HardwareMap hardwareMap) {
-        p = new PIDFController(new PIDFCoefficients(kp, 0, kd, 0));
+        b = new PIDFController(new PIDFCoefficients(bp, 0, bd, bf));
+        s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
         l = hardwareMap.get(DcMotorEx.class, "sl");
         r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
@@ -90,11 +94,17 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        p.setCoefficients(new PIDFCoefficients(kp, 0, kd, 0));
+        b.setCoefficients(new PIDFCoefficients(bp, 0, bd, bf));
+        s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
 
         if (activated) {
-            p.updateError(getTarget() - getVelocity());
-            setPower(p.run());
+            if (Math.abs(getTarget() - getVelocity()) < pSwitch) {
+                s.updateError(getTarget() - getVelocity());
+                setPower(s.run());
+            } else {
+                b.updateError(getTarget() - getVelocity());
+                setPower(b.run());
+            }
         }
     }
 
