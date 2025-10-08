@@ -149,16 +149,13 @@ public class Test extends OpMode {
 
         if (shoot) {
             shooter.setTarget(targetV);
-            shooter.periodic();
+            shooter.on();
         } else
-            sl.setPower(shooterPower);
+            shooter.off();
+
+        shooter.periodic();
 
         if (gamepad1.bWasPressed()) {
-            if (shooterPower == 0) {
-                shooterPower = shooterPowerHigh;
-            } else {
-                shooterPower = 0;
-            }
             shoot = !shoot;
         }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.config.commands.ShootClose;
@@ -21,12 +22,14 @@ public class BlueTwelve extends OpModeCommand {
         r.f.setStartingPose(p.start);
 
         r.s.down();
+        r.i.in();
 
         schedule(
                 new RunCommand(r::periodic),
                 new SequentialCommandGroup(
+                        new WaitCommand(1000),
                         new FollowPath(r, p.next())
-                                .alongWith(
+                                .andThen(
                                         new ShootClose(r)
                                                 .andThen(
                                                         new ShootClose(r),

@@ -28,14 +28,14 @@ public class ShootClose extends CommandBase {
                 setState(1);
                 break;
             case 1:
-                if (r.f.atParametricEnd() && r.s.atTarget() && t.getElapsedTime() > 500) {
+                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
                     r.i.idle();
                     r.s.up();
                     setState(2);
                 }
                 break;
             case 2:
-                if (r.f.atParametricEnd() && r.s.atTarget() && t.getElapsedTime() > 500) {
+                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 1000) {
                     setState(-1);
                 }
                 break;

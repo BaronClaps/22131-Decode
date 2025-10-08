@@ -20,6 +20,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.*;
 import com.pedropathing.math.*;
 import com.pedropathing.paths.*;
@@ -37,7 +38,6 @@ import java.util.List;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 1.0, 6/26/2025
  */
-@Configurable
 @Config
 @TeleOp(name = "Tuning", group = "Pedro Pathing")
 public class Tuning extends SelectableOpMode {
@@ -95,15 +95,15 @@ public class Tuning extends SelectableOpMode {
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        FtcDashboard.getInstance().addConfigVariable("Tuning", "Heading PIDF", new ValueProvider<PIDFCoefficients>() {
+        FtcDashboard.getInstance().addConfigVariable("Tuning", "Constants", new ValueProvider<FollowerConstants>() {
             @Override
-            public PIDFCoefficients get() {
-                return follower.constants.getCoefficientsHeadingPIDF();
+            public FollowerConstants get() {
+                return follower.getConstants();
             }
 
             @Override
-            public void set(PIDFCoefficients value) {
-                follower.setConstants(follower.constants.headingPIDFCoefficients(value));
+            public void set(FollowerConstants value) {
+                follower.setConstants(value);
             }
         });
     }
