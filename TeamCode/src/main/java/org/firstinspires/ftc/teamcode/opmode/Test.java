@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.config.pedro.Constants;
 import org.firstinspires.ftc.teamcode.config.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.config.subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.config.subsystem.Turret;
+import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.vision.Limelight;
 import org.psilynx.psikit.Logger;
 import org.psilynx.psikit.io.RLOGServer;
@@ -32,15 +33,9 @@ public class Test extends OpMode {
     public static double targetV = 1200;
     public boolean shoot = false;
     public static double intakeOn = 0;
-    public static double shooterPower = 0;
-    public static double shooterPowerHigh = 1;
-    public static double flipUp = 0.3;
-    public static double flipDown = 0.5;
     Limelight limelight;
     Shooter shooter;
     Intake intake;
-    DcMotor sl;
-    Servo flip;
 
     Pose target = new Pose(144-5, 5);
     boolean am = false, tm = false;
@@ -54,9 +49,7 @@ public class Test extends OpMode {
         intake = new Intake(hardwareMap);
         turret = new Turret(hardwareMap);
         shooter = new Shooter(hardwareMap);
-       // limelight = new Limelight(hardwareMap, Alliance.BLUE);
-        sl = hardwareMap.get(DcMotor.class, "sl");
-        flip = hardwareMap.get(Servo.class, "f");
+        limelight = new Limelight(hardwareMap, Alliance.BLUE);
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -83,7 +76,7 @@ public class Test extends OpMode {
         follower.startTeleopDrive();
         follower.update();
         turret.reset();
-      //  limelight.start();
+        limelight.switchToShoot();
     }
 
     /**
@@ -99,7 +92,7 @@ public class Test extends OpMode {
         }
 
         if (!am)
-            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.75: -gamepad1.right_stick_x, false);
         follower.update();
 
     //    Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
@@ -128,24 +121,11 @@ public class Test extends OpMode {
             tm = !tm;
         }
 
-        double ttg = 0;
-        double ttl = 0;
-        double dy = 0;
-        double dx = 0;
-        if (gamepad1.dpadUpWasPressed() || tm) {
-        //    turret.setYaw(turret.getYaw() + Math.toRadians(limelight.angleFromBlue()));
-//            dy = target.getY() - follower.getPose().getY();
-//            dx = target.getX() - follower.getPose().getX();
-//            ttg = Math.atan2(dy , dx );
-//            telemetryM.addData("ttg", ttg);
-//            telemetry.addData("ttg", ttg);
-//            ttl = MathFunctions.normalizeAngle(ttg + follower.getHeading());
-//            telemetryM.addData("ttl", ttl);
-//            telemetry.addData("ttl", ttl);
-//            turret.setYaw(ttl);
-        } else {
-            turret.setYaw(turret.getYaw() + ((gamepad1.right_trigger - gamepad1.left_trigger) / 5));
-        }
+        if (gamepad1.dpadUpWasPressed())
+            tm = !tm;
+
+        turret.periodicError((limelight.angleFromShoot()));
+       // turret.m.setPower((gamepad1.right_trigger - gamepad1.left_trigger)/1.5);
 
         if (shoot) {
             shooter.setTarget(targetV);
@@ -163,27 +143,10 @@ public class Test extends OpMode {
             shooter.flip();
         }
 
-        turret.periodic();
-
         TelemetryPacket packet = new TelemetryPacket();
-        //packet.put("Pose x", p.getX(DistanceUnit.INCH)); // Inches
-   //     packet.put("Pose y", p.getY(DistanceUnit.INCH)); // Inches
-  //      packet.put("Pose heading", p.getHeading(AngleUnit.RADIANS)); // Radians
-//        packet.put("Turret Angle", turret.getYaw());
-//        packet.put("Turret Target", Math.toRadians(turret.getTurretTarget()));
-//        packet.put("Turret Auto Aim", tm);
         packet.put("Shooter Velocity", shooter.getVelocity());
         packet.put("Shooter Target", shooter.getTarget());
-      //  packet.put("Limelight Distance", limelight.distanceFromShoot());
-      //  packet.put("Limelight Angle", Math.toRadians(limelight.angleFromShoot()));
-//        packet.put("Turret kp", Turret.kp);
-//        packet.put("Turret kd", Turret.kd);
-//        packet.put("Turret Error", Turret.error);
-//        packet.put("Turret Power", Turret.power);
-//        packet.put("Turret Target Goal", ttg);
-//        packet.put("Turret Target Local", ttl);
-//        packet.put("Dy", dy);
-//        packet.put("Dx", dx);
+        packet.put("limelight angle", limelight.angleFromShoot());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("x:" + follower.getPose().getX());
@@ -193,10 +156,7 @@ public class Test extends OpMode {
         telemetryM.debug("velocity", shooter.getVelocity());
         telemetryM.debug("target", shooter.getTarget());
         telemetryM.debug("pid on: " + shoot);
-        telemetryM.debug(dx);
-        telemetryM.debug(dy);
-        telemetryM.debug("ttg: " + ttg);
-        telemetryM.debug("ttl: " + ttl);
+        telemetryM.debug("xdeg", limelight.angleFromShoot());
         telemetryM.update(telemetry);
     }
 

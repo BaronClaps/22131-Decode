@@ -18,7 +18,6 @@ public class Limelight extends SubsystemBase {
         a = alliance;
         l = hardwareMap.get(Limelight3A.class, "limelight");
         switchToShoot();
-        l.stop();
     }
 
     public void start() {
@@ -67,6 +66,9 @@ public class Limelight extends SubsystemBase {
     public double angleFromTag(double tagID) {
         switchToShoot();
         List<LLResultTypes.FiducialResult> r = l.getLatestResult().getFiducialResults();
+
+        if (r.isEmpty()) return 0;
+
         LLResultTypes.FiducialResult target = null;
         for (LLResultTypes.FiducialResult i: r) {
             if (i != null && i.getFiducialId() ==  tagID) {
@@ -75,9 +77,8 @@ public class Limelight extends SubsystemBase {
             }
         }
 
-        if (target != null) {
+        if (target != null)
             return target.getTargetXDegrees();
-        }
 
         return 0;
     }
@@ -101,6 +102,7 @@ public class Limelight extends SubsystemBase {
     public void switchToShoot() {
         if (pipeline != shoot)
             l.pipelineSwitch(shoot);
+        l.setPollRateHz(20);
         l.start();
     }
 }

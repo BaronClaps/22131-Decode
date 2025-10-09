@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.util.AbsoluteEncoder;
 
 import java.util.Arrays;
-@Config
+// @Config
 @Configurable
 
 public class Shooter extends SubsystemBase {
