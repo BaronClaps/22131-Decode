@@ -37,7 +37,7 @@ public class Test extends OpMode {
     Shooter shooter;
     Intake intake;
 
-    Pose target = new Pose(144-5, 5);
+    Pose target = new Pose(144 - 5, 5);
     boolean am = false, tm = false;
 
     @Override
@@ -49,7 +49,7 @@ public class Test extends OpMode {
         intake = new Intake(hardwareMap);
         turret = new Turret(hardwareMap);
         shooter = new Shooter(hardwareMap);
-        limelight = new Limelight(hardwareMap, Alliance.BLUE);
+        limelight = new Limelight(hardwareMap, Alliance.RED);
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -92,11 +92,11 @@ public class Test extends OpMode {
         }
 
         if (!am)
-            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.75: -gamepad1.right_stick_x, false);
+            follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false);
         follower.update();
 
-    //    Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
-     //   Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
+        //    Pose2D p = PoseConverter.poseToPose2D(follower.getPose(), DecodeCoordinates.INSTANCE);
+        //   Logger.recordOutput("Pose2D", new Pose2d(p.getX(DistanceUnit.INCH), p.getY(DistanceUnit.INCH), new Rotation2d(p.getHeading(AngleUnit.RADIANS))));
 
         if (gamepad1.rightBumperWasPressed())
             if (intakeOn == 2 || intakeOn == 1)
@@ -105,7 +105,7 @@ public class Test extends OpMode {
                 intakeOn = 1;
 
         if (gamepad1.leftBumperWasPressed())
-            if (intakeOn == 1 || intakeOn == 2)
+            if (intakeOn == 1)
                 intakeOn = 0;
             else
                 intakeOn = 2;
@@ -117,18 +117,18 @@ public class Test extends OpMode {
         else
             intake.spinIdle();
 
-        if (gamepad1.xWasPressed()) {
+        if (gamepad1.xWasPressed())
             tm = !tm;
-        }
 
-        if (gamepad1.dpadUpWasPressed())
-            tm = !tm;
+        if (tm && limelight.distanceFromShoot() != 0)
+            shooter.forDistance(limelight.distanceFromShoot());
+        else
+            shooter.setTarget(targetV);
 
         turret.periodicError((limelight.angleFromShoot()));
-       // turret.m.setPower((gamepad1.right_trigger - gamepad1.left_trigger)/1.5);
+        // turret.m.setPower((gamepad1.right_trigger - gamepad1.left_trigger)/1.5);
 
         if (shoot) {
-            shooter.setTarget(targetV);
             shooter.on();
         } else
             shooter.off();

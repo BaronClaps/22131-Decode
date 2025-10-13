@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.util.AbsoluteEncoder;
 
 import java.util.Arrays;
-// @Config
+@Config
 @Configurable
 
 public class Shooter extends SubsystemBase {
@@ -125,6 +125,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean atTarget() {
         return Math.abs((getTarget()- getVelocity())) < 100;
+    }
+
+    public void forDistance(double distance) {
+        setTarget((6.13992 * distance) + 858.51272);
     }
 
 }

@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
 import java.util.List;
@@ -35,6 +36,9 @@ public class Limelight extends SubsystemBase {
     public double distanceFromTag(double tagID) {
         switchToShoot();
         List<LLResultTypes.FiducialResult> r = l.getLatestResult().getFiducialResults();
+
+        if (r.isEmpty()) return 0;
+
         LLResultTypes.FiducialResult target = null;
         for (LLResultTypes.FiducialResult i: r) {
             if (i != null && i.getFiducialId() ==  tagID) {
@@ -44,8 +48,8 @@ public class Limelight extends SubsystemBase {
         }
 
         if (target != null) {
-            double x = target.getCameraPoseTargetSpace().getPosition().x; // right/left from tag
-            double z = target.getCameraPoseTargetSpace().getPosition().z; // forward/back from tag
+            double x = (target.getCameraPoseTargetSpace().getPosition().x / DistanceUnit.mPerInch) + 8; // right/left from tag
+            double z = (target.getCameraPoseTargetSpace().getPosition().z / DistanceUnit.mPerInch) + 8; // forward/back from tag
 
             Vector e = new Vector();
             e.setOrthogonalComponents(x, z);

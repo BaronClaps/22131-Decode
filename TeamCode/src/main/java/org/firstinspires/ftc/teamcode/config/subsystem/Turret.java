@@ -15,13 +15,13 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 @Config
 public class Turret {
-    public static double error = 0, power = 0, num = 1;
+    public static double error = 0, power = 0;
     public static double rpt = 0.008660489741;
 
     public final DcMotorEx m;
     private PIDFController p, s; // pidf controller for turret
     public static double t = 0; // target for turret
-    public static double kp = 3, kf = 0.01, kd = 0.001, sp = 3, sf = 0.01, sd = 0.001;
+    public static double kp = 0.1, kf = 0.0, kd = 0.001, sp = .05, sf = 0, sd = 0.0001;
     public static double limitDegrees = 220;
 
     public Turret(HardwareMap hardwareMap) {
@@ -93,7 +93,7 @@ public class Turret {
         else
             power = p.run();
 
-        m.setPower(power);
+        m.setPower(power/2.64367);
     }
 
 
