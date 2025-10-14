@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config.commands;
 
 import com.pedropathing.util.Timer;
 import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.command.RunCommand;
 import org.firstinspires.ftc.teamcode.config.Robot;
 
 public class ShootClose extends CommandBase {
@@ -20,11 +21,15 @@ public class ShootClose extends CommandBase {
 
     @Override
     public void execute() {
+        if (r.l.distanceFromShoot() > 0)
+            r.s.forDistance(r.l.distanceFromShoot());
+        else
+            r.s.close();
+
         switch (st) {
             case 0:
                 r.s.down();
                 r.i.in();
-                r.s.close();
                 setState(1);
                 break;
             case 1:
@@ -35,7 +40,13 @@ public class ShootClose extends CommandBase {
                 }
                 break;
             case 2:
-                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 1000) {
+                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
+                    r.s.down();
+                    setState(3);
+                }
+                break;
+            case 3:
+                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
                     setState(-1);
                 }
                 break;

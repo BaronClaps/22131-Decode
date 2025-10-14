@@ -32,9 +32,7 @@ public class Robot {
 
     public void periodic() {
         f.update();
-        l.periodic();
         s.periodic();
-        t.periodic();
     }
 
     public void stop() {

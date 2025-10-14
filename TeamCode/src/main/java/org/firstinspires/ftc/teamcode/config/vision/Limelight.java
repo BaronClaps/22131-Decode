@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
 import java.util.List;
-public class Limelight extends SubsystemBase {
+public class Limelight {
     private Limelight3A l;
     private Alliance a;
     private static final int shoot = 0, zone = 1;
