@@ -48,6 +48,7 @@ public class Blue extends OpMode {
      */
     @Override
     public void loop() {
+        r.periodic();
         r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false);
 
         if (gamepad1.rightBumperWasPressed())
@@ -93,7 +94,6 @@ public class Blue extends OpMode {
             r.f.setPose(r.f.getPose().withHeading(0));
 
         r.t.periodicError((r.l.angleFromShoot()));
-        r.periodic();
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Shooter Velocity", r.s.getVelocity());

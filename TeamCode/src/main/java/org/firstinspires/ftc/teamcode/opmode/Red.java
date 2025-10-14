@@ -26,7 +26,7 @@ public class Red extends OpMode {
     @Override
     public void init() {
         r = new Robot(hardwareMap, Alliance.RED);
-        r.f.setStartingPose(Robot.endPose.withHeading(Robot.endPose.getHeading() + Math.toRadians(180)));
+        r.f.setStartingPose(Robot.endPose.withHeading(0));//Robot.endPose.getHeading() + Math.toRadians(180)));
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -48,6 +48,7 @@ public class Red extends OpMode {
      */
     @Override
     public void loop() {
+        r.periodic();
         r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false);
 
         if (gamepad1.rightBumperWasPressed())
@@ -79,8 +80,6 @@ public class Red extends OpMode {
         } else
             r.s.off();
 
-        r.s.periodic();
-
         if (gamepad1.bWasPressed()) {
             shoot = !shoot;
         }
@@ -90,7 +89,7 @@ public class Red extends OpMode {
         }
 
         if (gamepad1.dpadDownWasPressed())
-            r.f.setPose(r.f.getPose().withHeading(180));
+            r.f.setPose(r.f.getPose().withHeading(0));
 
         r.t.periodicError((r.l.angleFromShoot()));
         r.periodic();
