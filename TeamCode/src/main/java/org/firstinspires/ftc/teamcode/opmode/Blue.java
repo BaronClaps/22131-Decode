@@ -100,6 +100,8 @@ public class Blue extends OpMode {
         packet.put("Shooter Target", r.s.getTarget());
         packet.put("limelight angle", r.l.angleFromShoot());
         packet.put("Distance from shoot", r.l.distanceFromShoot());
+        packet.put("Loop Time (ms)", r.getLoopTime());
+        packet.put("Loop Time (hz)", (1000 / r.getLoopTime()));
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("x:" + r.f.getPose().getX());
@@ -109,6 +111,8 @@ public class Blue extends OpMode {
         telemetryM.debug("target", r.s.getTarget());
         telemetryM.debug("limelight angle", r.l.angleFromShoot());
         telemetryM.debug("Distance from shoot", r.l.distanceFromShoot());
+        telemetryM.debug("Loop Time (ms)", r.getLoopTime());
+        telemetryM.debug("Loop Time (hz)", (1000 / r.getLoopTime()));
         telemetryM.update(telemetry);
     }
 }
