@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.config.vision.c270.opencv;
+package org.firstinspires.ftc.teamcode.config.vision.opencv;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

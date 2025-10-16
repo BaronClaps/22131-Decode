@@ -48,6 +48,7 @@ public class Blue extends OpMode {
      */
     @Override
     public void loop() {
+        r.s.targetSpotted(r.l.angleFromShoot() != 0);
         r.periodic();
         r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false);
 

@@ -31,7 +31,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.config.vision.c270.opencv;
+package org.firstinspires.ftc.teamcode.config.vision.opencv;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

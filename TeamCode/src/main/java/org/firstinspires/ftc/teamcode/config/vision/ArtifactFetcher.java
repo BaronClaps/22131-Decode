@@ -15,11 +15,11 @@ import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
-import org.firstinspires.ftc.teamcode.config.vision.c270.opencv.BlobCamera;
-import org.firstinspires.ftc.teamcode.config.vision.c270.opencv.Circle;
-import org.firstinspires.ftc.teamcode.config.vision.c270.opencv.ColorBlobLocatorProcessor;
-import org.firstinspires.ftc.teamcode.config.vision.c270.opencv.ColorRange;
-import org.firstinspires.ftc.teamcode.config.vision.c270.opencv.ImageRegion;
+import org.firstinspires.ftc.teamcode.config.vision.opencv.BlobCamera;
+import org.firstinspires.ftc.teamcode.config.vision.opencv.Circle;
+import org.firstinspires.ftc.teamcode.config.vision.opencv.ColorBlobLocatorProcessor;
+import org.firstinspires.ftc.teamcode.config.vision.opencv.ColorRange;
+import org.firstinspires.ftc.teamcode.config.vision.opencv.ImageRegion;
 
 import java.util.List;
 
@@ -29,12 +29,15 @@ public class ArtifactFetcher extends OpMode {
     public ColorBlobLocatorProcessor purpleLocator, greenLocator;
     PIDFController rotController, yController, xController;
     Follower f;
-    public static double Pr = 0.0003;
-    public static double Py = 0.0002;
-    public static double Px = 0.0002;
+    public static double Pr = 0.003;
+    public static double Dr = 0.0003;
+    public static double Py = 0.002;
+    public static double Dy = 0.0002;
+    public static double Px = 0.002;
+    public static double Dx = 0.0002;
     public static double Er, Ey, Ex;
-    public static double camCenter = (double) 1280 / 2;
-    public static double blobRadGoal = 300;
+    public static double camCenter = 160;
+    public static double blobRadGoal = 200;
 
     @Override
     public void init() {
@@ -72,16 +75,17 @@ public class ArtifactFetcher extends OpMode {
         BlobCamera portal = new BlobCamera.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessors(greenLocator, purpleLocator)
-                .setCameraResolution(new Size(1280, 720))
-                .setStreamFormat(BlobCamera.StreamFormat.MJPEG)
-                .setLiveViewContainerId(0)
+                .setCameraResolution(new Size(320, 240)) // setting the resolution of the camera. lower resolution = faster looptimes
+                .setStreamFormat(BlobCamera.StreamFormat.MJPEG) // have to use MJPEG for the OV camera
+                .enableLiveView(true)
+               // .setLiveViewContainerId(1011)
                 .build();
 
         telemetry.setMsTransmissionInterval(100);
 
-        rotController = new PIDFController(new PIDFCoefficients(Pr, 0, 0, 0));
-        xController = new PIDFController(new PIDFCoefficients(Px, 0, 0, 0));
-        yController = new PIDFController(new PIDFCoefficients(Py, 0, 0, 0));
+        rotController = new PIDFController(new PIDFCoefficients(Pr, 0, Dr, 0));
+        xController = new PIDFController(new PIDFCoefficients(Px, 0, Dx, 0));
+        yController = new PIDFController(new PIDFCoefficients(Py, 0, Dy, 0));
         f.setStartingPose(new Pose());
     }
 
@@ -93,6 +97,12 @@ public class ArtifactFetcher extends OpMode {
 
     @Override
     public void loop() {
+        rotController.setP(Pr);
+        rotController.setD(Dr);
+        yController.setP(Py);
+        yController.setD(Dr);
+        xController.setP(Px);
+        xController.setD(Dx);
         f.update();
 
         // creates a new ArrayList of Blobs. I want to use both purple blobs and green blobs
