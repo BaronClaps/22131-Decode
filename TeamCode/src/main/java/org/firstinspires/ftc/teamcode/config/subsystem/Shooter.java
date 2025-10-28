@@ -19,8 +19,8 @@ public class Shooter extends SubsystemBase {
     private Servo f;
     private DcMotorEx l, r;
     private PIDFController b, s;
-    private RGBLight sl;
-    private Headlight fl;
+ //   private RGBLight sl;
+ //   private Headlight fl;
 
     private double t = 0;
     public static double bp = 0.03, bd = 0.0, bf = 0.0, sp = 0.01, sd = 0.0001, sf = 0.0;
@@ -41,8 +41,8 @@ public class Shooter extends SubsystemBase {
         f = hardwareMap.get(Servo.class, "f");
         r.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        sl = new RGBLight(hardwareMap.get(Servo.class, "ls"));
-        fl = new Headlight(hardwareMap.get(Servo.class, "lf"));
+      //  sl = new RGBLight(hardwareMap.get(Servo.class, "ls"));
+      //  fl = new Headlight(hardwareMap.get(Servo.class, "lf"));
     }
 
     /** in/s */
@@ -106,27 +106,27 @@ public class Shooter extends SubsystemBase {
                 setPower(b.run());
             }
 
-            if (atTarget()) {
-                if (targetSpotted)
-                    sl.green();
-                else
-                    sl.blue();
-            } else {
-                sl.red();
-            }
-        } else {
-            sl.orange();
-        }
+            // if (atTarget()) {
+             //   if (targetSpotted)
+                  //  sl.green();
+             //   else
+                  //  sl.blue();
+            //} else {
+              //  sl.red();
+            //}
+        }// else {
+         //  // sl.orange();
+       // }
     }
 
     public void up() {
         f.setPosition(flipUp);
-        fl.max();
+   //     fl.max();
     }
 
     public void down() {
         f.setPosition(flipDown);
-        fl.off();
+      //  fl.off();
     }
 
     public void flip() {

@@ -93,7 +93,7 @@ public class Turret {
         else
             power = p.run();
 
-        m.setPower(power/2.64367);
+        m.setPower(power);
     }
 
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
@@ -14,6 +15,10 @@ public class Intake {
     public static double idle = 0;
     public static double in = 1;
     public static double out = -1;
+    private ColorRangeSensor l;
+    private ColorRangeSensor r;
+    private ColorRangeSensor d;
+
 
     public Intake(HardwareMap hardwareMap) {
         i = hardwareMap.get(DcMotorEx.class, "i");
