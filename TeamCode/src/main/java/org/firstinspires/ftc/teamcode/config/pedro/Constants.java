@@ -20,10 +20,9 @@ public class Constants {
             .mass(6)
             .forwardZeroPowerAcceleration(-42.072)
             .lateralZeroPowerAcceleration(-67.58)
-            //.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(.2,0,.02,.015))
-            //.translationalPIDFCoefficients(new PIDFCoefficients(.1,0,.01,0))
-            //.headingPIDFCoefficients(new PIDFCoefficients(3, 0, .02, 0))
-            //.secondaryHeadingPIDFCoefficients(new PIDFCoefficients(.2, 0, 0.005, 0))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(3, 0, .04, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.01, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.015,0,0.3,0.015))
             .useSecondaryDrivePIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true);
@@ -37,8 +36,8 @@ public class Constants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
     public static PinpointConstants pinpointConstants = new PinpointConstants()
-            .forwardPodY(1.5)
-            .strafePodX(-7.25)
+            .forwardPodY(-5)
+            .strafePodX(3)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
