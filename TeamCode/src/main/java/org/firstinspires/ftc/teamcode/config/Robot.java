@@ -20,14 +20,14 @@ public class Robot {
     public final Shooter s;
     public final Turret t;
     public final Follower f;
-    public final Alliance a;
+    public Alliance a;
 
     private final List<LynxModule> hubs;
     private final Timer loop = new Timer();
     private int loops = 0;
     private double loopTime = 0;
 
-    public static Pose endPose = new Pose();
+    public static Pose endPose = new Pose(8,6.25,0);
 
     public Robot(HardwareMap h, Alliance a) {
         this.a = a;

@@ -17,17 +17,17 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 @Config
 public class Turret {
     public static double error = 0, power = 0;
-    public static double rpt = 0.0007435;
+    public static double rpt = 0.0029919;
 
     public final DcMotorEx m;
     private PIDFController p, s; // pidf controller for turret
     public static double t = 0; // target for turret
-    public static double kp = 0.1, kf = 0.0, kd = 0.001, sp = .05, sf = 0, sd = 0.0001;
+    public static double kp = 0.01, kf = 0.0, kd = 0.0001, sp = .005, sf = 0, sd = 0.0001;
 
     public Turret(HardwareMap hardwareMap) {
         m = hardwareMap.get(DcMotorEx.class, "t");
         m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    m.setDirection(DcMotor.Direction.REVERSE);
+    //m.setDirection(DcMotor.Direction.REVERSE);
         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));

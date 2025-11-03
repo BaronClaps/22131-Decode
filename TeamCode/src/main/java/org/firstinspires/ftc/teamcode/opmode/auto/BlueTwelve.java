@@ -26,7 +26,7 @@ public class BlueTwelve extends OpModeCommand {
 
         schedule(
                 new RunCommand(r::periodic),
-                new RunCommand(() -> r.t.periodicError(r.l.angleFromShoot())),
+                //new RunCommand(() -> r.t.periodicError(r.l.angleFromShoot())),
                 new SequentialCommandGroup(
                         new WaitCommand(1000),
                         new FollowPath(r, p.next())
