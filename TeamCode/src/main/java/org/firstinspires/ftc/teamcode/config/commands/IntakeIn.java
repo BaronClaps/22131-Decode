@@ -24,7 +24,6 @@ public class IntakeIn extends CommandBase {
             case 0:
                 r.s.down();
                 r.i.in();
-                r.s.close();
                 setState(1);
                 break;
             case 1:

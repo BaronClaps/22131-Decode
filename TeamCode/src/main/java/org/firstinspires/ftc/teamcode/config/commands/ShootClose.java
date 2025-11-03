@@ -21,32 +21,30 @@ public class ShootClose extends CommandBase {
 
     @Override
     public void execute() {
-        if (r.l.distanceFromShoot() > 0)
-            r.s.forDistance(r.l.distanceFromShoot());
-        else
-            r.s.close();
-
         switch (st) {
             case 0:
                 r.s.down();
-                r.i.in();
+                r.i.spinIn();
                 setState(1);
                 break;
             case 1:
-                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
-                    r.i.idle();
-                    r.s.up();
+                if (t.getElapsedTime() > 500) {
+                    r.i.spinIdle();
+                    r.s.close();
                     setState(2);
                 }
                 break;
             case 2:
-                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
-                    r.s.down();
+                if (r.s.atTarget() && t.getElapsedTime() > 500) {
+                    r.i.spinIdle();
+                    r.s.up();
                     setState(3);
                 }
                 break;
             case 3:
-                if (!r.f.isBusy() && r.s.atTarget() && t.getElapsedTime() > 500) {
+                if (t.getElapsedTime() > 500) {
+                    r.s.down();
+                    r.s.off();
                     setState(-1);
                 }
                 break;

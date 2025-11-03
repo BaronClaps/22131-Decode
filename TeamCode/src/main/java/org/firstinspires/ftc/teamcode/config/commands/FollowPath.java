@@ -77,10 +77,7 @@ public class FollowPath extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if ( follower.getCurrentPathNumber() == this.path.size() - 1 && Math.abs(follower.getHeadingError()) < 0.1 ) {
-            return follower.getCurrentTValue() >= this.completionThreshold;
-        }
-        return false;
+        return follower.atParametricEnd();
     }
 
     @Override

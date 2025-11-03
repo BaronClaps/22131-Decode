@@ -96,10 +96,9 @@ public class Tele extends OpMode {
 
         if (shoot) {
             r.s.on();
+            r.t.face(shootTarget, r.f.getPose());
         } else
             r.s.off();
-
-        r.s.periodic();
 
         if (gamepad1.bWasPressed()) {
             shoot = !shoot;
@@ -114,9 +113,6 @@ public class Tele extends OpMode {
 
         // r.t.periodicError((r.l.angleFromShoot()));
         //if (gamepad1.dpad_up)
-        r.t.face(shootTarget, r.f.getPose());
-
-        r.t.periodic();
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Shooter Velocity", r.s.getVelocity());

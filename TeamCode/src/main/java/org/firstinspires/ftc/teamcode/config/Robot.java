@@ -59,6 +59,7 @@ public class Robot {
         }
 
         f.update();
+        t.periodic();
         s.periodic();
     }
 
