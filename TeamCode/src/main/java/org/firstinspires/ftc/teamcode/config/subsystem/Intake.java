@@ -15,13 +15,11 @@ public class Intake {
     public static double idle = 0;
     public static double in = 1;
     public static double out = -1;
-    private ColorRangeSensor l;
-    private ColorRangeSensor r;
-    private ColorRangeSensor d;
 
 
     public Intake(HardwareMap hardwareMap) {
         i = hardwareMap.get(DcMotorEx.class, "i");
+        set(0);
     }
 
     public void set(double power) {
