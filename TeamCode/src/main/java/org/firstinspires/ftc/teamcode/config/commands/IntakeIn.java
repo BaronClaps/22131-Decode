@@ -23,12 +23,11 @@ public class IntakeIn extends CommandBase {
         switch (st) {
             case 0:
                 r.s.down();
-                r.i.in();
+                r.i.spinIn();
                 setState(1);
                 break;
             case 1:
                 if (t.getElapsedTime() > 1500 && !r.f.isBusy()) {
-                    r.i.idle();
                     setState(-1);
                 }
                 break;

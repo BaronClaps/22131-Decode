@@ -29,7 +29,6 @@ public class Tele extends OpMode {
     public void init() {
         r = new Robot(hardwareMap, Alliance.BLUE);
         r.f.setStartingPose(Robot.endPose);
-        r.t.resetTurret();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -44,6 +43,9 @@ public class Tele extends OpMode {
 
         if (gamepad1.bWasPressed())
             r.a = Alliance.RED;
+
+        if (gamepad1.xWasPressed())
+            r.t.resetTurret();
 
         telemetryM.addData("alliance", r.a);
         telemetryM.update(telemetry);

@@ -8,18 +8,18 @@ import com.pedropathing.paths.PathChain;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
-public class Artifact12 {
+public class CloseFar12 {
     private final Follower f;
 
     public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
     public Pose scoreEnd = new Pose(48, 96, Math.toRadians(135));
     public Pose line2Start = new Pose(20, 84, Math.toRadians(180));
     public Pose line2End = new Pose(48.750, 85.250, Math.toRadians(-135));
-    public Pose line3End = new Pose(24.050, 60.050, Math.toRadians(-170));
-    public Pose line4Start = new Pose(24.050, 60.050, Math.toRadians(-170));
+    public Pose line3End = new Pose(16, 60.050, Math.toRadians(-170));
+    public Pose line4Start = new Pose(16, 60.050, Math.toRadians(-170));
     public Pose line4End = new Pose(48.750, 85.250, Math.toRadians(-135));
-    public Pose line5End = new Pose(16.250, 70.000, Math.toRadians(-90));
-    public Pose line6End = new Pose(24.000, 39.750, Math.toRadians(-70));
+    public Pose line5End = new Pose(16.250, 70.000, Math.toRadians(0));
+    public Pose line6End = new Pose(16, 39.750, Math.toRadians(180));
     public Pose line7End = new Pose(59.500, 10.000, Math.toRadians(180));
     public Pose line8End = new Pose(12.000, 10.000, Math.toRadians(180));
     public Pose line9End = new Pose(59.500, 12.000, Math.toRadians(180));
@@ -32,7 +32,7 @@ public class Artifact12 {
     private int index = 0;
     private static final int PATH_COUNT = 14;
 
-    public Artifact12(Robot r) {
+    public CloseFar12(Robot r) {
         this.f = r.f;
 
         if (r.a.equals(Alliance.RED)) {
@@ -54,6 +54,8 @@ public class Artifact12 {
             line13End = line13End.mirror();
             line14End = line14End.mirror();
         }
+
+        index = 0;
     }
 
     public PathChain score() {
@@ -69,7 +71,7 @@ public class Artifact12 {
                 .build();
     }
 
-    public PathChain line1() {
+    public PathChain line1() { // intake 1
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
@@ -82,19 +84,19 @@ public class Artifact12 {
                 .build();
     }
 
-    public PathChain line2() {
+    public PathChain line2() { // go back from intake 1 to score
         return f.pathBuilder()
                 .addPath(new BezierLine(line2Start, line2End))
                 .setLinearHeadingInterpolation(line2Start.getHeading(), line2End.getHeading())
                 .build();
     }
 
-    public PathChain line3() {
+    public PathChain line3() { // intake 2
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 line2End,
-                                new Pose(44.400, 66.300),
+                                new Pose(55.400, 66.300),
                                 line3End
                         )
                 )
@@ -102,7 +104,7 @@ public class Artifact12 {
                 .build();
     }
 
-    public PathChain line4() {
+    public PathChain line4() { // go score intake 2
         return f.pathBuilder()
                 .addPath(new BezierLine(line4Start, line4End))
                 .setLinearHeadingInterpolation(line4Start.getHeading(), line4End.getHeading())
@@ -110,19 +112,19 @@ public class Artifact12 {
                 .build();
     }
 
-    public PathChain line5() {
+    public PathChain line5() { // do the gate
         return f.pathBuilder()
                 .addPath(new BezierLine(line4End, line5End))
-                .setLinearHeadingInterpolation(line4End.getHeading(), line5End.getHeading())
+                .setLinearHeadingInterpolation(line4End.getHeading(), line5End.getHeading(), 0.5)
                 .build();
     }
 
-    public PathChain line6() {
+    public PathChain line6() { // intake 3
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 line5End,
-                                new Pose(16.560, 44.000),
+                                new Pose(72, 44.000),
                                 line6End
                         )
                 )
@@ -130,56 +132,56 @@ public class Artifact12 {
                 .build();
     }
 
-    public PathChain line7() {
+    public PathChain line7() { // score intake 3
         return f.pathBuilder()
                 .addPath(new BezierLine(line6End, line7End))
                 .setLinearHeadingInterpolation(line6End.getHeading(), line7End.getHeading())
                 .build();
     }
 
-    public PathChain line8() {
+    public PathChain line8() { // to corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line7End, line8End))
                 .setConstantHeadingInterpolation(line7End.getHeading())
                 .build();
     }
 
-    public PathChain line9() {
+    public PathChain line9() { // score corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line8End, line9End))
                 .setConstantHeadingInterpolation(line8End.getHeading())
                 .build();
     }
 
-    public PathChain line10() {
+    public PathChain line10() { // to corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line9End, line10End))
                 .setConstantHeadingInterpolation(line9End.getHeading())
                 .build();
     }
 
-    public PathChain line11() {
+    public PathChain line11() { // score corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line10End, line11End))
                 .setConstantHeadingInterpolation(line10End.getHeading())
                 .build();
     }
 
-    public PathChain line12() {
+    public PathChain line12() { // to corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line11End, line12End))
                 .setConstantHeadingInterpolation(line11End.getHeading())
                 .build();
     }
 
-    public PathChain line13() {
+    public PathChain line13() { // score corner
         return f.pathBuilder()
                 .addPath(new BezierLine(line12End, line13End))
                 .setConstantHeadingInterpolation(line12End.getHeading())
                 .build();
     }
 
-    public PathChain line14() {
+    public PathChain line14() { // intake corner
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(

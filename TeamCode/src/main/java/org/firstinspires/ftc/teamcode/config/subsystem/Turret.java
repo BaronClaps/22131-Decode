@@ -30,8 +30,6 @@ public class Turret {
     //m.setDirection(DcMotor.Direction.REVERSE);
         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        resetTurret();
-
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
     }

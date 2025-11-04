@@ -141,7 +141,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atTarget() {
-        return Math.abs((getTarget()- getVelocity())) < 100;
+        return Math.abs((getTarget()- getVelocity())) < 50;
     }
 
     public void forDistance(double distance) {
