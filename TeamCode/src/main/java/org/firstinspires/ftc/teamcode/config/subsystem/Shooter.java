@@ -145,7 +145,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void forDistance(double distance) {
-        setTarget((6.13992 * distance) + 858.51272);
+        //setTarget((6.13992 * distance) + 858.51272);
+        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+    }
+
+    public boolean atUp() {
+        return f.getPosition() == flipUp;
     }
 
 }

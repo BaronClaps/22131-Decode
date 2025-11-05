@@ -44,14 +44,13 @@ public class Close12 extends OpModeCommand {
                                         new ShootClose(r),
                                         new ShootClose(r),
                                         new ShootClose(r)
-                                )
-                        ,
+                                ),
                         new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
-                        new WaitCommand(3000),
+                        new WaitCommand(1500),
                         new FollowPath(r, p.next())
                                 .andThen(
                                         new WaitCommand(500)
@@ -73,7 +72,21 @@ public class Close12 extends OpModeCommand {
                                                         new ShootClose(r),
                                                         new ShootClose(r)
                                                 )
-                                )
+                                ),
+                        new IntakeIn(r)
+                                .alongWith(
+                                        new FollowPath(r, p.next())
+                                ),
+                        new FollowPath(r, p.next())
+                                .andThen(
+                                        new WaitCommand(500)
+                                                .andThen(
+                                                        new ShootClose(r),
+                                                        new ShootClose(r),
+                                                        new ShootClose(r)
+                                                )
+                                ),
+                        new FollowPath(r, p.next())
                 )
         );
     }

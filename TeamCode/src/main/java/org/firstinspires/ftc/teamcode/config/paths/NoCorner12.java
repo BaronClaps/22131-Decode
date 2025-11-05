@@ -12,11 +12,12 @@ public class NoCorner12 {
     private final Follower f;
 
     public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
-    public Pose score = new Pose(48, 85.250, Math.toRadians(135)); // score
+    public Pose score = new Pose(48, 90.0, Math.toRadians(135)); // score
     public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake
-    public Pose gate = new Pose(16.250, 70.000, Math.toRadians(180)); // gate
+    public Pose gate = new Pose(18.5, 71.000, Math.toRadians(180)); // gate
     public Pose intake2 = new Pose(16, 60.050, Math.toRadians(-170)); // intake
     public Pose intake3 = new Pose(16, 39.750, Math.toRadians(180));
+    public Pose park = new Pose(24, 72, 0);
 
     private int index = 0;
     private static final int PATH_COUNT = 14;
@@ -26,134 +27,116 @@ public class NoCorner12 {
 
         if (r.a.equals(Alliance.RED)) {
             start = start.mirror();
-            scoreEnd = scoreEnd.mirror();
+            score = score.mirror();
             intake1 = intake1.mirror();
             gate = gate.mirror();
-            line3End = line3End.mirror();
-            line3End = line3End.mirror();
             intake2 = intake2.mirror();
-            line5End = line5End.mirror();
-            line6End = line6End.mirror();
             intake3 = intake3.mirror();
-            line8End = line8End.mirror();
-            line9End = line9End.mirror();
-            line10End = line10End.mirror();
-            line11End = line11End.mirror();
-            line12End = line12End.mirror();
-            line13End = line13End.mirror();
-            line14End = line14End.mirror();
+            park = park.mirror();
         }
 
         index = 0;
     }
 
-    public PathChain score() {
+    public PathChain scoreP() {
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 start,
                                 new Pose(55.593, 94.779),
-                                scoreEnd
+                                score
                         )
                 )
-                .setLinearHeadingInterpolation(start.getHeading(), scoreEnd.getHeading())
+                .setLinearHeadingInterpolation(start.getHeading(), score.getHeading())
                 .build();
     }
 
-    public PathChain line1() { // intake 1
+    public PathChain intake1() { // intake 1
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                scoreEnd,
+                                score,
                                 new Pose(50.000, 80.000),
                                 intake1
                         )
                 )
-                .setLinearHeadingInterpolation(scoreEnd.getHeading(), intake1.getHeading(), 0.3)
+                .setLinearHeadingInterpolation(score.getHeading(), intake1.getHeading(), 0.3)
                 .build();
     }
 
-    public PathChain line2() { // go back from intake 1 to score
+    public PathChain gate() { // go to gate from intake1
         return f.pathBuilder()
-                .addPath(new BezierLine(intake1, gate))
+                .addPath(new BezierCurve(intake1, new Pose(48, intake1.getY()), gate))
                 .setLinearHeadingInterpolation(intake1.getHeading(), gate.getHeading())
                 .build();
     }
 
-    public PathChain line3() { // intake 2
+    public PathChain score1() {
+        return f.pathBuilder()
+                .addPath(new BezierLine(gate, score))
+                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
+                .build();
+    }
+
+    public PathChain intake2() {
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                gate,
+                                score,
                                 new Pose(55.400, 66.300),
-                                line3End
+                                intake2
                         )
                 )
-                .setLinearHeadingInterpolation(gate.getHeading(), line3End.getHeading())
+                .setLinearHeadingInterpolation(score.getHeading(), intake2.getHeading())
                 .build();
     }
 
-    public PathChain line4() { // go score intake 2
+    public PathChain score2() {
         return f.pathBuilder()
-                .addPath(new BezierLine(line3End, intake2))
-                .setLinearHeadingInterpolation(line3End.getHeading(), intake2.getHeading())
-                .setReversed()
+                .addPath(new BezierLine(intake2, score))
+                .setLinearHeadingInterpolation(intake2.getHeading(), score.getHeading())
                 .build();
     }
 
-    public PathChain line5() { // do the gate
-        return f.pathBuilder()
-                .addPath(new BezierLine(intake2, line5End))
-                .setLinearHeadingInterpolation(intake2.getHeading(), line5End.getHeading(), 0.5)
-                .build();
-    }
-
-    public PathChain line6() { // intake 3
+    public PathChain intake3() { // intake 3
         return f.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                line5End,
+                                score,
                                 new Pose(72, 44.000),
-                                line6End
+                                intake3
                         )
                 )
-                .setLinearHeadingInterpolation(line5End.getHeading(), line6End.getHeading())
+                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading())
                 .build();
     }
 
-    public PathChain line7() { // score intake 3
+    public PathChain score3() { // score intake 3
         return f.pathBuilder()
-                .addPath(new BezierLine(line6End, intake3))
-                .setLinearHeadingInterpolation(line6End.getHeading(), intake3.getHeading())
+                .addPath(new BezierLine(intake3, score))
+                .setLinearHeadingInterpolation(intake3.getHeading(), score.getHeading())
                 .build();
     }
 
-    public PathChain line8() { // to corner
+    public PathChain park() { // to corner
         return f.pathBuilder()
-                .addPath(new BezierLine(intake3, line8End))
-                .setConstantHeadingInterpolation(intake3.getHeading())
-                .build();
-    }
-
-    public PathChain line9() { // score corner
-        return f.pathBuilder()
-                .addPath(new BezierLine(line8End, line9End))
-                .setConstantHeadingInterpolation(line8End.getHeading())
+                .addPath(new BezierLine(score, park))
+                .setLinearHeadingInterpolation(score.getHeading(), park.getHeading())
+                .setNoDeceleration()
                 .build();
     }
 
     public PathChain next() {
         switch (index++) {
-            case 0: return score();
-            case 1: return line1();
-            case 2: return line2();
-            case 3: return line3();
-            case 4: return line4();
-            case 5: return line5();
-            case 6: return line6();
-            case 7: return line7();
-            case 8: return line8();
-            case 9: return line9();
+            case 0: return scoreP();
+            case 1: return intake1();
+            case 2: return gate();
+            case 3: return score1();
+            case 4: return intake2();
+            case 5: return score2();
+            case 6: return intake3();
+            case 7: return score3();
+            case 8: return park();
             default: return null;
         }
     }

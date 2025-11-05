@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.Robot;
@@ -24,6 +25,7 @@ public class Tele extends OpMode {
     public static double targetV = 1200;
     public boolean shoot = false;
     public static double intakeOn = 0;
+    private final Timer upTimer = new Timer();
 
     @Override
     public void init() {
@@ -61,6 +63,8 @@ public class Tele extends OpMode {
         r.periodic();
         r.t.reset();
         r.f.startTeleopDrive();
+
+        upTimer.resetTimer();
     }
 
     /**
@@ -71,6 +75,9 @@ public class Tele extends OpMode {
     public void loop() {
         r.periodic();
         r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
+
+        if (upTimer.getElapsedTimeSeconds() > 2 && r.s.atUp())
+            gamepad1.rumbleBlips(1);
 
         if (gamepad1.rightBumperWasPressed())
             if (intakeOn == 1)
@@ -92,7 +99,10 @@ public class Tele extends OpMode {
             r.i.spinIdle();
 
 //        if (r.l.distanceFromShoot() != 0)
-        r.s.forDistance(shootTarget.distanceFrom(r.f.getPose()));
+        double dist = shootTarget.distanceFrom(r.f.getPose());
+        r.s.forDistance(dist);
+        //r.s.setTarget(targetV);
+
 //        else
 //            r.s.setTarget(targetV);
 
@@ -107,6 +117,7 @@ public class Tele extends OpMode {
         }
 
         if (gamepad1.aWasPressed()) {
+            upTimer.resetTimer();
             r.s.flip();
         }
 
@@ -129,6 +140,7 @@ public class Tele extends OpMode {
         packet.put("Loop Time (hz)", (1000 / r.getLoopTime()));
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
+        telemetryM.debug("Up Timer", upTimer.getElapsedTimeSeconds());
         telemetryM.debug("x:" + r.f.getPose().getX());
         telemetryM.debug("y:" + r.f.getPose().getY());
         telemetryM.debug("heading:" + r.f.getPose().getHeading());
@@ -137,6 +149,9 @@ public class Tele extends OpMode {
         telemetryM.debug("Turret Yaw", r.t.getYaw());
         telemetryM.debug("Turret Target", r.t.getTurretTarget());
         telemetryM.debug("Turret Ticks", r.t.getTurret());
+        telemetryM.debug("\n");
+        telemetryM.debug("Dist", dist);
+        telemetryM.debug("\n");
         //telemetryM.debug("limelight angle", r.l.angleFromShoot());
         //telemetryM.debug("Distance from shoot", r.l.distanceFromShoot());
         telemetryM.debug("Loop Time (ms)", r.getLoopTime());
