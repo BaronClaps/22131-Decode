@@ -14,7 +14,7 @@ public class NoCorner12 {
     public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
     public Pose score = new Pose(48, 90.0, Math.toRadians(135)); // score
     public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake
-    public Pose gate = new Pose(18.5, 71.000, Math.toRadians(180)); // gate
+    public Pose gate = new Pose(18.5, 73.000, Math.toRadians(180)); // gate
     public Pose intake2 = new Pose(16, 60.050, Math.toRadians(-170)); // intake
     public Pose intake3 = new Pose(16, 39.750, Math.toRadians(180));
     public Pose park = new Pose(24, 72, 0);
