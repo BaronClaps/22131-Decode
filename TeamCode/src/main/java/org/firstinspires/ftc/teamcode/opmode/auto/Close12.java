@@ -19,7 +19,7 @@ public class Close12 extends OpModeCommand {
 
     @Override
     public void initialize() {
-        r = new Robot(hardwareMap, Alliance.BLUE);
+        r = new Robot(hardwareMap, Alliance.RED);
         NoCorner12 p = new NoCorner12(r);
         r.f.setStartingPose(p.start);
 

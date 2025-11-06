@@ -16,13 +16,13 @@ public class NoCorner12 {
     public Pose score = new Pose(48, 90.0, Math.toRadians(135)); // score
     public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake\
     public Pose intake1Control = new Pose(50.000, 80.000);
-    public Pose gate = new Pose(18.5, 73.000, Math.toRadians(180)); // gate
+    public Pose gate = new Pose(16.5, 73.500, Math.toRadians(180)); // gate
     public Pose gateControl = new Pose(48, intake1.getY());
-    public Pose intake2 = new Pose(16, 60.050, Math.toRadians(-170)); // intake
+    public Pose intake2 = new Pose(16, 60.050-2, Math.toRadians(-170)); // intake
     public Pose intake2Control = new Pose(65.400, 66.300);
-    public Pose intake3 = new Pose(16, 39.750, Math.toRadians(180));
-    public Pose intake3Control = new Pose(72, intake3.getY());
-    public Pose park = new Pose(24, 72, 0);
+    public Pose intake3 = new Pose(16, 39.750-5, Math.toRadians(180));
+    public Pose intake3Control = new Pose(72, intake3.getY() - 5);
+    public Pose park = new Pose(48, 72, Math.toRadians(135));
 
     private int index;
 
@@ -96,7 +96,7 @@ public class NoCorner12 {
                                 intake2
                         )
                 )
-                .setLinearHeadingInterpolation(score.getHeading(), intake2.getHeading())
+                .setLinearHeadingInterpolation(score.getHeading(), intake2.getHeading(), 0.5)
                 .build();
     }
 
@@ -116,7 +116,7 @@ public class NoCorner12 {
                                 intake3
                         )
                 )
-                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading())
+                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading(), 0.5)
                 .build();
     }
 

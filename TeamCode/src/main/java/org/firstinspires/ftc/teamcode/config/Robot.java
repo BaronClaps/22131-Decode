@@ -25,7 +25,8 @@ public class Robot {
     // int loops = 0;
     //private double loopTime = 0;
 
-    public static Pose endPose = new Pose(8+24,6.25+24,0);
+    public static Pose endPose;
+    public static Pose defaultPose = new Pose(8+24,6.25+24,0);
     public static Pose shootTarget = new Pose(6, 144-6, 0);
 
     public Robot(HardwareMap h, Alliance a) {
