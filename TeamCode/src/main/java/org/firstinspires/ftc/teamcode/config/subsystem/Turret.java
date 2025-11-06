@@ -16,13 +16,15 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 @Config
 public class Turret {
-    public static double error = 0, power = 0;
+    public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 0.0029919;
 
     public final DcMotorEx m;
     private PIDFController p, s; // pidf controller for turret
     public static double t = 0; // target for turret
     public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
+
+    public static boolean on = true, manual = false;
 
     public Turret(HardwareMap hardwareMap) {
         m = hardwareMap.get(DcMotorEx.class, "t");
@@ -53,12 +55,37 @@ public class Turret {
     }
 
     public void periodic() {
-        p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
-        s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
-        error = getTurretTarget() - getTurret();
-        p.updateError(error);
-        power = p.run();
-        m.setPower(power);
+        if (on) {
+            if (manual) {
+                m.setPower(manualPower);
+                return;
+            }
+            p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
+            s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
+            error = getTurretTarget() - getTurret();
+            p.updateError(error);
+            power = p.run();
+            m.setPower(power);
+        } else {
+            m.setPower(0);
+        }
+    }
+
+    public void manual(double power) {
+        manual = true;
+        manualPower = power;
+    }
+
+    public void automatic() {
+        manual = false;
+    }
+
+    public void on() {
+        on = true;
+    }
+
+    public void off() {
+        on = false;
     }
 
     /** Return yaw in radians */
@@ -80,21 +107,6 @@ public class Turret {
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading());
         setYaw(robotAngleDiff);
     }
-
-//    public void periodicError(double error) {
-//        p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
-//        s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
-//        p.updateError(error);
-//        s.updateError(error);
-//
-//        double power = 0;
-//        if (Math.abs(error) <= 15)
-//            power = s.run();
-//        else
-//            power = p.run();
-//
-//        m.setPower(power);
-//    }
 
     public void resetTurret() {
         m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

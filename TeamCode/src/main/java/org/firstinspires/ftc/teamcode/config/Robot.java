@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.config.subsystem.Turret;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.vision.Limelight;
 
-import java.util.List;
-
 public class Robot {
     public final Intake i;
     public final Limelight l;
@@ -22,12 +20,13 @@ public class Robot {
     public final Follower f;
     public Alliance a;
 
-    private final List<LynxModule> hubs;
+    private final LynxModule hub;
     private final Timer loop = new Timer();
-    private int loops = 0;
-    private double loopTime = 0;
+    // int loops = 0;
+    //private double loopTime = 0;
 
     public static Pose endPose = new Pose(8+24,6.25+24,0);
+    public static Pose shootTarget = new Pose(6, 144-6, 0);
 
     public Robot(HardwareMap h, Alliance a) {
         this.a = a;
@@ -37,25 +36,22 @@ public class Robot {
         t = new Turret(h);
         f = Constants.createFollower(h);
 
-        hubs = h.getAll(LynxModule.class);
-
-        for (LynxModule module : hubs) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
+        hub = h.getAll(LynxModule.class).get(0);
+        hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
         loop.resetTimer();
+        setShootTarget();
 
     }
 
     public void periodic() {
-        loops++;
+        setShootTarget();
+
+        //loops++;
 
         if (loop.getElapsedTime() % 5 == 0) {
-            for (LynxModule hub : hubs) {
-                hub.clearBulkCache();
-            }
-
-            loopTime = (double) loop.getElapsedTime() / loops;
+            hub.clearBulkCache();
+            //loopTime = (double) loop.getElapsedTime() / loops;
         }
 
         f.update();
@@ -67,8 +63,18 @@ public class Robot {
         endPose = f.getPose();
     }
 
-    public double getLoopTime() {
-        return loopTime;
+//    public double getLoopTime() {
+//        return loopTime;
+//    }
+
+    public void setShootTarget() {
+        if (a == Alliance.BLUE && shootTarget.getX() != 6)
+            shootTarget = new Pose(6, 144 - 6, 0);
+        else if (a == Alliance.RED && shootTarget.getX() != (144 - 6))
+            shootTarget = shootTarget.mirror();
     }
 
+    public Pose getShootTarget() {
+        return shootTarget;
+    }
 }

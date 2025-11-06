@@ -12,26 +12,35 @@ public class NoCorner12 {
     private final Follower f;
 
     public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
+    public Pose scorePControl = new Pose(55.593, 94.779);
     public Pose score = new Pose(48, 90.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake
+    public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake\
+    public Pose intake1Control = new Pose(50.000, 80.000);
     public Pose gate = new Pose(18.5, 73.000, Math.toRadians(180)); // gate
+    public Pose gateControl = new Pose(48, intake1.getY());
     public Pose intake2 = new Pose(16, 60.050, Math.toRadians(-170)); // intake
+    public Pose intake2Control = new Pose(65.400, 66.300);
     public Pose intake3 = new Pose(16, 39.750, Math.toRadians(180));
+    public Pose intake3Control = new Pose(72, intake3.getY());
     public Pose park = new Pose(24, 72, 0);
 
-    private int index = 0;
-    private static final int PATH_COUNT = 14;
+    private int index;
 
     public NoCorner12(Robot r) {
         this.f = r.f;
 
         if (r.a.equals(Alliance.RED)) {
             start = start.mirror();
+            scorePControl = scorePControl.mirror();
             score = score.mirror();
             intake1 = intake1.mirror();
+            intake1Control = intake1Control.mirror();
             gate = gate.mirror();
+            gateControl = gateControl.mirror();
             intake2 = intake2.mirror();
+            intake2Control = intake2Control.mirror();
             intake3 = intake3.mirror();
+            intake3Control = intake3Control.mirror();
             park = park.mirror();
         }
 
@@ -43,7 +52,7 @@ public class NoCorner12 {
                 .addPath(
                         new BezierCurve(
                                 start,
-                                new Pose(55.593, 94.779),
+                                scorePControl,
                                 score
                         )
                 )
@@ -56,7 +65,7 @@ public class NoCorner12 {
                 .addPath(
                         new BezierCurve(
                                 score,
-                                new Pose(50.000, 80.000),
+                                intake1Control,
                                 intake1
                         )
                 )
@@ -66,7 +75,7 @@ public class NoCorner12 {
 
     public PathChain gate() { // go to gate from intake1
         return f.pathBuilder()
-                .addPath(new BezierCurve(intake1, new Pose(48, intake1.getY()), gate))
+                .addPath(new BezierCurve(intake1, gateControl, gate))
                 .setLinearHeadingInterpolation(intake1.getHeading(), gate.getHeading())
                 .build();
     }
@@ -83,7 +92,7 @@ public class NoCorner12 {
                 .addPath(
                         new BezierCurve(
                                 score,
-                                new Pose(55.400, 66.300),
+                                intake2Control,
                                 intake2
                         )
                 )
@@ -103,7 +112,7 @@ public class NoCorner12 {
                 .addPath(
                         new BezierCurve(
                                 score,
-                                new Pose(72, 44.000),
+                                intake3Control,
                                 intake3
                         )
                 )
@@ -142,6 +151,7 @@ public class NoCorner12 {
     }
 
     public boolean hasNext() {
+        int PATH_COUNT = 9;
         return index < PATH_COUNT;
     }
 

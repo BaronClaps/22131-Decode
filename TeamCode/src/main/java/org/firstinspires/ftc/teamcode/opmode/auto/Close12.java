@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 @Autonomous(name = "Close 12", group = "Interesting")
 public class Close12 extends OpModeCommand {
     Robot r;
-    public static Pose shootTarget = new Pose(6, 144 - 6, 0);
 
     @Override
     public void initialize() {
@@ -29,15 +28,14 @@ public class Close12 extends OpModeCommand {
 
         schedule(
                 new RunCommand(r::periodic),
-                new RunCommand(() -> r.t.face(shootTarget, r.f.getPose())),
+                new RunCommand(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
                 new RunCommand(() -> {
                     telemetry.addData("at target", r.s.atTarget());
                     telemetry.update();
                 }),
-                new RunCommand(() -> r.t.face(shootTarget, r.f.getPose())),
                 new SequentialCommandGroup(
+                        new WaitCommand(1),
                         r.i.in(),
-                        new WaitCommand(500),
                         new FollowPath(r, p.next())
                                 .andThen(
                                         new WaitCommand(500),
@@ -89,10 +87,6 @@ public class Close12 extends OpModeCommand {
                         new FollowPath(r, p.next())
                 )
         );
-    }
-
-    @Override
-    public void start() {
     }
 
     @Override

@@ -9,21 +9,18 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
-@TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @Config
 public class Tele extends OpMode {
     TelemetryManager telemetryM;
     MultipleTelemetry multipleTelemetry;
 
     Robot r;
-    public static Pose shootTarget = new Pose(8, 144-8, 0);
 
-    public static double targetV = 1200;
-    public boolean shoot = false;
+    public boolean shoot = false, manual = false;
     public static double intakeOn = 0;
     private final Timer upTimer = new Timer();
 
@@ -55,11 +52,6 @@ public class Tele extends OpMode {
 
     @Override
     public void start() {
-        if (r.a == Alliance.BLUE)
-            shootTarget = new Pose(6, 144 - 6, 0);
-        else
-            shootTarget = new Pose(144-6, 144-6, 0);
-
         r.periodic();
         r.t.reset();
         r.f.startTeleopDrive();
@@ -98,19 +90,23 @@ public class Tele extends OpMode {
         else
             r.i.spinIdle();
 
-//        if (r.l.distanceFromShoot() != 0)
-        double dist = shootTarget.distanceFrom(r.f.getPose());
-        r.s.forDistance(dist);
-        //r.s.setTarget(targetV);
-
-//        else
-//            r.s.setTarget(targetV);
-
         if (shoot) {
             r.s.on();
-            r.t.face(shootTarget, r.f.getPose());
-        } else
+            r.t.on();
+
+            if (manual) {
+                r.t.manual(gamepad1.right_trigger - gamepad1.left_trigger);
+                r.s.close();
+            } else {
+                double dist = r.getShootTarget().distanceFrom(r.f.getPose());
+                r.s.forDistance(dist);
+                r.t.face(r.getShootTarget(), r.f.getPose());
+                r.t.automatic();
+            }
+        } else {
             r.s.off();
+            r.t.off();
+        }
 
         if (gamepad1.bWasPressed()) {
             shoot = !shoot;
@@ -121,11 +117,16 @@ public class Tele extends OpMode {
             r.s.flip();
         }
 
-        if (gamepad1.dpadDownWasPressed())
-            r.f.setPose(r.f.getPose().withHeading(0));
+        if (gamepad1.dpadLeftWasPressed())
+            manual = !manual;
 
-        // r.t.periodicError((r.l.angleFromShoot()));
-        //if (gamepad1.dpad_up)
+        if (gamepad1.dpadDownWasPressed()) {
+            if (r.a.equals(Alliance.BLUE)) {
+                r.f.setPose(new Pose(8,6.25, Math.toRadians(0)).mirror());
+            } else {
+                r.f.setPose(new Pose(8,6.25, Math.toRadians(0)));
+            }
+        }
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Shooter Velocity", r.s.getVelocity());
@@ -133,11 +134,6 @@ public class Tele extends OpMode {
         packet.put("Turret Yaw", r.t.getYaw());
         packet.put("Turret Target", r.t.getTurretTarget());
         packet.put("Turret Ticks", r.t.getTurret());
-
-        //packet.put("limelight angle", r.l.angleFromShoot());
-        //packet.put("Distance from shoot", r.l.distanceFromShoot());
-        packet.put("Loop Time (ms)", r.getLoopTime());
-        packet.put("Loop Time (hz)", (1000 / r.getLoopTime()));
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetryM.debug("Up Timer", upTimer.getElapsedTimeSeconds());
@@ -149,13 +145,6 @@ public class Tele extends OpMode {
         telemetryM.debug("Turret Yaw", r.t.getYaw());
         telemetryM.debug("Turret Target", r.t.getTurretTarget());
         telemetryM.debug("Turret Ticks", r.t.getTurret());
-        telemetryM.debug("\n");
-        telemetryM.debug("Dist", dist);
-        telemetryM.debug("\n");
-        //telemetryM.debug("limelight angle", r.l.angleFromShoot());
-        //telemetryM.debug("Distance from shoot", r.l.distanceFromShoot());
-        telemetryM.debug("Loop Time (ms)", r.getLoopTime());
-        telemetryM.debug("Loop Time (hz)", (1000 / r.getLoopTime()));
         telemetryM.update(telemetry);
     }
 }
