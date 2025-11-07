@@ -22,8 +22,6 @@ public class Robot {
 
     private final LynxModule hub;
     private final Timer loop = new Timer();
-    // int loops = 0;
-    //private double loopTime = 0;
 
     public static Pose endPose;
     public static Pose defaultPose = new Pose(8+24,6.25+24,0);
@@ -48,11 +46,8 @@ public class Robot {
     public void periodic() {
         setShootTarget();
 
-        //loops++;
-
         if (loop.getElapsedTime() % 5 == 0) {
             hub.clearBulkCache();
-            //loopTime = (double) loop.getElapsedTime() / loops;
         }
 
         f.update();
@@ -64,9 +59,6 @@ public class Robot {
         endPose = f.getPose();
     }
 
-//    public double getLoopTime() {
-//        return loopTime;
-//    }
 
     public void setShootTarget() {
         if (a == Alliance.BLUE && shootTarget.getX() != 6)

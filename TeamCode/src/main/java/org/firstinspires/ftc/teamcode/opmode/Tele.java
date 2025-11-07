@@ -6,13 +6,15 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@TeleOp
 @Config
 public class Tele extends OpMode {
     TelemetryManager telemetryM;
@@ -20,8 +22,8 @@ public class Tele extends OpMode {
 
     Robot r;
 
-    public boolean shoot = false, manual = false;
-    public static double intakeOn = 0;
+    public boolean shoot = false, manual = false, field = true, hold = false;
+    public static double intakeOn = 0, dist;
     private final Timer upTimer = new Timer();
 
     @Override
@@ -47,7 +49,7 @@ public class Tele extends OpMode {
         if (gamepad1.xWasPressed())
             r.t.resetTurret();
 
-        telemetryM.addData("alliance", r.a);
+        telemetryM.addData("Alliance", r.a);
         telemetryM.update(telemetry);
     }
 
@@ -68,14 +70,14 @@ public class Tele extends OpMode {
         upTimer.resetTimer();
     }
 
-    /**
-     * This updates the robot's pose estimate, the simple mecanum drive, and updates the
-     * Panels telemetry with the robot's position as well as draws the robot's position.
-     */
     @Override
     public void loop() {
         r.periodic();
-        r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
+
+        if (hold)
+            r.f.holdPoint(new BezierPoint(r.f.getPose()), r.f.getHeading(), false);
+        else
+            r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, !field, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
 
         if (upTimer.getElapsedTimeSeconds() > 2 && r.s.atUp())
             gamepad1.rumbleBlips(1);
@@ -107,7 +109,7 @@ public class Tele extends OpMode {
                 r.t.manual(gamepad1.right_trigger - gamepad1.left_trigger);
                 r.s.close();
             } else {
-                double dist = r.getShootTarget().distanceFrom(r.f.getPose());
+                dist = r.getShootTarget().distanceFrom(r.f.getPose());
                 r.s.forDistance(dist);
                 r.t.face(r.getShootTarget(), r.f.getPose());
                 r.t.automatic();
@@ -117,43 +119,67 @@ public class Tele extends OpMode {
             r.t.off();
         }
 
-        if (gamepad1.bWasPressed()) {
+        if (gamepad1.bWasPressed())
             shoot = !shoot;
-        }
 
         if (gamepad1.aWasPressed()) {
             upTimer.resetTimer();
             r.s.flip();
         }
 
-        if (gamepad1.dpadLeftWasPressed())
-            manual = !manual;
-
-        if (gamepad1.dpadDownWasPressed()) {
+        if (gamepad1.dpadUpWasPressed()) {
             if (r.a.equals(Alliance.BLUE)) {
-                r.f.setPose(new Pose(8,6.25, Math.toRadians(0)).mirror());
+                r.f.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
             } else {
-                r.f.setPose(new Pose(8,6.25, Math.toRadians(0)));
+                r.f.setPose(new Pose(8, 6.25, Math.toRadians(0)));
             }
         }
 
+        if (gamepad1.dpadLeftWasPressed())
+            manual = !manual;
+
+        if (gamepad1.dpadRightWasPressed())
+            field = !field;
+
+        if (gamepad1.dpadDownWasPressed())
+            hold = !hold;
+
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Shooter Velocity", r.s.getVelocity());
-        packet.put("Shooter Target", r.s.getTarget());
-        packet.put("Turret Yaw", r.t.getYaw());
-        packet.put("Turret Target", r.t.getTurretTarget());
-        packet.put("Turret Ticks", r.t.getTurret());
+        packet.addLine("Follower Pose: " + r.f.getPose().toString());
+        packet.addLine("Shooter Velocity: " + r.s.getVelocity());
+        packet.addLine("Shooter Target: " + r.s.getTarget());
+        packet.addLine("Shooter Distance: " + dist);
+        packet.addLine("Turret Yaw: " + r.t.getYaw());
+        packet.addLine("Turret Target: " + r.t.getTurretTarget());
+        packet.addLine("Turret Ticks: " + r.t.getTurret());
+        packet.addLine("Shooter On: " + shoot);
+        packet.addLine("Flipped Up: " + r.s.atUp());
+        packet.addLine("Distance from Target: " + dist);
+        packet.addLine("Manual Shooter + Turret: " + manual);
+        packet.addLine("Field Centric: " + field);
+        packet.addLine("Hold Position: " + hold);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
-        telemetryM.debug("Up Timer", upTimer.getElapsedTimeSeconds());
-        telemetryM.debug("x:" + r.f.getPose().getX());
-        telemetryM.debug("y:" + r.f.getPose().getY());
-        telemetryM.debug("heading:" + r.f.getPose().getHeading());
-        telemetryM.debug("velocity", r.s.getVelocity());
-        telemetryM.debug("target", r.s.getTarget());
-        telemetryM.debug("Turret Yaw", r.t.getYaw());
-        telemetryM.debug("Turret Target", r.t.getTurretTarget());
-        telemetryM.debug("Turret Ticks", r.t.getTurret());
+        telemetryM.addData("Follower Pose", r.f.getPose().toString());
+        telemetryM.addData("Shooter Velocity", r.s.getVelocity());
+        telemetryM.addData("Shooter Target", r.s.getTarget());
+        telemetryM.addData("Shooter Distance", dist);
+        telemetryM.addData("Turret Yaw", r.t.getYaw());
+        telemetryM.addData("Turret Target", r.t.getTurretTarget());
+        telemetryM.addData("Turret Ticks", r.t.getTurret());
+        telemetryM.addData("Shooter On", shoot);
+        telemetryM.addData("Flipped Up", r.s.atUp());
+        telemetryM.addData("Distance from Target", dist);
+        telemetryM.addData("Manual Shooter + Turret", manual);
+        telemetryM.addData("Field Centric", field);
+        telemetryM.addData("Hold Position", hold);
         telemetryM.update(telemetry);
     }
+
+
+    @Override
+    public void stop() {
+        r.stop();
+    }
+
 }

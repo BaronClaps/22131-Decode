@@ -9,6 +9,7 @@ import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.SortOrder;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.config.vision.opencv.ImageRegion;
 import java.util.List;
 
 @Config
+@Disabled
 @TeleOp(name = "Vision Dog", group = "Concept")
 public class ArtifactFetcher extends OpMode {
     public ColorBlobLocatorProcessor purpleLocator, greenLocator;

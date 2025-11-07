@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import org.firstinspires.ftc.teamcode.config.util.Headlight;
-import org.firstinspires.ftc.teamcode.config.util.RGBLight;
 
 @Config
 @Configurable
@@ -19,14 +17,12 @@ public class Shooter extends SubsystemBase {
     private Servo f;
     private DcMotorEx l, r;
     private PIDFController b, s;
- //   private RGBLight sl;
- //   private Headlight fl;
 
     private double t = 0;
     public static double bp = 0.03, bd = 0.0, bf = 0.0, sp = 0.01, sd = 0.0001, sf = 0.0;
 
     public static double pSwitch = 50;
-    private boolean activated = true, targetSpotted = false;
+    private boolean activated = true;
 
     public static double close = 1200;
     public static double far = 2000;
@@ -40,17 +36,12 @@ public class Shooter extends SubsystemBase {
         r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
         r.setDirection(DcMotorSimple.Direction.REVERSE);
-
-      //  sl = new RGBLight(hardwareMap.get(Servo.class, "ls"));
-      //  fl = new Headlight(hardwareMap.get(Servo.class, "lf"));
     }
 
-    /** in/s */
     public double getTarget() {
         return t;
     }
 
-    /** in/s */
     public double getVelocity() {
         return l.getVelocity();
     }
@@ -58,11 +49,6 @@ public class Shooter extends SubsystemBase {
     public void setPower(double p) {
         l.setPower(p);
         r.setPower(p);
-    }
-
-    public void toggle() {
-        activated = !activated;
-        if (!activated) setPower(0);
     }
 
     public void off() {
@@ -105,28 +91,15 @@ public class Shooter extends SubsystemBase {
                 b.updateError(getTarget() - getVelocity());
                 setPower(b.run());
             }
-
-            // if (atTarget()) {
-             //   if (targetSpotted)
-                  //  sl.green();
-             //   else
-                  //  sl.blue();
-            //} else {
-              //  sl.red();
-            //}
-        }// else {
-         //  // sl.orange();
-       // }
+        }
     }
 
     public void up() {
         f.setPosition(flipUp);
-   //     fl.max();
     }
 
     public void down() {
         f.setPosition(flipDown);
-      //  fl.off();
     }
 
     public void flip() {
@@ -134,10 +107,6 @@ public class Shooter extends SubsystemBase {
             up();
         else
             down();
-    }
-
-    public void targetSpotted(boolean spotted) {
-        targetSpotted = spotted;
     }
 
     public boolean atTarget() {

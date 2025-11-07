@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -13,8 +12,8 @@ import org.firstinspires.ftc.teamcode.config.paths.NoCorner12;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 
-@Autonomous(name = "Close 12", group = "Interesting")
-public class Close12 extends OpModeCommand {
+@Autonomous(name = "Red 12", group = "Interesting")
+public class Red12 extends OpModeCommand {
     Robot r;
 
     @Override
@@ -30,7 +29,11 @@ public class Close12 extends OpModeCommand {
                 new RunCommand(r::periodic),
                 new RunCommand(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
                 new RunCommand(() -> {
-                    telemetry.addData("at target", r.s.atTarget());
+                    telemetry.addData("Pose: ", r.f.getPose());
+                    telemetry.addData("Follower Busy: ", r.f.isBusy());
+                    telemetry.addData("Shooter At Target: ", r.s.atTarget());
+                    telemetry.addData("Flipper at Up: ", r.s.atUp());
+                    telemetry.addData("Turret Ticks: ", r.t.getTurret());
                     telemetry.update();
                 }),
                 new SequentialCommandGroup(
