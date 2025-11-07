@@ -58,7 +58,7 @@ public class Tele extends OpMode {
         r.setShootTarget();
 
         if (Robot.endPose == null) {
-            r.f.setStartingPose(r.a.equals(Alliance.BLUE) ? Robot.defaultPose : Robot.defaultPose.mirror());
+            r.f.setStartingPose(r.a.equals(Alliance.BLUE) ? Robot.defaultPose.mirror() : Robot.defaultPose);
         } else {
             r.f.setStartingPose(Robot.endPose);
         }
@@ -74,9 +74,7 @@ public class Tele extends OpMode {
     public void loop() {
         r.periodic();
 
-        if (hold)
-            r.f.holdPoint(new BezierPoint(r.f.getPose()), r.f.getHeading(), false);
-        else
+        if (!hold)
             r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, !field, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
 
         if (upTimer.getElapsedTimeSeconds() > 2 && r.s.atUp())
@@ -141,8 +139,15 @@ public class Tele extends OpMode {
         if (gamepad1.dpadRightWasPressed())
             field = !field;
 
-        if (gamepad1.dpadDownWasPressed())
+        if (gamepad1.dpadDownWasPressed()) {
             hold = !hold;
+
+            if (hold) {
+                r.f.holdPoint(new BezierPoint(r.f.getPose()), r.f.getHeading(), false);
+            } else {
+                r.f.startTeleopDrive();
+            }
+        }
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.addLine("Follower Pose: " + r.f.getPose().toString());
