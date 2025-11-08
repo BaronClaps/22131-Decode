@@ -75,7 +75,10 @@ public class Tele extends OpMode {
         r.periodic();
 
         if (!hold)
-            r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, !field, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
+            if (field)
+                r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
+            else
+                r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, true);
 
         if (upTimer.getElapsedTimeSeconds() > 2 && r.s.atUp())
             gamepad1.rumbleBlips(1);
@@ -104,7 +107,7 @@ public class Tele extends OpMode {
             r.t.on();
 
             if (manual) {
-                r.t.manual(gamepad1.right_trigger - gamepad1.left_trigger);
+                r.t.manual(-gamepad1.right_trigger + gamepad1.left_trigger);
                 r.s.close();
             } else {
                 dist = r.getShootTarget().distanceFrom(r.f.getPose());
