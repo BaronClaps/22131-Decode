@@ -22,9 +22,9 @@ public class Tele extends OpMode {
 
     Robot r;
 
-    public boolean shoot = false, manual = false, field = true, hold = false;
-    public static double intakeOn = 0, dist;
-    private final Timer upTimer = new Timer();
+    public boolean shoot = false, manual = false, field = true, hold = false, autoFlipping = false, manualFlip = false;
+    public double intakeOn = 0, dist;
+    private final Timer upTimer = new Timer(), autoFlipTimer = new Timer();
 
     @Override
     public void init() {
@@ -80,7 +80,7 @@ public class Tele extends OpMode {
             else
                 r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, true);
 
-        if (upTimer.getElapsedTimeSeconds() > 2 && r.s.atUp())
+        if (upTimer.getElapsedTimeSeconds() > 1 && r.s.atUp() && manualFlip)
             gamepad1.rumbleBlips(1);
 
         if (gamepad1.rightBumperWasPressed())
@@ -120,13 +120,37 @@ public class Tele extends OpMode {
             r.t.off();
         }
 
+        if (gamepad1.aWasPressed())
+            if (manualFlip) {
+                upTimer.resetTimer();
+                r.s.flip();
+                autoFlipping = false;
+            } else {
+                autoFlipping = true;
+                autoFlipTimer.resetTimer();
+            }
+
+        if (!manualFlip && autoFlipping) {
+            if (autoFlipTimer.getElapsedTimeSeconds() > 1.25) {
+                r.s.down();
+                autoFlipping = false;
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
+                r.s.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .75)
+                r.s.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .5)
+                r.s.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 0.25)
+                r.s.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 0)
+                r.s.up();
+        }
+
+        if (gamepad1.leftStickButtonWasPressed())
+            manualFlip = !manualFlip;
+
         if (gamepad1.bWasPressed())
             shoot = !shoot;
-
-        if (gamepad1.aWasPressed()) {
-            upTimer.resetTimer();
-            r.s.flip();
-        }
 
         if (gamepad1.dpadUpWasPressed()) {
             if (r.a.equals(Alliance.BLUE)) {
