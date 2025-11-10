@@ -7,7 +7,7 @@ import com.seattlesolvers.solverslib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.config.commands.IntakeIn;
-import org.firstinspires.ftc.teamcode.config.commands.ShootClose;
+import org.firstinspires.ftc.teamcode.config.commands.Shoot;
 import org.firstinspires.ftc.teamcode.config.paths.NoCorner12;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
@@ -42,9 +42,7 @@ public class Blue12 extends OpModeCommand {
                         new FollowPath(r, p.next())
                                 .andThen(
                                         new WaitCommand(500),
-                                        new ShootClose(r),
-                                        new ShootClose(r),
-                                        new ShootClose(r)
+                                        new Shoot(r)
                                 ),
                         new IntakeIn(r)
                                 .alongWith(
@@ -56,9 +54,7 @@ public class Blue12 extends OpModeCommand {
                                 .andThen(
                                         new WaitCommand(500)
                                                 .andThen(
-                                                        new ShootClose(r),
-                                                        new ShootClose(r),
-                                                        new ShootClose(r)
+                                                        new Shoot(r)
                                                 )
                                 ),
                         new IntakeIn(r)
@@ -69,9 +65,7 @@ public class Blue12 extends OpModeCommand {
                                 .andThen(
                                         new WaitCommand(500)
                                                 .andThen(
-                                                        new ShootClose(r),
-                                                        new ShootClose(r),
-                                                        new ShootClose(r)
+                                                        new Shoot(r)
                                                 )
                                 ),
                         new IntakeIn(r)
@@ -82,9 +76,7 @@ public class Blue12 extends OpModeCommand {
                                 .andThen(
                                         new WaitCommand(500)
                                                 .andThen(
-                                                        new ShootClose(r),
-                                                        new ShootClose(r),
-                                                        new ShootClose(r)
+                                                        new Shoot(r)
                                                 )
                                 ),
                         new FollowPath(r, p.next())

@@ -131,10 +131,14 @@ public class Tele extends OpMode {
             }
 
         if (!manualFlip && autoFlipping) {
-            if (autoFlipTimer.getElapsedTimeSeconds() > 1.25) {
+            if (autoFlipTimer.getElapsedTimeSeconds() > 1.75) {
                 r.s.down();
                 autoFlipping = false;
-            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1.5)
+                r.s.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 1.25)
+                r.s.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
                 r.s.up();
             else if (autoFlipTimer.getElapsedTimeSeconds() > .75)
                 r.s.down();
@@ -175,6 +179,9 @@ public class Tele extends OpMode {
                 r.f.startTeleopDrive();
             }
         }
+
+        if (gamepad1.rightStickButtonWasPressed())
+            r.t.resetTurret();
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.addLine("Follower Pose: " + r.f.getPose().toString());

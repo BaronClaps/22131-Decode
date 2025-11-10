@@ -15,7 +15,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     private Servo f;
-    private DcMotorEx l, r;
+    private DcMotorEx l;//, r;
     private PIDFController b, s;
 
     private double t = 0;
@@ -33,9 +33,9 @@ public class Shooter extends SubsystemBase {
         b = new PIDFController(new PIDFCoefficients(bp, 0, bd, bf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
         l = hardwareMap.get(DcMotorEx.class, "sl");
-        r = hardwareMap.get(DcMotorEx.class, "sr");
+        //r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
-        r.setDirection(DcMotorSimple.Direction.REVERSE);
+        //r.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public double getTarget() {
@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
 
     public void setPower(double p) {
         l.setPower(p);
-        r.setPower(p);
+        //r.setPower(p);
     }
 
     public void off() {
