@@ -16,12 +16,15 @@ public class NoCorner12 {
     public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
     public Pose intake1 = new Pose(18, 84, Math.toRadians(180)); // intake\
     public Pose intake1Control = new Pose(50.000, 80.000);
-    public Pose intake2 = new Pose(16, 60.050-2, Math.toRadians(-170)); // intake
+    public Pose intake2 = new Pose(18, 60.050-2, Math.toRadians(-170)); // intake
     public Pose intake2Control = new Pose(65.400, 66.300);
-    public Pose gate = new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
-    public Pose gateControl = new Pose(48, 62);
-//    public Pose intake3 = new Pose(16, 39.750-5, Math.toRadians(180));
-//    public Pose intake3Control = new Pose(72, intake3.getY() - 5);
+    public Pose gate = new Pose(16.25, 73.500, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
+    public Pose gateControl = new Pose(48, 73); //62);
+    public Pose intake3 = new Pose(16, 39.750-4.75, Math.toRadians(180));
+    public Pose intake3Control = new Pose(72, intake3.getY());
+    public Pose intakeCorner = new Pose(9.75, 13, Math.toRadians(180+55));
+    public Pose intakeCornerControl = intakeCorner.withY(45);
+    public Pose scoreCorner = score.withHeading(Math.toRadians(-135));
 //    public Pose park = new Pose(48, 72, Math.toRadians(135));
 
     private int index;
@@ -39,8 +42,11 @@ public class NoCorner12 {
             gateControl = gateControl.mirror();
             intake2 = intake2.mirror();
             intake2Control = intake2Control.mirror();
-//            intake3 = intake3.mirror();
-//            intake3Control = intake3Control.mirror();
+            intake3 = intake3.mirror();
+            intake3Control = intake3Control.mirror();
+            intakeCorner = intakeCorner.mirror();
+            intakeCornerControl = intakeCornerControl.mirror();
+            scoreCorner = scoreCorner.mirror();
 //            park = park.mirror();
         }
 
@@ -95,22 +101,50 @@ public class NoCorner12 {
 
     public PathChain score2() {
         return f.pathBuilder()
-                .addPath(new BezierLine(intake2, score))
-                .setLinearHeadingInterpolation(intake2.getHeading(), score.getHeading())
+                .addPath(new BezierLine(gate, score))
+                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
                 .build();
     }
 
     public PathChain gate() { // go to gate from intake1
         return f.pathBuilder()
-                .addPath(new BezierCurve(score, gateControl, gate))
-                .setLinearHeadingInterpolation(score.getHeading(), gate.getHeading())
+                .addPath(new BezierCurve(intake2, gateControl, gate))
+                .setLinearHeadingInterpolation(intake2.getHeading(), gate.getHeading())
                 .build();
     }
 
-    public PathChain scoreGate() {
+//    public PathChain scoreGate() {
+//        return f.pathBuilder()
+//                .addPath(new BezierCurve(gate, gateControl, score))
+//                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
+//                .build();
+//    }
+
+    public PathChain intake3() {
         return f.pathBuilder()
-                .addPath(new BezierCurve(gate, gateControl, score))
-                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
+                .addPath(new BezierCurve(score, intake3Control, intake3))
+                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading(), 0.7)
+                .build();
+    }
+
+    public PathChain score3() {
+        return f.pathBuilder()
+                .addPath(new BezierCurve(intake3, scoreCorner))
+                .setLinearHeadingInterpolation(intake3.getHeading(), scoreCorner.getHeading())
+                .build();
+    }
+
+    public PathChain intakeCorner() {
+        return f.pathBuilder()
+                .addPath(new BezierCurve(scoreCorner, intakeCornerControl, intakeCorner))
+                .setLinearHeadingInterpolation(scoreCorner.getHeading(), intakeCorner.getHeading(), 0.8)
+                .build();
+    }
+
+    public PathChain scoreCorner() {
+        return f.pathBuilder()
+                .addPath(new BezierLine(intakeCorner, scoreCorner))
+                .setLinearHeadingInterpolation(intakeCorner.getHeading(), scoreCorner.getHeading())
                 .build();
     }
 
@@ -120,15 +154,19 @@ public class NoCorner12 {
             case 1: return intake1();
             case 2: return score1();
             case 3: return intake2();
-            case 4: return score2();
-            case 5: return gate();
-            case 6: return scoreGate();
+            case 4: return gate();
+            case 5: return score2();
+            //case 6: return scoreGate();
+            case 6: return intake3();
+            case 7: return score3();
+            case 8: return intakeCorner();
+            case 9: return scoreCorner();
             default: return null;
         }
     }
 
     public boolean hasNext() {
-        int PATH_COUNT = 7;
+        int PATH_COUNT = 9;
         return index < PATH_COUNT;
     }
 

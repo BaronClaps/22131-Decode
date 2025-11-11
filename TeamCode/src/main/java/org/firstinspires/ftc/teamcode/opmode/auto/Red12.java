@@ -25,7 +25,7 @@ public class Red12 extends OpModeCommand {
 
         schedule(
                 new RunCommand(r::periodic),
-                new RunCommand(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                //new RunCommand(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
                 new RunCommand(() -> {
                     double dist = r.getShootTarget().distanceFrom(r.f.getPose());
                     r.s.forDistance(dist);
@@ -41,9 +41,10 @@ public class Red12 extends OpModeCommand {
                 new SequentialCommandGroup(
                         new WaitCommand(1),
                         r.i.in(),
+                        new InstantCommand(() -> r.t.face(r.getShootTarget(), p.score)),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.75)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
@@ -55,7 +56,7 @@ public class Red12 extends OpModeCommand {
                                 ),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.75)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
@@ -65,22 +66,31 @@ public class Red12 extends OpModeCommand {
                                 .alongWith(
                                         new FollowPath(r, p.next())
                                 ),
+                        new FollowPath(r, p.next()),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.75)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
                         new IntakeIn(r)
-                                .alongWith(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new WaitCommand(1500),
+                                .alongWith(new FollowPath(r, p.next())),
+                        new InstantCommand(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.75)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                                .andThen(
+                                                        new InstantCommand(() -> r.s.on())
+                                                )
+                                ),
+                        new Shoot(r),
+                        new IntakeIn(r)
+                                .alongWith(new FollowPath(r, p.next())),
+                        new FollowPath(r, p.next())
+                                .alongWith(
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )

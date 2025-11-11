@@ -51,7 +51,7 @@ public class Shoot extends CommandBase {
                 break;
             case 3:
                 if (t.getElapsedTime() > 250) {
-                    r.s.off();
+                    r.s.setTarget(0);
                     r.s.down();
                     r.i.spinIdle();
                     setState(-1);
