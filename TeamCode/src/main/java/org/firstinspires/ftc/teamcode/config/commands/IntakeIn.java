@@ -27,7 +27,7 @@ public class IntakeIn extends CommandBase {
                 setState(1);
                 break;
             case 1:
-                if (t.getElapsedTime() > 1500 && !r.f.isBusy()) {
+                if (t.getElapsedTime() > 500) {
                     setState(-1);
                 }
                 break;

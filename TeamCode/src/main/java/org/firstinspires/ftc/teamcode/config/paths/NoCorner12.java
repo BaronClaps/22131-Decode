@@ -11,18 +11,18 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 public class NoCorner12 {
     private final Follower f;
 
-    public Pose start = new Pose(24-3.5, 120+2.5, Math.toRadians(90));
+    public Pose start = new Pose(24+6.25, 144-11, Math.toRadians(90));
     public Pose scorePControl = new Pose(55.593, 94.779);
-    public Pose score = new Pose(48, 90.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(20, 84, Math.toRadians(180)); // intake\
+    public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
+    public Pose intake1 = new Pose(18, 84, Math.toRadians(180)); // intake\
     public Pose intake1Control = new Pose(50.000, 80.000);
-    public Pose gate = new Pose(16.5, 73.500, Math.toRadians(180)); // gate
-    public Pose gateControl = new Pose(48, intake1.getY());
     public Pose intake2 = new Pose(16, 60.050-2, Math.toRadians(-170)); // intake
     public Pose intake2Control = new Pose(65.400, 66.300);
-    public Pose intake3 = new Pose(16, 39.750-5, Math.toRadians(180));
-    public Pose intake3Control = new Pose(72, intake3.getY() - 5);
-    public Pose park = new Pose(48, 72, Math.toRadians(135));
+    public Pose gate = new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
+    public Pose gateControl = new Pose(48, 62);
+//    public Pose intake3 = new Pose(16, 39.750-5, Math.toRadians(180));
+//    public Pose intake3Control = new Pose(72, intake3.getY() - 5);
+//    public Pose park = new Pose(48, 72, Math.toRadians(135));
 
     private int index;
 
@@ -39,9 +39,9 @@ public class NoCorner12 {
             gateControl = gateControl.mirror();
             intake2 = intake2.mirror();
             intake2Control = intake2Control.mirror();
-            intake3 = intake3.mirror();
-            intake3Control = intake3Control.mirror();
-            park = park.mirror();
+//            intake3 = intake3.mirror();
+//            intake3Control = intake3Control.mirror();
+//            park = park.mirror();
         }
 
         index = 0;
@@ -73,16 +73,9 @@ public class NoCorner12 {
                 .build();
     }
 
-    public PathChain gate() { // go to gate from intake1
-        return f.pathBuilder()
-                .addPath(new BezierCurve(intake1, gateControl, gate))
-                .setLinearHeadingInterpolation(intake1.getHeading(), gate.getHeading())
-                .build();
-    }
-
     public PathChain score1() {
         return f.pathBuilder()
-                .addPath(new BezierLine(gate, score))
+                .addPath(new BezierLine(intake1, score))
                 .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
                 .build();
     }
@@ -107,31 +100,17 @@ public class NoCorner12 {
                 .build();
     }
 
-    public PathChain intake3() { // intake 3
+    public PathChain gate() { // go to gate from intake1
         return f.pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                score,
-                                intake3Control,
-                                intake3
-                        )
-                )
-                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading(), 0.5)
+                .addPath(new BezierCurve(score, gateControl, gate))
+                .setLinearHeadingInterpolation(score.getHeading(), gate.getHeading())
                 .build();
     }
 
-    public PathChain score3() { // score intake 3
+    public PathChain scoreGate() {
         return f.pathBuilder()
-                .addPath(new BezierLine(intake3, score))
-                .setLinearHeadingInterpolation(intake3.getHeading(), score.getHeading())
-                .build();
-    }
-
-    public PathChain park() { // to corner
-        return f.pathBuilder()
-                .addPath(new BezierLine(score, park))
-                .setLinearHeadingInterpolation(score.getHeading(), park.getHeading())
-                .setNoDeceleration()
+                .addPath(new BezierCurve(gate, gateControl, score))
+                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
                 .build();
     }
 
@@ -139,19 +118,17 @@ public class NoCorner12 {
         switch (index++) {
             case 0: return scoreP();
             case 1: return intake1();
-            case 2: return gate();
-            case 3: return score1();
-            case 4: return intake2();
-            case 5: return score2();
-            case 6: return intake3();
-            case 7: return score3();
-            case 8: return park();
+            case 2: return score1();
+            case 3: return intake2();
+            case 4: return score2();
+            case 5: return gate();
+            case 6: return scoreGate();
             default: return null;
         }
     }
 
     public boolean hasNext() {
-        int PATH_COUNT = 9;
+        int PATH_COUNT = 7;
         return index < PATH_COUNT;
     }
 

@@ -20,9 +20,6 @@ public class Shoot extends CommandBase {
 
     @Override
     public void execute() {
-        double dist = r.getShootTarget().distanceFrom(r.f.getPose());
-        r.s.forDistance(dist);
-        
         switch (st) {
             case 0:
                 r.s.down();
@@ -31,17 +28,15 @@ public class Shoot extends CommandBase {
                 setState(1);
                 break;
             case 1:
-                if (r.s.atTarget() && t.getElapsedTime() > 250) {
+                if (r.s.atTarget()) {
                     setState(2);
                 }
                 break;
             case 2:
-                if (t.getElapsedTimeSeconds() > 1.75) {
-                    r.s.down();
-                    setState(3);
-                } else if (t.getElapsedTimeSeconds() > 1.5)
+                if (t.getElapsedTimeSeconds() > 1.5) {
                     r.s.up();
-                else if (t.getElapsedTimeSeconds() > 1.25)
+                    setState(3);
+                } else if (t.getElapsedTimeSeconds() > 1.25)
                     r.s.down();
                 else if (t.getElapsedTimeSeconds() > 1)
                     r.s.up();
@@ -57,6 +52,7 @@ public class Shoot extends CommandBase {
             case 3:
                 if (t.getElapsedTime() > 250) {
                     r.s.off();
+                    r.s.down();
                     r.i.spinIdle();
                     setState(-1);
                 }
