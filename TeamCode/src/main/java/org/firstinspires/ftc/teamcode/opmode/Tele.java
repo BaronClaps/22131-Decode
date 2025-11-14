@@ -24,6 +24,7 @@ public class Tele extends OpMode {
 
     public boolean shoot = false, manual = false, field = true, hold = false, autoFlipping = false, manualFlip = false;
     public double intakeOn = 0, dist;
+    public static double shootTarget = 1200;
     private final Timer upTimer = new Timer(), autoFlipTimer = new Timer();
 
     @Override
@@ -108,7 +109,7 @@ public class Tele extends OpMode {
 
             if (manual) {
                 r.t.manual(-gamepad1.right_trigger + gamepad1.left_trigger);
-                r.s.close();
+                r.s.setTarget(shootTarget);
             } else {
                 dist = r.getShootTarget().distanceFrom(r.f.getPose());
                 r.s.forDistance(dist);

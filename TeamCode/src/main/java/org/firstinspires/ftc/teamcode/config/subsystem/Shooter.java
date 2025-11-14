@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
     public static double close = 1250;
     public static double far = 1400;
     public static double flipUp = 0.3;
-    public static double flipDown = 0.52;
+    public static double flipDown = 0.71;
 
     public Shooter(HardwareMap hardwareMap) {
         b = new PIDFController(new PIDFCoefficients(bp, 0, bd, bf));
