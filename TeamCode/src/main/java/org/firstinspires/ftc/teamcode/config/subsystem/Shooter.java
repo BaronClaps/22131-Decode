@@ -18,7 +18,7 @@ public class Shooter extends SubsystemBase {
     private DcMotorEx l, r;
 
     private double t = 0;
-    public static double kS, kV, kP;
+    public static double kS = 0.08, kV = 0.00039, kP = 0.001;
 
     private boolean activated = true;
 
@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
         l = hardwareMap.get(DcMotorEx.class, "sl");
         r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
-        r.setDirection(DcMotorSimple.Direction.REVERSE);
+        l.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public double getTarget() {
@@ -39,12 +39,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return l.getVelocity();
+        return r.getVelocity();
     }
 
     public void setPower(double p) {
-        l.setPower(p);
-        r.setPower(p);
+        l.setPower(-p);
+        r.setPower(-p);
     }
 
     public void off() {

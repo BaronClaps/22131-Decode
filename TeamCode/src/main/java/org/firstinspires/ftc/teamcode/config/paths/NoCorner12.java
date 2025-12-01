@@ -24,7 +24,8 @@ public class NoCorner12 {
     public Pose intake3Control = new Pose(72, intake3.getY());
     public Pose intakeCorner = new Pose(9.75, 13, Math.toRadians(180+55));
     public Pose intakeCornerControl = intakeCorner.withY(45);
-    public Pose scoreCorner = score.withHeading(Math.toRadians(-135));
+    public Pose scoreToCorner = score.withHeading(Math.toRadians(-135));
+    public Pose scoreCorner = new Pose(52, 12, Math.toRadians(180));
 //    public Pose park = new Pose(48, 72, Math.toRadians(135));
 
     private int index;
@@ -46,6 +47,7 @@ public class NoCorner12 {
             intake3Control = intake3Control.mirror();
             intakeCorner = intakeCorner.mirror();
             intakeCornerControl = intakeCornerControl.mirror();
+            scoreToCorner = scoreToCorner.mirror();
             scoreCorner = scoreCorner.mirror();
 //            park = park.mirror();
         }
