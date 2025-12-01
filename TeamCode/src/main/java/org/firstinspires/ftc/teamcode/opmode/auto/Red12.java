@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.config.paths.NoCorner12;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 
-@Autonomous(name = "Red 12", group = "Interesting")
+@Autonomous(name = "Red 12", group = "Interesting", preselectTeleOp = "Tele")
 public class Red12 extends OpModeCommand {
     Robot r;
 

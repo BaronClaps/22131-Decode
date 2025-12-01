@@ -15,13 +15,11 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     private Servo f;
-    private DcMotorEx l;//, r;
-    private PIDFController b, s;
+    private DcMotorEx l, r;
 
     private double t = 0;
-    public static double bp = 0.03, bd = 0.0, bf = 0.0, sp = 0.01, sd = 0.0001, sf = 0.0;
+    public static double kS, kV, kP;
 
-    public static double pSwitch = 50;
     private boolean activated = true;
 
     public static double close = 1250;
@@ -30,12 +28,10 @@ public class Shooter extends SubsystemBase {
     public static double flipDown = 0.71;
 
     public Shooter(HardwareMap hardwareMap) {
-        b = new PIDFController(new PIDFCoefficients(bp, 0, bd, bf));
-        s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
         l = hardwareMap.get(DcMotorEx.class, "sl");
-        //r = hardwareMap.get(DcMotorEx.class, "sr");
+        r = hardwareMap.get(DcMotorEx.class, "sr");
         f = hardwareMap.get(Servo.class, "f");
-        //r.setDirection(DcMotorSimple.Direction.REVERSE);
+        r.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public double getTarget() {
@@ -48,7 +44,7 @@ public class Shooter extends SubsystemBase {
 
     public void setPower(double p) {
         l.setPower(p);
-        //r.setPower(p);
+        r.setPower(p);
     }
 
     public void off() {
@@ -80,18 +76,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        b.setCoefficients(new PIDFCoefficients(bp, 0, bd, bf));
-        s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
-
-        if (activated) {
-            if (Math.abs(getTarget() - getVelocity()) < pSwitch) {
-                s.updateError(getTarget() - getVelocity());
-                setPower(s.run());
-            } else {
-                b.updateError(getTarget() - getVelocity());
-                setPower(b.run());
-            }
-        }
+        if (activated)
+            setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
     }
 
     public void up() {
