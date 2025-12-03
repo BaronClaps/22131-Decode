@@ -139,4 +139,12 @@ public class Turret {
         if (angle > Math.PI) angle -= Math.PI * 2D;
         return angle;
     }
+
+    public double getError() {
+        return error;
+    }
+
+    public boolean isReady() {
+        return Math.abs(getError()) < 30;
+    }
 }

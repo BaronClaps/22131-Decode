@@ -36,6 +36,7 @@ public class Red12 extends OpModeCommand {
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
                     telemetry.addData("Flipper at Up: ", r.s.atUp());
                     telemetry.addData("Turret Ticks: ", r.t.getTurret());
+                    telemetry.addData("Turret Ready: ", r.t.isReady());
                     telemetry.update();
                 }),
                 new SequentialCommandGroup(
@@ -67,6 +68,7 @@ public class Red12 extends OpModeCommand {
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
+                        new WaitCommand(500),
                         new FollowPath(r, p.next())
                                 .alongWith(
                                         new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
@@ -85,7 +87,19 @@ public class Red12 extends OpModeCommand {
                                                         new InstantCommand(() -> r.s.on())
                                                 )
                                 ),
+                        new WaitUntilCommand(() -> r.t.isReady()),
                         new Shoot(r),
+                        new IntakeIn(r)
+                                .alongWith(new FollowPath(r, p.next())),
+                        new FollowPath(r, p.next())
+                                .alongWith(
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                                .andThen(
+                                                        new InstantCommand(() -> r.s.on())
+                                                )
+                                ),
+                        new Shoot(r),
+                        new WaitUntilCommand(() -> r.t.isReady()),
                         new IntakeIn(r)
                                 .alongWith(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
