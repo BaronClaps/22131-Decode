@@ -13,7 +13,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 @Config
 @Configurable
 
-public class Shooter extends SubsystemBase {
+public class Shooter {
     private Servo f;
     private DcMotorEx l, r;
 
@@ -74,7 +74,6 @@ public class Shooter extends SubsystemBase {
         t = velocity;
     }
 
-    @Override
     public void periodic() {
         if (activated)
             setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
