@@ -77,7 +77,7 @@ public class FollowPath extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return follower.atParametricEnd();
+        return !follower.isBusy();
     }
 
     @Override

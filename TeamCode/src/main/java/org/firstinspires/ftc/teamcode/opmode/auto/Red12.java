@@ -68,7 +68,7 @@ public class Red12 extends OpModeCommand {
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
-                        new WaitCommand(500),
+                        new WaitCommand(300),
                         new FollowPath(r, p.next())
                                 .alongWith(
                                         new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
@@ -100,16 +100,7 @@ public class Red12 extends OpModeCommand {
                                 ),
                         new Shoot(r),
                         new WaitUntilCommand(() -> r.t.isReady()),
-                        new IntakeIn(r)
-                                .alongWith(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
-                                                )
-                                ),
-                        new Shoot(r)
                 )
         );
     }
