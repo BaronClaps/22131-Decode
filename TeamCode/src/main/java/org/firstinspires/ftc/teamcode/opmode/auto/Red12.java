@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.*;
 import org.firstinspires.ftc.teamcode.config.Robot;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 @Autonomous(name = "Red 12", group = "Interesting", preselectTeleOp = "Tele")
 public class Red12 extends OpModeCommand {
     Robot r;
+    Timer t;
 
     @Override
     public void initialize() {
@@ -22,6 +24,8 @@ public class Red12 extends OpModeCommand {
 
         r.s.down();
         r.t.resetTurret();
+
+        t = new Timer();
 
         schedule(
                 new RunCommand(r::periodic),
@@ -45,19 +49,20 @@ public class Red12 extends OpModeCommand {
                         new InstantCommand(() -> r.t.face(r.getShootTarget(), p.score)),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
+                        new WaitCommand(750),
                         new IntakeIn(r)
                                 .alongWith(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
@@ -68,21 +73,23 @@ public class Red12 extends OpModeCommand {
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
+                        r.i.stop(),
                         new WaitCommand(300),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
+                        new WaitCommand(250),
                         new IntakeIn(r)
                                 .alongWith(new FollowPath(r, p.next())),
                         new InstantCommand(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )
@@ -93,7 +100,7 @@ public class Red12 extends OpModeCommand {
                                 .alongWith(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
                                 .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.25)
+                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .andThen(
                                                         new InstantCommand(() -> r.s.on())
                                                 )

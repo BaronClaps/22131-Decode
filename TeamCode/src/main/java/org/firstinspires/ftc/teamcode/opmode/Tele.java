@@ -23,7 +23,7 @@ public class Tele extends OpMode {
     Robot r;
 
     public boolean shoot = false, manual = false, field = true, hold = false, autoFlipping = false, manualFlip = false;
-    public double intakeOn = 0, dist;
+    public double intakeOn = 0, dist, speed = 1;
     public static double shootTarget = 1200;
     private final Timer upTimer = new Timer(), autoFlipTimer = new Timer();
 
@@ -32,7 +32,7 @@ public class Tele extends OpMode {
         r = new Robot(hardwareMap, Alliance.BLUE);
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+        multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
         r.s.down();
     }
@@ -77,9 +77,9 @@ public class Tele extends OpMode {
 
         if (!hold)
             if (field)
-                r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, false, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
+                r.f.setTeleOpDrive(speed * -gamepad1.left_stick_y, speed * -gamepad1.left_stick_x, speed * -gamepad1.right_stick_x, false, r.a == Alliance.BLUE ? Math.toRadians(180) : 0);
             else
-                r.f.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, shoot ? -gamepad1.right_stick_x * 0.5 : -gamepad1.right_stick_x * 0.75, true);
+                r.f.setTeleOpDrive(speed * -gamepad1.left_stick_y, speed * -gamepad1.left_stick_x, speed * -gamepad1.right_stick_x, true);
 
         if (upTimer.getElapsedTimeSeconds() > 1 && r.s.atUp() && manualFlip)
             gamepad1.rumbleBlips(1);
@@ -90,7 +90,7 @@ public class Tele extends OpMode {
             else
                 intakeOn = 1;
 
-        if (gamepad1.leftBumperWasPressed())
+        if (gamepad1.dpadDownWasPressed())
             if (intakeOn == 2)
                 intakeOn = 0;
             else
@@ -171,7 +171,7 @@ public class Tele extends OpMode {
         if (gamepad1.dpadRightWasPressed())
             field = !field;
 
-        if (gamepad1.dpadDownWasPressed()) {
+        if (gamepad1.yWasPressed()) {
             hold = !hold;
 
             if (hold) {
@@ -181,24 +181,13 @@ public class Tele extends OpMode {
             }
         }
 
-        if (gamepad1.rightStickButtonWasPressed())
+        if (gamepad1.xWasPressed())
             r.t.resetTurret();
 
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.addLine("Follower Pose: " + r.f.getPose().toString());
-        packet.addLine("Shooter Velocity: " + r.s.getVelocity());
-        packet.addLine("Shooter Target: " + r.s.getTarget());
-        packet.addLine("Shooter Distance: " + dist);
-        packet.addLine("Turret Yaw: " + r.t.getYaw());
-        packet.addLine("Turret Target: " + r.t.getTurretTarget());
-        packet.addLine("Turret Ticks: " + r.t.getTurret());
-        packet.addLine("Shooter On: " + shoot);
-        packet.addLine("Flipped Up: " + r.s.atUp());
-        packet.addLine("Distance from Target: " + dist);
-        packet.addLine("Manual Shooter + Turret: " + manual);
-        packet.addLine("Field Centric: " + field);
-        packet.addLine("Hold Position: " + hold);
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        if (gamepad1.left_bumper)
+            speed = 0.5;
+        else
+            speed = 1.0;
 
         telemetryM.addData("Follower Pose", r.f.getPose().toString());
         telemetryM.addData("Shooter Velocity", r.s.getVelocity());
