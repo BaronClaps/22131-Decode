@@ -13,7 +13,7 @@ repositories {
 
 configurations.all {
     resolutionStrategy {
-        cacheChangingModulesFor 0, 'minutes'
+        cacheChangingModulesFor 10, 'minutes'
     }
 }
 
