@@ -115,5 +115,6 @@ public class Red12 extends OpModeCommand {
     @Override
     public void stop() {
         r.stop();
+        reset();
     }
 }
