@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.Command;
-import com.seattlesolvers.solverslib.command.InstantCommand;
 
 @Config
-@Configurable
 public class Intake {
     private final DcMotorEx i;
     public static double idle = 0;
@@ -39,18 +36,18 @@ public class Intake {
     }
 
     public Command idle() {
-        return new InstantCommand(() -> set(idle));
+        return new Instant(() -> set(idle));
     }
 
     public Command in() {
-        return new InstantCommand(() -> set(in));
+        return new Instant(() -> set(in));
     }
 
     public Command out() {
-        return new InstantCommand(() -> set(out));
+        return new Instant(() -> set(out));
     }
 
     public Command stop() {
-        return new InstantCommand(() -> set(0));
+        return new Instant(() -> set(0));
     }
 }

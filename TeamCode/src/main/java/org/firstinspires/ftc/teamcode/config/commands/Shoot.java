@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.config.commands;
 
+import com.pedropathing.ivy.Command;
 import com.pedropathing.util.Timer;
-import com.seattlesolvers.solverslib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.config.Robot;
 
-public class Shoot extends CommandBase {
+public class Shoot extends Command {
     private final Robot r;
     private int st = 0;
     private Timer t = new Timer();
@@ -14,7 +14,7 @@ public class Shoot extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void start() {
         setState(0);
     }
 
@@ -62,7 +62,7 @@ public class Shoot extends CommandBase {
 
 
     @Override
-    public boolean isFinished() {
+    public boolean done() {
         return st == -1;
     }
 

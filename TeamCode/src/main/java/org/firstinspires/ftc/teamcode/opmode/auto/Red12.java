@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.commands.Infinite;
+import com.pedropathing.ivy.commands.Instant;
+import com.pedropathing.ivy.commands.Wait;
+import com.pedropathing.ivy.commands.WaitUntil;
+import com.pedropathing.ivy.groups.Sequential;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.seattlesolvers.solverslib.command.*;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.config.commands.IntakeIn;
@@ -17,7 +22,7 @@ public class Red12 extends OpModeCommand {
     Timer t;
 
     @Override
-    public void initialize() {
+    public void init() {
         r = new Robot(hardwareMap, Alliance.RED);
         NoCorner12 p = new NoCorner12(r);
         r.f.setStartingPose(p.start);
@@ -28,13 +33,12 @@ public class Red12 extends OpModeCommand {
         t = new Timer();
 
         schedule(
-                new RunCommand(r::periodic),
-                //new RunCommand(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
-                new RunCommand(() -> {
+                new Infinite(r::periodic),
+                new Infinite(() -> {
                     double dist = r.getShootTarget().distanceFrom(r.f.getPose());
                     r.s.forDistance(dist);
                 }),
-                new RunCommand(() -> {
+                new Infinite(() -> {
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
@@ -43,70 +47,70 @@ public class Red12 extends OpModeCommand {
                     telemetry.addData("Turret Ready: ", r.t.isReady());
                     telemetry.update();
                 }),
-                new SequentialCommandGroup(
-                        new WaitCommand(1),
+                new Sequential(
+                        new Wait(1),
                         r.i.in(),
-                        new InstantCommand(() -> r.t.face(r.getShootTarget(), p.score)),
+                        new Instant(() -> r.t.face(r.getShootTarget(), p.score)),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
+                                .with(
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                                .then(
+                                                        new Instant(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
-                        new WaitCommand(750),
+                        new Wait(750),
                         new IntakeIn(r)
-                                .alongWith(
+                                .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
+                                .with(
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                                .then(
+                                                        new Instant(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
                         new IntakeIn(r)
-                                .alongWith(
+                                .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
                         r.i.stop(),
-                        new WaitCommand(300),
+                        new Wait(300),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
+                                .with(
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                                .then(
+                                                        new Instant(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
-                        new WaitCommand(250),
+                        new Wait(250),
                         new IntakeIn(r)
-                                .alongWith(new FollowPath(r, p.next())),
-                        new InstantCommand(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
+                                .with(new FollowPath(r, p.next())),
+                        new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
+                                .with(
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                                .then(
+                                                        new Instant(() -> r.s.on())
                                                 )
                                 ),
-                        new WaitUntilCommand(() -> r.t.isReady()),
+                        new WaitUntil(() -> r.t.isReady()),
                         new Shoot(r),
                         new IntakeIn(r)
-                                .alongWith(new FollowPath(r, p.next())),
+                                .with(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
-                                .alongWith(
-                                        new WaitUntilCommand(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .andThen(
-                                                        new InstantCommand(() -> r.s.on())
+                                .with(
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                                .then(
+                                                        new Instant(() -> r.s.on())
                                                 )
                                 ),
                         new Shoot(r),
-                        new WaitUntilCommand(() -> r.t.isReady()),
+                        new WaitUntil(() -> r.t.isReady()),
                         new FollowPath(r, p.next())
                 )
         );

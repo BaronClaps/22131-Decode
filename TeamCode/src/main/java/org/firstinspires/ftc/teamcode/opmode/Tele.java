@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
@@ -17,7 +14,6 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 @TeleOp
 @Config
 public class Tele extends OpMode {
-    TelemetryManager telemetryM;
     MultipleTelemetry multipleTelemetry;
 
     Robot r;
@@ -30,8 +26,7 @@ public class Tele extends OpMode {
     @Override
     public void init() {
         r = new Robot(hardwareMap, Alliance.BLUE);
-
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
         r.s.down();
@@ -50,8 +45,8 @@ public class Tele extends OpMode {
         if (gamepad1.xWasPressed())
             r.t.resetTurret();
 
-        telemetryM.addData("Alliance", r.a);
-        telemetryM.update(telemetry);
+        multipleTelemetry.addData("Alliance", r.a);
+        multipleTelemetry.update();
     }
 
     @Override
@@ -189,20 +184,20 @@ public class Tele extends OpMode {
         else
             speed = 1.0;
 
-        telemetryM.addData("Follower Pose", r.f.getPose().toString());
-        telemetryM.addData("Shooter Velocity", r.s.getVelocity());
-        telemetryM.addData("Shooter Target", r.s.getTarget());
-        telemetryM.addData("Shooter Distance", dist);
-        telemetryM.addData("Turret Yaw", r.t.getYaw());
-        telemetryM.addData("Turret Target", r.t.getTurretTarget());
-        telemetryM.addData("Turret Ticks", r.t.getTurret());
-        telemetryM.addData("Shooter On", shoot);
-        telemetryM.addData("Flipped Up", r.s.atUp());
-        telemetryM.addData("Distance from Target", dist);
-        telemetryM.addData("Manual Shooter + Turret", manual);
-        telemetryM.addData("Field Centric", field);
-        telemetryM.addData("Hold Position", hold);
-        telemetryM.update(telemetry);
+        multipleTelemetry.addData("Follower Pose", r.f.getPose().toString());
+        multipleTelemetry.addData("Shooter Velocity", r.s.getVelocity());
+        multipleTelemetry.addData("Shooter Target", r.s.getTarget());
+        multipleTelemetry.addData("Shooter Distance", dist);
+        multipleTelemetry.addData("Turret Yaw", r.t.getYaw());
+        multipleTelemetry.addData("Turret Target", r.t.getTurretTarget());
+        multipleTelemetry.addData("Turret Ticks", r.t.getTurret());
+        multipleTelemetry.addData("Shooter On", shoot);
+        multipleTelemetry.addData("Flipped Up", r.s.atUp());
+        multipleTelemetry.addData("Distance from Target", dist);
+        multipleTelemetry.addData("Manual Shooter + Turret", manual);
+        multipleTelemetry.addData("Field Centric", field);
+        multipleTelemetry.addData("Hold Position", hold);
+        multipleTelemetry.update();
     }
 
 
