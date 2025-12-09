@@ -5,7 +5,6 @@ import com.pedropathing.ivy.commands.Instant;
 import com.pedropathing.ivy.commands.Wait;
 import com.pedropathing.ivy.commands.WaitUntil;
 import com.pedropathing.ivy.groups.Sequential;
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.paths.NoCorner12;
@@ -15,6 +14,7 @@ import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 @Autonomous
 public class RevAmpedPoisonIvyAutonomousSixSeven extends OpModeCommand {
     Robot r;
+    int north = 0;
 
     @Override
     public void init() {
@@ -34,15 +34,18 @@ public class RevAmpedPoisonIvyAutonomousSixSeven extends OpModeCommand {
                     telemetry.addData("Flipper at Up: ", r.s.atUp());
                     telemetry.addData("Turret Ticks: ", r.t.getTurret());
                     telemetry.addData("Turret Ready: ", r.t.isReady());
+                    telemetry.addData("Potato", north);
                     telemetry.update();
                 }),
                 new Sequential(
+                        new Instant(() -> { north = 1; }),
                         new Wait(500),
-                        new Instant(() -> r.t.set(Math.toRadians(90))),
+                        new Instant(() -> north = 2),
+                        r.t.set(Math.toRadians(90)),
                         new WaitUntil(() -> r.t.isReady()),
                         new Instant(() -> r.s.flip()),
                         new Wait(500),
-                        new Instant(() -> r.t.set(Math.toRadians(-90))),
+                        r.t.set(Math.toRadians(-90)),
                         new WaitUntil(() -> r.t.isReady()),
                         new Instant(() -> r.s.flip()),
                         new Wait(500)

@@ -93,9 +93,13 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
 
-    public void forDistance(double distance) {
+    public void forDistance(double distance, boolean close) {
         //setTarget((6.13992 * distance) + 858.51272);
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+        if (close)
+            //setTarget((0.000367066*Math.pow(distance,4))-(0.124995*Math.pow(distance,3))+(15.63311*Math.pow(distance,2))-(847.49369*distance)+18000.2274);
+            setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+        else
+            setTarget(1550);
     }
 
     public boolean atUp() {

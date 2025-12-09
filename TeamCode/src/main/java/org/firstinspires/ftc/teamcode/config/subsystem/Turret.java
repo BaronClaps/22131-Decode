@@ -121,7 +121,7 @@ public class Turret {
     }
 
     public Instant set(double radians) {
-        return new Instant(() -> set(radians));
+        return new Instant(() -> setYaw(radians));
 
     }
 

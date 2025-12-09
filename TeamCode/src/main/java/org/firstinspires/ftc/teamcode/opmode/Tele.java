@@ -107,7 +107,8 @@ public class Tele extends OpMode {
                 r.s.setTarget(shootTarget);
             } else {
                 dist = r.getShootTarget().distanceFrom(r.f.getPose());
-                r.s.forDistance(dist);
+                boolean close = r.f.getPose().getY() > 48;
+                r.s.forDistance(dist, close);
                 r.t.face(r.getShootTarget(), r.f.getPose());
                 r.t.automatic();
             }

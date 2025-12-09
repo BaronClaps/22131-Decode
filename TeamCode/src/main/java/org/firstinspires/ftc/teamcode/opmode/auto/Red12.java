@@ -36,7 +36,7 @@ public class Red12 extends OpModeCommand {
                 new Infinite(r::periodic),
                 new Infinite(() -> {
                     double dist = r.getShootTarget().distanceFrom(r.f.getPose());
-                    r.s.forDistance(dist);
+                    r.s.forDistance(dist, true);
                 }),
                 new Infinite(() -> {
                     telemetry.addData("Pose: ", r.f.getPose());
@@ -45,6 +45,9 @@ public class Red12 extends OpModeCommand {
                     telemetry.addData("Flipper at Up: ", r.s.atUp());
                     telemetry.addData("Turret Ticks: ", r.t.getTurret());
                     telemetry.addData("Turret Ready: ", r.t.isReady());
+                    telemetry.addData("Shooter At Target: ", r.s.atTarget());
+                    telemetry.addData("Shooter Velocity: ", r.s.getVelocity());
+                    telemetry.addData("Shooter Target", r.s.getTarget());
                     telemetry.update();
                 }),
                 new Sequential(

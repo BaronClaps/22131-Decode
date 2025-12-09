@@ -14,13 +14,13 @@ public class NoCorner12 {
     public Pose start = new Pose(24+6.25, 120+8+4.75, Math.toRadians(90));
     public Pose scorePControl = new Pose(55.593, 94.779);
     public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(21.5, 84, Math.toRadians(180)); // intake\
+    public Pose intake1 = new Pose(17.5, 83.5, Math.toRadians(180)); // intake\
     public Pose intake1Control = new Pose(50.000, 80.000);
-    public Pose intake2 = new Pose(18, 60.050-2, Math.toRadians(-170)); // intake
+    public Pose intake2 = new Pose(11.5, 60.050-2, Math.toRadians(-170)); // intake
     public Pose intake2Control = new Pose(65.400, 59.00);
     public Pose gate = new Pose(16.25, 72.500, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
     public Pose gateControl = new Pose(48, 73); //62);
-    public Pose intake3 = new Pose(16, 39.750-3.5, Math.toRadians(180));
+    public Pose intake3 = new Pose(11.5, 39.750-3.5, Math.toRadians(180));
     public Pose intake3Control = new Pose(75, intake3.getY()-5);
     public Pose intakeCorner = new Pose(12, 14, Math.toRadians(180+65));
     public Pose intakeCornerControl = intakeCorner.withY(50);
