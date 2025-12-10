@@ -17,7 +17,7 @@ public class Shooter {
 
     private boolean activated = true;
 
-    public static double close = 1250;
+    public static double close = 1200;
     public static double far = 1400;
     public static double flipUp = 0.3;
     public static double flipDown = 0.71;

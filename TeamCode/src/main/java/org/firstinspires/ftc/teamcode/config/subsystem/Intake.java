@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Config
 public class Intake {
     private final DcMotorEx i;
-    public static double idle = 0;
+    public static double off = 0;
+    public static double idle = 0.5;
     public static double in = 1;
     public static double out = -1;
 
@@ -31,12 +32,16 @@ public class Intake {
         set(out);
     }
 
+    public void spinOff() {
+        set(off);
+    }
+
     public void spinIdle() {
         set(idle);
     }
 
-    public Command idle() {
-        return new Instant(() -> set(idle));
+    public Command off() {
+        return new Instant(() -> set(off));
     }
 
     public Command in() {
@@ -45,6 +50,10 @@ public class Intake {
 
     public Command out() {
         return new Instant(() -> set(out));
+    }
+
+    public Command idle() {
+        return new Instant(this::spinIdle);
     }
 
     public Command stop() {

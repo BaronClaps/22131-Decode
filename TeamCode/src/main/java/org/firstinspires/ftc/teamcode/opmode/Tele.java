@@ -96,7 +96,7 @@ public class Tele extends OpMode {
         else if (intakeOn == 2)
             r.i.spinOut();
         else
-            r.i.spinIdle();
+            r.i.spinOff();
 
         if (shoot) {
             r.s.on();

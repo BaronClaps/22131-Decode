@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
-import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.commands.Infinite;
 import com.pedropathing.ivy.commands.Instant;
 import com.pedropathing.ivy.commands.Wait;
@@ -19,7 +18,6 @@ import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
 @Autonomous(name = "Red 12", group = "Interesting", preselectTeleOp = "Tele")
 public class Red12 extends OpModeCommand {
     Robot r;
-    Timer t;
 
     @Override
     public void init() {
@@ -30,14 +28,8 @@ public class Red12 extends OpModeCommand {
         r.s.down();
         r.t.resetTurret();
 
-        t = new Timer();
-
         schedule(
                 new Infinite(r::periodic),
-                new Infinite(() -> {
-                    double dist = r.getShootTarget().distanceFrom(r.f.getPose());
-                    r.s.forDistance(dist, true);
-                }),
                 new Infinite(() -> {
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
@@ -56,50 +48,53 @@ public class Red12 extends OpModeCommand {
                         new Instant(() -> r.t.face(r.getShootTarget(), p.score)),
                         new FollowPath(r, p.next())
                                 .with(
+
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.on())
+                                                        new Shoot(r)
                                                 )
+
                                 ),
-                        new Shoot(r),
-                        new Wait(750),
                         new IntakeIn(r)
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next())
                                 .with(
+
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.on())
+                                                        new Shoot(r)
                                                 )
+
                                 ),
-                        new Shoot(r),
                         new IntakeIn(r)
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
-                        r.i.stop(),
-                        new Wait(300),
+                        r.i.idle(),
+                        new Wait(250),
                         new FollowPath(r, p.next())
                                 .with(
+
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.on())
+                                                        new Shoot(r)
                                                 )
+
                                 ),
-                        new Shoot(r),
-                        new Wait(250),
                         new IntakeIn(r)
                                 .with(new FollowPath(r, p.next())),
                         new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
                                 .with(
+
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.on())
+                                                        new Instant(() -> r.s.close())
                                                 )
+
                                 ),
                         new WaitUntil(() -> r.t.isReady()),
                         new Shoot(r),
@@ -109,11 +104,9 @@ public class Red12 extends OpModeCommand {
                                 .with(
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.on())
+                                                        new Shoot(r)
                                                 )
                                 ),
-                        new Shoot(r),
-                        new WaitUntil(() -> r.t.isReady()),
                         new FollowPath(r, p.next())
                 )
         );
