@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.control.PIDFCoefficients;
-import com.pedropathing.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 @Config
-@Configurable
 
 public class Shooter {
     private Servo f;
@@ -22,7 +17,7 @@ public class Shooter {
 
     private boolean activated = true;
 
-    public static double close = 1250;
+    public static double close = 1200;
     public static double far = 1400;
     public static double flipUp = 0.3;
     public static double flipDown = 0.71;
@@ -98,9 +93,13 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
 
-    public void forDistance(double distance) {
+    public void forDistance(double distance, boolean close) {
         //setTarget((6.13992 * distance) + 858.51272);
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+        if (close)
+            //setTarget((0.000367066*Math.pow(distance,4))-(0.124995*Math.pow(distance,3))+(15.63311*Math.pow(distance,2))-(847.49369*distance)+18000.2274);
+            setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+        else
+            setTarget(1550);
     }
 
     public boolean atUp() {

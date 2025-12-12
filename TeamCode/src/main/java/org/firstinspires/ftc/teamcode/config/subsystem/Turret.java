@@ -4,15 +4,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.MathFunctions;
+import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.Command;
-import com.seattlesolvers.solverslib.command.CommandBase;
-import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 @Config
 public class Turret {
@@ -30,7 +25,6 @@ public class Turret {
     public Turret(HardwareMap hardwareMap) {
         m = hardwareMap.get(DcMotorEx.class, "t");
         m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    //m.setDirection(DcMotor.Direction.REVERSE);
         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
@@ -121,17 +115,17 @@ public class Turret {
         setTurretTarget(0);
     }
 
-    public InstantCommand reset() {
-        return new InstantCommand(this::resetTurret);
+    public Instant reset() {
+        return new Instant(this::resetTurret);
     }
 
-    public InstantCommand set(double radians) {
-        return new InstantCommand(() -> set(radians));
+    public Instant set(double radians) {
+        return new Instant(() -> setYaw(radians));
 
     }
 
-    public InstantCommand add(double radians) {
-        return new InstantCommand(() -> setYaw(getYaw() + radians));
+    public Instant add(double radians) {
+        return new Instant(() -> setYaw(getYaw() + radians));
     }
 
     public static double normalizeAngle(double angleRadians) {

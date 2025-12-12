@@ -1,7 +1,6 @@
 repositories {
     mavenCentral()
     google() // Needed for androidx
-    maven { url = "https://mymaven.bylazar.com/releases" }
     maven {
         url "https://repo.dairy.foundation/releases"
     }
@@ -9,7 +8,14 @@ repositories {
         url "https://repo.dairy.foundation/snapshots"
     }
     maven { url = 'https://maven.brott.dev/'}
+    maven { url = 'https://central.sonatype.com/repository/maven-snapshots/'}
 }
+
+//configurations.all {
+//    resolutionStrategy {
+//        cacheChangingModulesFor 0, 'minutes'
+//    }
+//}
 
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:11.0.0'
@@ -22,18 +28,13 @@ dependencies {
     implementation 'org.firstinspires.ftc:FtcCommon:11.0.0'
     implementation 'org.firstinspires.ftc:Vision:11.0.0'
 
-    implementation 'com.pedropathing:ftc:2.0.3'
+    implementation 'com.pedropathing:ftc:2.0.4'
     implementation 'com.pedropathing:telemetry:1.0.0'
+    implementation 'com.pedropathing:ivy:0.0.1-SNAPSHOT'
 
-    implementation "org.solverslib:core:SNAPSHOT-7cdcc66"
-    implementation "org.solverslib:pedroPathing:SNAPSHOT-7cdcc66"
-
-    // implementation"page.j5155.AdvantageScope:lite:v26.0.0"
     implementation 'dev.frozenmilk.sinister:Sloth:0.2.4'
-    // implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
     implementation 'com.acmerobotics.slothboard:dashboard:0.2.4+0.4.17'
-    implementation 'org.psilynx:psikit:0.0.4'
-    implementation 'com.bylazar:fullpanels:1.0.7'
+
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }
 
