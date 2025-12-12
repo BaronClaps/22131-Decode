@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
-@Autonomous(name = "Red 12", group = "Old", preselectTeleOp = "Tele")
-public class Red12 extends Auto12 {
-    public Red12() {
-        super(Alliance.RED);
+@Autonomous(name = "Blue 15", group = "Interesting", preselectTeleOp = "Tele")
+public class Blue15 extends Auto15 {
+    public Blue15() {
+        super(Alliance.BLUE);
     }
 }
+
