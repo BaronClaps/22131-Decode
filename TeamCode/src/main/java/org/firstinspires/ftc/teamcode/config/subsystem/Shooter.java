@@ -19,8 +19,8 @@ public class Shooter {
 
     public static double close = 1200;
     public static double far = 1400;
-    public static double flipUp = 0.3;
-    public static double flipDown = 0.71;
+    public static double flipUp = 0.45;
+    public static double flipDown = 0.73;
 
     public Shooter(HardwareMap hardwareMap) {
         l = hardwareMap.get(DcMotorEx.class, "sl");

@@ -33,6 +33,7 @@ public abstract class Auto15 extends OpModeCommand {
         schedule(
                 new Infinite(r::periodic),
                 new Infinite(() -> {
+                    r.t.face(r.getShootTarget(), r.f.getPose());
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
@@ -47,7 +48,6 @@ public abstract class Auto15 extends OpModeCommand {
                 new Sequential(
                         new Wait(1),
                         r.i.in(),
-                        new Instant(() -> r.t.face(r.getShootTarget(), p.score)),
                         new FollowPath(r, p.next())
                                 .with(
 
@@ -79,7 +79,6 @@ public abstract class Auto15 extends OpModeCommand {
                         new Wait(250),
                         new FollowPath(r, p.next())
                                 .with(
-
                                         new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         new Shoot(r)
@@ -88,7 +87,7 @@ public abstract class Auto15 extends OpModeCommand {
                                 ),
                         new IntakeIn(r)
                                 .with(new FollowPath(r, p.next())),
-                        new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
+                        //new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
                                 .with(
 

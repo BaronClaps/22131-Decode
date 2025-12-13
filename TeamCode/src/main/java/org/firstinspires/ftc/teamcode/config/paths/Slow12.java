@@ -14,14 +14,14 @@ public class Slow12 {
     public Pose start = new Pose(24+6.25, 120+8+4.75, Math.toRadians(90));
     public Pose scorePControl = new Pose(55.593, 94.779);
     public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(17,83.5, Math.toRadians(180)); // intake\
-    public Pose intake1Control = new Pose(50.000, 87.5);
-    public Pose intake2 = new Pose(10, 60.050, Math.toRadians(-170)); // intake
-    public Pose intake2Control = new Pose(65.400, 65);
-    public Pose gate = new Pose(16.25, 72.500, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
-    public Pose gateControl = new Pose(30, 73); //62);
-    public Pose intake3 = new Pose(10, 39.750-3.5, Math.toRadians(180));
-    public Pose intake3Control = new Pose(75, intake3.getY()-5);
+    public Pose intake1 = new Pose(17,88.5, Math.toRadians(180)); // intake\
+    public Pose intake1Mid = intake1.withX(48);
+    public Pose intake2 = new Pose(10, 64, Math.toRadians(180)); // intake
+    public Pose intake2Mid = intake2.withX(48);
+    public Pose gate = new Pose(16, 68.5, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
+    public Pose gateMid = gate.withX(30);
+    public Pose intake3 = new Pose(10, 39.750+1.5, Math.toRadians(180));
+    public Pose intake3Mid = intake3.withX(48);
     public Pose park = new Pose(48, 72, Math.toRadians(180));//new Pose(36, 12, Math.toRadians(180));
 
     private int index;
@@ -34,13 +34,13 @@ public class Slow12 {
             scorePControl = scorePControl.mirror();
             score = score.mirror();
             intake1 = intake1.mirror();
-            intake1Control = intake1Control.mirror();
+            intake1Mid = intake1Mid.mirror();
             gate = gate.mirror();
-            gateControl = gateControl.mirror();
+            gateMid = gateMid.mirror();
             intake2 = intake2.mirror();
-            intake2Control = intake2Control.mirror();
+            intake2Mid = intake2Mid.mirror();
             intake3 = intake3.mirror();
-            intake3Control = intake3Control.mirror();
+            intake3Mid = intake3Mid.mirror();
             park = park.mirror();
         }
 
@@ -60,17 +60,28 @@ public class Slow12 {
                 .build();
     }
 
-    public PathChain intake1() { // intake 1
+    public PathChain intake1() {
         return f.pathBuilder()
                 .addPath(
-                        new BezierCurve(
-                                score,
-                                intake1Control,
+                        new BezierLine(
+                                intake1Mid,
                                 intake1
                         )
                 )
+                .setConstantHeadingInterpolation(intake1.getHeading())
                 .setBrakingStrength(0.75)
-                .setLinearHeadingInterpolation(score.getHeading(), intake1.getHeading(), 0.3)
+                .build();
+    }
+
+    public PathChain alignIntake1() {
+        return f.pathBuilder()
+                .addPath(
+                        new BezierLine(
+                                score,
+                                intake1Mid
+                        )
+                )
+                .setLinearHeadingInterpolation(score.getHeading(), intake1Mid.getHeading(), 0.5)
                 .build();
     }
 
@@ -84,14 +95,24 @@ public class Slow12 {
     public PathChain intake2() {
         return f.pathBuilder()
                 .addPath(
-                        new BezierCurve(
-                                score,
-                                intake2Control,
+                        new BezierLine(
+                                intake2Mid,
                                 intake2
                         )
                 )
+                .setConstantHeadingInterpolation(intake2.getHeading())
                 .setBrakingStrength(0.75)
-                .setLinearHeadingInterpolation(score.getHeading(), intake2.getHeading(), 0.5)
+                .build();
+    }
+    public PathChain alignIntake2() {
+        return f.pathBuilder()
+                .addPath(
+                        new BezierLine(
+                                score,
+                                intake2Mid
+                        )
+                )
+                .setLinearHeadingInterpolation(score.getHeading(), intake2Mid.getHeading(), 0.5)
                 .build();
     }
 
@@ -102,18 +123,37 @@ public class Slow12 {
                 .build();
     }
 
-    public PathChain gate() { // go to gate from intake1
+    public PathChain gate() {
         return f.pathBuilder()
-                .addPath(new BezierCurve(intake2, gateControl, gate))
+                .addPath(new BezierLine(intake2, gateMid))
                 .setLinearHeadingInterpolation(intake2.getHeading(), gate.getHeading())
+                .addPath(new BezierLine(gateMid, gate))
+                .setConstantHeadingInterpolation(gate.getHeading())
+                .build();
+    }
+
+    public PathChain alignIntake3() {
+        return f.pathBuilder()
+                .addPath(
+                        new BezierLine(
+                                score,
+                                intake3Mid
+                        )
+                )
+                .setLinearHeadingInterpolation(score.getHeading(), intake3Mid.getHeading(), .5)
                 .build();
     }
 
     public PathChain intake3() {
         return f.pathBuilder()
-                .addPath(new BezierCurve(score, intake3Control, intake3))
+                .addPath(
+                        new BezierLine(
+                                intake3Mid,
+                                intake3
+                        )
+                )
+                .setConstantHeadingInterpolation(intake3.getHeading())
                 .setBrakingStrength(0.75)
-                .setLinearHeadingInterpolation(score.getHeading(), intake3.getHeading(), 0.7)
                 .build();
     }
 
@@ -134,20 +174,23 @@ public class Slow12 {
     public PathChain next() {
         switch (index++) {
             case 0: return scoreP();
-            case 1: return intake1();
-            case 2: return score1();
-            case 3: return intake2();
-            case 4: return gate();
-            case 5: return score2();
-            case 6: return intake3();
-            case 7: return score3();
-            case 8: return park();
+            case 1: return alignIntake1();
+            case 2: return intake1();
+            case 3: return score1();
+            case 4: return alignIntake2();
+            case 5: return intake2();
+            case 6: return gate();
+            case 7: return score2();
+            case 8: return alignIntake3();
+            case 9: return intake3();
+            case 10: return score3();
+            case 11: return park();
             default: return null;
         }
     }
 
     public boolean hasNext() {
-        int PATH_COUNT = 9;
+        int PATH_COUNT = 12;
         return index < PATH_COUNT;
     }
 

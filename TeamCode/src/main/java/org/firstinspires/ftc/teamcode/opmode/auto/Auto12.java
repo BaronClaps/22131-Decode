@@ -19,7 +19,7 @@ public abstract class Auto12 extends OpModeCommand {
     final Alliance a;
 
     public Auto12(Alliance alliance) {
-        a =  alliance;
+        a = alliance;
     }
 
     @Override
@@ -30,6 +30,8 @@ public abstract class Auto12 extends OpModeCommand {
 
         r.s.down();
         r.t.resetTurret();
+
+        reset();
 
         schedule(
                 new Infinite(r::periodic),
@@ -48,45 +50,36 @@ public abstract class Auto12 extends OpModeCommand {
                 new Sequential(
                         new Wait(1),
                         r.i.in(),
-                        new Instant(() -> r.t.face(r.getShootTarget(), p.score)),
-                        new FollowPath(r, p.next())
-                                .with(
-
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .then(
-                                                        new Shoot(r)
-                                                )
-
-                                ),
+                        new FollowPath(r, p.next()),
+                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        new Shoot(r),
+                        new FollowPath(r, p.next()),
                         new IntakeIn(r)
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
-                        new FollowPath(r, p.next())
-                                .with(
-
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .then(
-                                                        new Shoot(r)
-                                                )
-
-                                ),
+                        new FollowPath(r, p.next()),
+                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        new Shoot(r),
+                        new FollowPath(r, p.next()),
                         new IntakeIn(r)
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
                         r.i.idle(),
-                        new Wait(250),
-                        new FollowPath(r, p.next())
+                        new Wait(500),
+                        new FollowPath(r, p.next()),
+                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        new Shoot(r),
+                        new FollowPath(r, p.next()),
+                        new IntakeIn(r)
                                 .with(
-
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
-                                                .then(
-                                                        new Shoot(r)
-                                                )
-
+                                        new FollowPath(r, p.next())
                                 ),
+                        new FollowPath(r, p.next()),
+                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        new Shoot(r),
                         new FollowPath(r, p.next())
                 )
         );
