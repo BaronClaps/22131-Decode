@@ -19,7 +19,7 @@ public class Slow12 {
     public Pose intake2 = new Pose(10, 64, Math.toRadians(180)); // intake
     public Pose intake2Mid = intake2.withX(48);
     public Pose gate = new Pose(16, 68.5, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
-    public Pose gateMid = gate.withX(30);
+    public Pose gateMid = gate.withX(27);
     public Pose intake3 = new Pose(10, 39.750+1.5, Math.toRadians(180));
     public Pose intake3Mid = intake3.withX(48);
     public Pose park = new Pose(48, 72, Math.toRadians(180));//new Pose(36, 12, Math.toRadians(180));
@@ -85,12 +85,22 @@ public class Slow12 {
                 .build();
     }
 
+    public PathChain gate() {
+        return f.pathBuilder()
+                .addPath(new BezierLine(intake1, gateMid))
+                .setLinearHeadingInterpolation(intake1.getHeading(), gate.getHeading())
+                .addPath(new BezierLine(gateMid, gate))
+                .setConstantHeadingInterpolation(gate.getHeading())
+                .build();
+    }
+
     public PathChain score1() {
         return f.pathBuilder()
-                .addPath(new BezierLine(intake1, score))
+                .addPath(new BezierLine(gate, score))
                 .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
                 .build();
     }
+
 
     public PathChain intake2() {
         return f.pathBuilder()
@@ -104,6 +114,7 @@ public class Slow12 {
                 .setBrakingStrength(0.75)
                 .build();
     }
+
     public PathChain alignIntake2() {
         return f.pathBuilder()
                 .addPath(
@@ -118,17 +129,8 @@ public class Slow12 {
 
     public PathChain score2() {
         return f.pathBuilder()
-                .addPath(new BezierLine(gate, score))
-                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
-                .build();
-    }
-
-    public PathChain gate() {
-        return f.pathBuilder()
-                .addPath(new BezierLine(intake2, gateMid))
-                .setLinearHeadingInterpolation(intake2.getHeading(), gate.getHeading())
-                .addPath(new BezierLine(gateMid, gate))
-                .setConstantHeadingInterpolation(gate.getHeading())
+                .addPath(new BezierLine(intake2, score))
+                .setLinearHeadingInterpolation(intake2.getHeading(), score.getHeading())
                 .build();
     }
 
@@ -176,10 +178,10 @@ public class Slow12 {
             case 0: return scoreP();
             case 1: return alignIntake1();
             case 2: return intake1();
-            case 3: return score1();
-            case 4: return alignIntake2();
-            case 5: return intake2();
-            case 6: return gate();
+            case 3: return gate();
+            case 4: return score1();
+            case 5: return alignIntake2();
+            case 6: return intake2();
             case 7: return score2();
             case 8: return alignIntake3();
             case 9: return intake3();
