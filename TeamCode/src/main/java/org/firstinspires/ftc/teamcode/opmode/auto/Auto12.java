@@ -51,15 +51,7 @@ public abstract class Auto12 extends OpModeCommand {
                         new Wait(1),
                         r.i.in(),
                         new FollowPath(r, p.next()),
-                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
-                        new Shoot(r),
-                        new FollowPath(r, p.next()),
-                        new IntakeIn(r)
-                                .with(
-                                        new FollowPath(r, p.next())
-                                ),
-                        new FollowPath(r, p.next()),
-                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        
                         new Shoot(r),
                         new FollowPath(r, p.next()),
                         new IntakeIn(r)
@@ -68,9 +60,10 @@ public abstract class Auto12 extends OpModeCommand {
                                 ),
                         new FollowPath(r, p.next()),
                         r.i.idle(),
+                        new FollowPath(r, p.next()),
                         new Wait(500),
                         new FollowPath(r, p.next()),
-                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        
                         new Shoot(r),
                         new FollowPath(r, p.next()),
                         new IntakeIn(r)
@@ -78,7 +71,15 @@ public abstract class Auto12 extends OpModeCommand {
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next()),
-                        new Instant(() -> r.t.face(r.getShootTarget(), r.f.getPose())),
+                        
+                        new Shoot(r),
+                        new FollowPath(r, p.next()),
+                        new IntakeIn(r)
+                                .with(
+                                        new FollowPath(r, p.next())
+                                ),
+                        new FollowPath(r, p.next()),
+                        
                         new Shoot(r),
                         new FollowPath(r, p.next())
                 )

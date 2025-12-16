@@ -20,6 +20,7 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
+        r.t.face(r.getShootTarget(), r.f.getPose());
         switch (st) {
             case 0:
                 r.s.down();
@@ -45,10 +46,14 @@ public class Shoot extends Command {
                     r.s.down();
                 else if (t.getElapsedTimeSeconds() > .5)
                     r.s.up();
-                else if (t.getElapsedTimeSeconds() > 0.25)
+                else if (t.getElapsedTimeSeconds() > 0.25) {
                     r.s.down();
-                else if (t.getElapsedTimeSeconds() > 0)
+                    r.i.spinIn();
+                }
+                else if (t.getElapsedTimeSeconds() > 0) {
                     r.s.up();
+                    r.i.spinOff();
+                }
                 break;
             case 3:
                 if (t.getElapsedTime() > 200) {

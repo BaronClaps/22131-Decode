@@ -11,14 +11,15 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 public class Slow12 {
     private final Follower f;
 
-    public Pose start = new Pose(24+6.25, 120+8+4.75, Math.toRadians(90));
+    public Pose start = new Pose(24+6.25, 120+8+5.5, Math.toRadians(90));
     public Pose scorePControl = new Pose(55.593, 94.779);
     public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(17,88.5, Math.toRadians(180)); // intake\
+    public Pose intake1 = new Pose(17,88, Math.toRadians(180)); // intake\
     public Pose intake1Mid = intake1.withX(48);
-    public Pose intake2 = new Pose(10, 64, Math.toRadians(180)); // intake
+    public Pose intake2 = new Pose(10, 63.5, Math.toRadians(180)); // intake
     public Pose intake2Mid = intake2.withX(48);
-    public Pose gate = new Pose(16, 68.5, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
+    public Pose intake2Return = intake2.withX(40);
+    public Pose gate = new Pose(17.5, 75.5, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
     public Pose gateMid = gate.withX(27);
     public Pose intake3 = new Pose(10, 39.750+1.5, Math.toRadians(180));
     public Pose intake3Mid = intake3.withX(48);
@@ -39,6 +40,7 @@ public class Slow12 {
             gateMid = gateMid.mirror();
             intake2 = intake2.mirror();
             intake2Mid = intake2Mid.mirror();
+            intake2Return = intake2Return.mirror();
             intake3 = intake3.mirror();
             intake3Mid = intake3Mid.mirror();
             park = park.mirror();
@@ -85,10 +87,15 @@ public class Slow12 {
                 .build();
     }
 
-    public PathChain gate() {
+    public PathChain gateAlign() {
         return f.pathBuilder()
                 .addPath(new BezierLine(intake1, gateMid))
-                .setLinearHeadingInterpolation(intake1.getHeading(), gate.getHeading())
+                .setLinearHeadingInterpolation(intake1.getHeading(), gateMid.getHeading())
+                .build();
+    }
+
+    public PathChain gate() {
+        return f.pathBuilder()
                 .addPath(new BezierLine(gateMid, gate))
                 .setConstantHeadingInterpolation(gate.getHeading())
                 .build();
@@ -129,7 +136,7 @@ public class Slow12 {
 
     public PathChain score2() {
         return f.pathBuilder()
-                .addPath(new BezierLine(intake2, score))
+                .addPath(new BezierCurve(intake2, intake2Return, score))
                 .setLinearHeadingInterpolation(intake2.getHeading(), score.getHeading())
                 .build();
     }
@@ -178,15 +185,16 @@ public class Slow12 {
             case 0: return scoreP();
             case 1: return alignIntake1();
             case 2: return intake1();
-            case 3: return gate();
-            case 4: return score1();
-            case 5: return alignIntake2();
-            case 6: return intake2();
-            case 7: return score2();
-            case 8: return alignIntake3();
-            case 9: return intake3();
-            case 10: return score3();
-            case 11: return park();
+            case 3: return gateAlign();
+            case 4: return gate();
+            case 5: return score1();
+            case 6: return alignIntake2();
+            case 7: return intake2();
+            case 8: return score2();
+            case 9: return alignIntake3();
+            case 10: return intake3();
+            case 11: return score3();
+            case 12: return park();
             default: return null;
         }
     }
