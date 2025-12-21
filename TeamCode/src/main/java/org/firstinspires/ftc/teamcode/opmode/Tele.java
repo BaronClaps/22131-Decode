@@ -5,6 +5,7 @@ import com.pedropathing.ivy.commands.Infinite;
 import com.pedropathing.ivy.commands.Instant;
 import com.pedropathing.ivy.commands.Wait;
 import com.pedropathing.ivy.groups.Sequential;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.command.ButtonMapper;
 import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
@@ -15,11 +16,12 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 public class Tele extends CommandOpMode {
     final Alliance a;
     boolean shoot, manualAim;
-    double shootTarget = 1200;
+    public static double shootTarget = 1200;
 
     public Tele(Alliance alliance) {
         a = alliance;
     }
+
     @Override
     public void init() {
         Robot r = new Robot(hardwareMap, a);
@@ -39,14 +41,18 @@ public class Tele extends CommandOpMode {
                 .put(g.dpad_right, r.t.right(manualAim));
 
         schedule(
-                new Infinite(() -> {
-                    r.periodic();
-                    m.update();
-                }),
                 new Sequential(
                         new Wait(1),
-                        new Instant(() -> r.d.setGamepad(gamepad1)),
-                        new Instant(r.d::start)
+                        new Instant(() -> {
+                            r.periodic();
+                            r.d.start();
+                            r.d.setGamepad(gamepad1);
+                        }),
+                        new Infinite(() -> {
+                            r.periodic();
+                            autoAim(r);
+                            m.update();
+                        })
                 )
         );
     }

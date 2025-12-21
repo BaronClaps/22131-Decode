@@ -14,7 +14,7 @@ public class Drivetrain {
     private Follower f;
     private final Alliance a;
     private boolean hold = false, field = true;
-    private Gamepad g;
+    private Gamepad g = null;
     public Drivetrain(HardwareMap hardwareMap, Alliance a, Pose start) {
         f = Constants.createFollower(hardwareMap);
         f.setStartingPose(start);
@@ -38,14 +38,16 @@ public class Drivetrain {
     public Instant reset() { return new Instant(this::resetDrive); }
 
     public void periodic() {
-        if (g != null)
-            if (!hold)
-                if (field)
-                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, false, a == Alliance.BLUE ? Math.toRadians(180) : 0);
-                else
-                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, true);
-
         f.update();
+
+        if (g == null)
+            return;
+
+        if (!hold)
+            if (field)
+                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, false, a == Alliance.BLUE ? Math.toRadians(180) : 0);
+            else
+                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, true);
     }
 
     public void setGamepad(Gamepad g) { this.g = g; }
