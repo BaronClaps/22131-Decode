@@ -6,7 +6,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.config.command.GamepadEx;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
@@ -14,7 +13,6 @@ public class Drivetrain {
     private Follower f;
     private final Alliance a;
     private boolean hold = false, field = true;
-    private Gamepad g = null;
     public Drivetrain(HardwareMap hardwareMap, Alliance a, Pose start) {
         f = Constants.createFollower(hardwareMap);
         f.setStartingPose(start);
@@ -39,18 +37,15 @@ public class Drivetrain {
 
     public void periodic() {
         f.update();
-
-        if (g == null)
-            return;
-
-        if (!hold)
-            if (field)
-                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, false, a == Alliance.BLUE ? Math.toRadians(180) : 0);
-            else
-                    f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, true);
     }
 
-    public void setGamepad(Gamepad g) { this.g = g; }
+    public void drive(Gamepad g) {
+        if (!hold)
+            if (field)
+                f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, false, a == Alliance.BLUE ? Math.toRadians(180) : 0);
+            else
+                f.setTeleOpDrive(-g.left_stick_y, -g.left_stick_x, -g.right_stick_x, true);
+    }
 
     public void holdCurrent() {
         f.holdPoint(new BezierPoint(f.getPose()), f.getHeading(), true);

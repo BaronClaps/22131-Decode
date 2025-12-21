@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 @Config
 public class Tele extends CommandOpMode {
     final Alliance a;
+    Robot r;
     boolean shoot, manualAim;
     public static double shootTarget = 1200;
 
@@ -24,7 +25,8 @@ public class Tele extends CommandOpMode {
 
     @Override
     public void init() {
-        Robot r = new Robot(hardwareMap, a);
+        r = new Robot(hardwareMap, a);
+        r.periodic();
         GamepadEx g = new GamepadEx(gamepad1);
 
         ButtonMapper m = new ButtonMapper()
@@ -43,18 +45,19 @@ public class Tele extends CommandOpMode {
         schedule(
                 new Sequential(
                         new Wait(1),
-                        new Instant(() -> {
-                            r.periodic();
-                            r.d.start();
-                            r.d.setGamepad(gamepad1);
-                        }),
                         new Infinite(() -> {
                             r.periodic();
-                            autoAim(r);
+                            r.d.drive(gamepad1);
+                            autoAim();
                             m.update();
                         })
                 )
         );
+    }
+
+    public void start() {
+        r.periodic();
+        r.d.startDrive();
     }
 
     public Instant toggleAim() {
@@ -65,7 +68,7 @@ public class Tele extends CommandOpMode {
         return new Instant(() -> manualAim = !manualAim);
     }
 
-    public void autoAim(Robot r) {
+    public void autoAim() {
         if (shoot) {
             r.s.on();
             r.t.on();

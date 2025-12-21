@@ -33,12 +33,15 @@ public class Robot {
         g = new Gate(h);
         t = new Turret(h);
         d = new Drivetrain(h, a, defaultPose);
+        d.setStart(defaultPose);
 
         hub = h.getAll(LynxModule.class).get(0);
         hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
         loop.resetTimer();
         setShootTarget();
+
+        periodic();
     }
 
     public void periodic() {
