@@ -28,7 +28,7 @@ public class Slow12 {
     private int index;
 
     public Slow12(Robot r) {
-        this.f = r.f;
+        this.f = r.d.getFollower();
 
         if (r.a.equals(Alliance.RED)) {
             start = start.mirror();

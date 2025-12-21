@@ -56,7 +56,21 @@ public class Intake {
         return new Instant(this::spinIdle);
     }
 
-    public Command stop() {
-        return new Instant(() -> set(0));
+    public Instant toggleIn() {
+        return new Instant(() -> {
+            if (i.getPower() != 0)
+                spinOff();
+            else
+                spinIn();
+        });
+    }
+
+    public Instant toggleOut() {
+        return new Instant(() -> {
+            if (i.getPower() != 0)
+                spinOff();
+            else
+                spinOut();
+        });
     }
 }

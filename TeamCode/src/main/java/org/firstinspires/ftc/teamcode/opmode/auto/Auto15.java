@@ -6,14 +6,12 @@ import com.pedropathing.ivy.commands.Wait;
 import com.pedropathing.ivy.commands.WaitUntil;
 import com.pedropathing.ivy.groups.Sequential;
 import org.firstinspires.ftc.teamcode.config.Robot;
-import org.firstinspires.ftc.teamcode.config.commands.FollowPath;
-import org.firstinspires.ftc.teamcode.config.commands.IntakeIn;
-import org.firstinspires.ftc.teamcode.config.commands.Shoot;
+import org.firstinspires.ftc.teamcode.config.command.FollowPath;
 import org.firstinspires.ftc.teamcode.config.paths.Fast15;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
-import org.firstinspires.ftc.teamcode.config.util.OpModeCommand;
+import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
 
-public abstract class Auto15 extends OpModeCommand {
+public abstract class Auto15 extends CommandOpMode {
     Robot r;
     final Alliance a;
 
@@ -25,19 +23,18 @@ public abstract class Auto15 extends OpModeCommand {
     public void init() {
         r = new Robot(hardwareMap, a);
         Fast15 p = new Fast15(r);
-        r.f.setStartingPose(p.start);
+        r.setStart(p.start);
 
-        r.s.down();
+        r.g.closeGate();
         r.t.resetTurret();
 
         schedule(
                 new Infinite(r::periodic),
                 new Infinite(() -> {
-                    r.t.face(r.getShootTarget(), r.f.getPose());
-                    telemetry.addData("Pose: ", r.f.getPose());
-                    telemetry.addData("Follower Busy: ", r.f.isBusy());
+                    r.t.face(r.getShootTarget(), r.d.getPose());
+                    telemetry.addData("Pose: ", r.d.getPose());
+                    telemetry.addData("Follower Busy: ", r.d.isBusy());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
-                    telemetry.addData("Flipper at Up: ", r.s.atUp());
                     telemetry.addData("Turret Ticks: ", r.t.getTurret());
                     telemetry.addData("Turret Ready: ", r.t.isReady());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
@@ -51,26 +48,26 @@ public abstract class Auto15 extends OpModeCommand {
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        new WaitUntil(() -> r.d.getT() >= 0.5)
                                                 .then(
-                                                        new Shoot(r)
+                                                        r.shoot()
                                                 )
 
                                 ),
-                        new IntakeIn(r)
+                        r.intake()
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        new WaitUntil(() -> r.d.getT() >= 0.5)
                                                 .then(
-                                                        new Shoot(r)
+                                                        r.shoot()
                                                 )
 
                                 ),
-                        new IntakeIn(r)
+                        r.intake()
                                 .with(
                                         new FollowPath(r, p.next())
                                 ),
@@ -79,33 +76,33 @@ public abstract class Auto15 extends OpModeCommand {
                         new Wait(250),
                         new FollowPath(r, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        new WaitUntil(() -> r.d.getT() >= 0.5)
                                                 .then(
-                                                        new Shoot(r)
+                                                        r.shoot()
                                                 )
 
                                 ),
-                        new IntakeIn(r)
+                        r.intake()
                                 .with(new FollowPath(r, p.next())),
                         //new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        new WaitUntil(() -> r.d.getT() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.close())
+                                                        new Instant(() -> r.s.shootNear())
                                                 )
 
                                 ),
                         new WaitUntil(() -> r.t.isReady()),
-                        new Shoot(r),
-                        new IntakeIn(r)
+                        r.shoot(),
+                        r.intake()
                                 .with(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        new WaitUntil(() -> r.d.getT() >= 0.5)
                                                 .then(
-                                                        new Shoot(r)
+                                                        r.shoot()
                                                 )
                                 ),
                         new FollowPath(r, p.next())
@@ -115,7 +112,7 @@ public abstract class Auto15 extends OpModeCommand {
 
     @Override
     public void stop() {
-        r.stop();
+        r.saveEnd();
         reset();
     }
 }

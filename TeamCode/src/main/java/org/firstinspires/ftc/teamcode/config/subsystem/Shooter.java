@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 
 public class Shooter {
-    private Servo f;
     private DcMotorEx l, r;
 
     private double t = 0;
@@ -17,15 +16,12 @@ public class Shooter {
 
     private boolean activated = true;
 
-    public static double close = 1200;
+    public static double near = 1200;
     public static double far = 1400;
-    public static double flipUp = 0.45;
-    public static double flipDown = 0.73;
 
     public Shooter(HardwareMap hardwareMap) {
         l = hardwareMap.get(DcMotorEx.class, "sl");
         r = hardwareMap.get(DcMotorEx.class, "sr");
-        f = hardwareMap.get(Servo.class, "f");
         l.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
@@ -51,18 +47,32 @@ public class Shooter {
         activated = true;
     }
 
-    public boolean isActivated() {
-        return activated;
+    public void shooterToggle() {
+        activated = !activated;
+        if (!activated)
+            setPower(0);
     }
 
-    public void far() {
+    public Instant toggle() {
+        return new Instant(this::shooterToggle);
+    }
+
+    public void shootFar() {
         setTarget(far);
         on();
     }
 
-    public void close() {
-        setTarget(close);
+    public void shootNear() {
+        setTarget(near);
         on();
+    }
+
+    public Instant near() {
+        return new Instant(this::shootNear);
+    }
+
+    public Instant far() {
+        return new Instant(this::shootFar);
     }
 
     public void setTarget(double velocity) {
@@ -72,21 +82,6 @@ public class Shooter {
     public void periodic() {
         if (activated)
             setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
-    }
-
-    public void up() {
-        f.setPosition(flipUp);
-    }
-
-    public void down() {
-        f.setPosition(flipDown);
-    }
-
-    public void flip() {
-        if (f.getPosition() == flipDown)
-            up();
-        else
-            down();
     }
 
     public boolean atTarget() {
@@ -100,10 +95,6 @@ public class Shooter {
             setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
         else
             setTarget(1550);
-    }
-
-    public boolean atUp() {
-        return f.getPosition() == flipUp;
     }
 
 }

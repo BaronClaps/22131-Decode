@@ -17,7 +17,7 @@ public class Turret {
     public final DcMotorEx m;
     private PIDFController p, s; // pidf controller for turret
     public static double t = 0;
-    public static double pidfSwitch = 50; // target for turret
+    public static double pidfSwitch = 30; // target for turret
     public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
 
     public static boolean on = true, manual = false;
@@ -35,14 +35,8 @@ public class Turret {
         t = ticks;
     }
 
-    /** ticks */
     public double getTurretTarget() {
         return t;
-    }
-
-    /** ticks */
-    private void incrementTurretTarget(double ticks) {
-        t += ticks;
     }
 
     public double getTurret() {
@@ -58,8 +52,9 @@ public class Turret {
             p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
             s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
             error = getTurretTarget() - getTurret();
-            if (error > pidfSwitch) {
+            if (Math.abs(error) > pidfSwitch) {
                 p.updateError(error);
+                p.updateFeedForwardInput(Math.signum(error));
                 power = p.run();
             } else {
                 s.updateError(error);
@@ -89,7 +84,6 @@ public class Turret {
         on = false;
     }
 
-    /** Return yaw in radians */
     public double getYaw() {
         return normalizeAngle(getTurret() * rpt);
     }
@@ -141,5 +135,19 @@ public class Turret {
 
     public boolean isReady() {
         return Math.abs(getError()) < 30;
+    }
+
+    public Instant left(boolean on) {
+        return new Instant(() -> {
+            if (on)
+                manual(-0.5);
+        });
+    }
+
+    public Instant right(boolean on) {
+        return new Instant(() -> {
+            if (on)
+                manual(0.5);
+        });
     }
 }

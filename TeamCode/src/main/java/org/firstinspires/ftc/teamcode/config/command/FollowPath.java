@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.config.commands;
+package org.firstinspires.ftc.teamcode.config.command;
 
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import org.firstinspires.ftc.teamcode.config.Robot;
 
@@ -14,24 +13,24 @@ public class FollowPath extends Command {
     private double maxPower = 1;
 
     public FollowPath(Robot r, PathChain pathChain) {
-        this.follower = r.f;
+        this.follower = r.d.getFollower();
         this.path = pathChain;
     }
 
     public FollowPath(Robot r, PathChain pathChain, double maxPower) {
-        this.follower = r.f;
+        this.follower = r.d.getFollower();
         this.path = pathChain;
         this.maxPower = maxPower;
     }
 
     public FollowPath(Robot r, PathChain pathChain, boolean holdEnd) {
-        this.follower = r.f;
+        this.follower = r.d.getFollower();
         this.path = pathChain;
         this.holdEnd = holdEnd;
     }
 
     public FollowPath(Robot r, PathChain pathChain, boolean holdEnd, double maxPower) {
-        this.follower = r.f;
+        this.follower = r.d.getFollower();
         this.path = pathChain;
         this.holdEnd = holdEnd;
         this.maxPower = maxPower;

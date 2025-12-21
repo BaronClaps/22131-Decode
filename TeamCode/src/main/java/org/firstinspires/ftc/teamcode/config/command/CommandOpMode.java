@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.config.util;
+package org.firstinspires.ftc.teamcode.config.command;
 
 import com.pedropathing.ivy.ICommand;
 import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-public abstract class OpModeCommand extends OpMode {
+public abstract class CommandOpMode extends OpMode {
 
     /**
      * Cancels all previous commands
