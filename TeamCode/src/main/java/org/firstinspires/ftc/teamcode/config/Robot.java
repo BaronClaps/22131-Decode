@@ -33,7 +33,7 @@ public class Robot {
         g = new Gate(h);
         t = new Turret(h);
         d = new Drivetrain(h, a, defaultPose);
-        d.setStart(defaultPose);
+        d.setStart(a == Alliance.RED ? defaultPose : defaultPose.mirror());
 
         hub = h.getAll(LynxModule.class).get(0);
         hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -80,7 +80,7 @@ public class Robot {
                 new WaitUntil(s::atTarget),
                 i.in(),
                 g.open(),
-                new Wait(400),
+                new Wait(800),
                 i.off(),
                 new Wait(200),
                 i.in(),
