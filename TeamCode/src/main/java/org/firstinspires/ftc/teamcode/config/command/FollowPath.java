@@ -13,24 +13,24 @@ public class FollowPath extends Command {
     private double maxPower = 1;
 
     public FollowPath(Robot r, PathChain pathChain) {
-        this.follower = r.d.getFollower();
+        this.follower = r.f;
         this.path = pathChain;
     }
 
     public FollowPath(Robot r, PathChain pathChain, double maxPower) {
-        this.follower = r.d.getFollower();
+        this.follower = r.f;
         this.path = pathChain;
         this.maxPower = maxPower;
     }
 
     public FollowPath(Robot r, PathChain pathChain, boolean holdEnd) {
-        this.follower = r.d.getFollower();
+        this.follower = r.f;
         this.path = pathChain;
         this.holdEnd = holdEnd;
     }
 
     public FollowPath(Robot r, PathChain pathChain, boolean holdEnd, double maxPower) {
-        this.follower = r.d.getFollower();
+        this.follower = r.f;
         this.path = pathChain;
         this.holdEnd = holdEnd;
         this.maxPower = maxPower;

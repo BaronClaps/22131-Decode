@@ -21,7 +21,7 @@ public class TurretTest extends OpMode {
 
     public void init() {
         r = new Robot(hardwareMap, Alliance.BLUE);
-        r.d.setStart(new Pose());
+        r.f.setStartingPose(new Pose());
         r.t.resetTurret();
 
         telemetryM = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -30,7 +30,7 @@ public class TurretTest extends OpMode {
     @Override
     public void loop() {
         if (face)
-            r.t.face(new Pose(x, y), r.d.getPose());
+            r.t.face(new Pose(x, y), r.f.getPose());
         else
             r.t.setYaw(Math.toRadians(target));
 

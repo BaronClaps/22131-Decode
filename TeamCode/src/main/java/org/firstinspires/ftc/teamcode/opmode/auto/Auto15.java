@@ -23,7 +23,7 @@ public abstract class Auto15 extends CommandOpMode {
     public void init() {
         r = new Robot(hardwareMap, a);
         Fast15 p = new Fast15(r);
-        r.setStart(p.start);
+        r.f.setStartingPose(p.start);
 
         r.g.closeGate();
         r.t.resetTurret();
@@ -31,9 +31,9 @@ public abstract class Auto15 extends CommandOpMode {
         schedule(
                 new Infinite(r::periodic),
                 new Infinite(() -> {
-                    r.t.face(r.getShootTarget(), r.d.getPose());
-                    telemetry.addData("Pose: ", r.d.getPose());
-                    telemetry.addData("Follower Busy: ", r.d.isBusy());
+                    r.t.face(r.getShootTarget(), r.f.getPose());
+                    telemetry.addData("Pose: ", r.f.getPose());
+                    telemetry.addData("Follower Busy: ", r.f.isBusy());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
                     telemetry.addData("Turret Ticks: ", r.t.getTurret());
                     telemetry.addData("Turret Ready: ", r.t.isReady());
@@ -48,7 +48,7 @@ public abstract class Auto15 extends CommandOpMode {
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.d.getT() >= 0.5)
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
@@ -61,7 +61,7 @@ public abstract class Auto15 extends CommandOpMode {
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.d.getT() >= 0.5)
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
@@ -76,7 +76,7 @@ public abstract class Auto15 extends CommandOpMode {
                         new Wait(250),
                         new FollowPath(r, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.d.getT() >= 0.5)
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
@@ -88,7 +88,7 @@ public abstract class Auto15 extends CommandOpMode {
                         new FollowPath(r, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.d.getT() >= 0.5)
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         new Instant(() -> r.s.shootNear())
                                                 )
@@ -100,7 +100,7 @@ public abstract class Auto15 extends CommandOpMode {
                                 .with(new FollowPath(r, p.next())),
                         new FollowPath(r, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.d.getT() >= 0.5)
+                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )

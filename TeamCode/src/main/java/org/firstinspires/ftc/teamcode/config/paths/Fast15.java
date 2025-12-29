@@ -32,7 +32,7 @@ public class Fast15 {
     private int index;
 
     public Fast15(Robot r) {
-        this.f = r.d.getFollower();
+        this.f = r.f;
 
         if (r.a.equals(Alliance.RED)) {
             start = start.mirror();
