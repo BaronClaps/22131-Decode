@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.config.pedro;
 
 import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.control.PredictiveBrakingCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(10)
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.3, 0.136791,0.00111079, 0.2))
             .forwardZeroPowerAcceleration(-42.072)
             .lateralZeroPowerAcceleration(-67.58)
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1, 0, .01, 0))
