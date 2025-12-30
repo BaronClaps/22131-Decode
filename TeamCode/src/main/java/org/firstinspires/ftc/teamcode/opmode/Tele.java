@@ -126,9 +126,7 @@ public class Tele extends CommandOpMode {
             if (autoFlipTimer.getElapsedTimeSeconds() > 1.25) {
                 r.g.closeGate();
                 autoFlipping = false;
-                r.f.startTeleopDrive();
-                hold = false;
-            } else if (autoFlipTimer.getElapsedTimeSeconds() > .25) {
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > .1) {
                 r.i.spinIn();
                 intakeOn = 1;
             }
@@ -136,8 +134,6 @@ public class Tele extends CommandOpMode {
                 r.g.openGate();
                 intakeOn = 0;
                 r.i.spinOff();
-                r.f.holdPoint(new BezierPoint(r.f.getPose()), r.f.getHeading(), false);
-                hold = true;
             }
         }
 
