@@ -8,6 +8,7 @@ import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 public class Turret {
@@ -149,5 +150,9 @@ public class Turret {
             if (on)
                 manual(0.5);
         });
+    }
+
+    public String getCurrent() {
+        return "Turret Motor: " + m.getCurrent(CurrentUnit.AMPS);
     }
 }

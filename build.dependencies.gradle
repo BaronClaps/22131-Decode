@@ -8,6 +8,7 @@ repositories {
         url "https://repo.dairy.foundation/snapshots"
     }
     maven { url = 'https://maven.brott.dev/'}
+    maven { url = "https://mymaven.bylazar.com/releases" }
     maven { url = 'https://central.sonatype.com/repository/maven-snapshots/'}
 }
 
@@ -31,9 +32,14 @@ dependencies {
     implementation 'com.pedropathing:ftc:2.1.0-SNAPSHOT'
     implementation 'com.pedropathing:telemetry:1.0.0'
     implementation 'com.pedropathing:ivy:0.0.1-SNAPSHOT'
+    implementation 'com.bylazar:fullpanels:1.0.9'
 
     implementation 'dev.frozenmilk.sinister:Sloth:0.2.4'
     implementation 'com.acmerobotics.slothboard:dashboard:0.2.4+0.4.17'
+
+    implementation('com.github.haifengl:smile-interpolation:2.6.0') {
+        exclude group: 'org.slf4j'
+    }
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }

@@ -101,9 +101,10 @@ public class Tele extends CommandOpMode {
                 r.t.manual(-gamepad1.right_trigger + gamepad1.left_trigger);
                 r.s.setTarget(shootTarget);
             } else {
-                dist = r.getShootTarget().distanceFrom(r.f.getPose());
+//                dist = r.getShootTarget().distanceFrom(r.f.getPose());
                 boolean close = r.f.getPose().getY() > 48;
-                r.s.forDistance(dist, close);
+//                r.s.forDistance(dist, close);
+                r.s.forPose(r.f.getPose(), r.getShootTarget(), close);
                 r.t.face(r.getShootTarget(), r.f.getPose());
                 r.t.automatic();
             }
@@ -126,7 +127,7 @@ public class Tele extends CommandOpMode {
             if (autoFlipTimer.getElapsedTimeSeconds() > 1.25) {
                 r.g.closeGate();
                 autoFlipping = false;
-            } else if (autoFlipTimer.getElapsedTimeSeconds() > .1) {
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > .25) {
                 r.i.spinIn();
                 intakeOn = 1;
             }
@@ -175,6 +176,11 @@ public class Tele extends CommandOpMode {
         else
             speed = 1.0;
 
+        multipleTelemetry.addData("LoopTime Hz", r.getLoopTimeHz());
+        multipleTelemetry.addData("Abs X", Math.abs(r.getShootTarget().getX()-r.f.getPose().getX()));
+        multipleTelemetry.addData("Abs Y", Math.abs(r.getShootTarget().getY()-r.f.getPose().getY()));
+        multipleTelemetry.addData("Shoot Target", shootTarget);
+        multipleTelemetry.addLine();
         multipleTelemetry.addData("Follower Pose", r.f.getPose().toString());
         multipleTelemetry.addData("Shooter Velocity", r.s.getVelocity());
         multipleTelemetry.addData("Shooter Target", r.s.getTarget());

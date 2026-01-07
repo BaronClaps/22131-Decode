@@ -5,6 +5,7 @@ import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.commands.Instant;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 public class Intake {
@@ -72,5 +73,9 @@ public class Intake {
             else
                 spinOut();
         });
+    }
+
+    public String getCurrent() {
+        return "Intake Motor: " + i.getCurrent(CurrentUnit.AMPS);
     }
 }

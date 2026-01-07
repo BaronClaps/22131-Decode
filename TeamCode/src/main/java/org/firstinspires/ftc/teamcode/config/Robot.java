@@ -24,6 +24,7 @@ public class Robot {
 
     private final LynxModule hub;
     private final Timer loop = new Timer();
+    public double loops = 0, lastLoop = 0, loopTime = 0;
     public static Pose defaultPose = new Pose(8 + 24, 6.25 + 24, 0);
     public static Pose shootTarget = new Pose(6, 144 - 6, 0);
 
@@ -49,8 +50,17 @@ public class Robot {
     public void periodic() {
         setShootTarget();
 
-        if (loop.getElapsedTime() % 5 == 0) {
+        if (loop.getElapsedTime() % 10 == 0) {
             hub.clearBulkCache();
+        }
+
+        loops++;
+
+        if (loops > 10) {
+            double now = loop.getElapsedTime();
+            loopTime = (now - lastLoop) / loops;
+            lastLoop = now;
+            loops = 0;
         }
 
         //d.periodic();
@@ -97,5 +107,17 @@ public class Robot {
                 i.in(),
                 new Wait(500)
         );
+    }
+
+    public String getCurrent() {
+        return i.getCurrent() + "/n" + s.getLeftCurrent() + "/n" + s.getRightCurrent() + "/n" + t.getCurrent();
+    }
+
+    public double getLoopTimeMs() {
+        return loopTime;
+    }
+
+    public double getLoopTimeHz() {
+        return 1000 / loopTime;
     }
 }
