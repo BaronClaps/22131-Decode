@@ -4,7 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.ivy.commands.Instant;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.commands.Commands;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -110,17 +111,17 @@ public class Turret {
         setTurretTarget(0);
     }
 
-    public Instant reset() {
-        return new Instant(this::resetTurret);
+    public CommandBuilder reset() {
+        return Commands.instant(this::resetTurret);
     }
 
-    public Instant set(double radians) {
-        return new Instant(() -> setYaw(radians));
+    public CommandBuilder set(double radians) {
+        return Commands.instant(() -> setYaw(radians));
 
     }
 
-    public Instant add(double radians) {
-        return new Instant(() -> setYaw(getYaw() + radians));
+    public CommandBuilder add(double radians) {
+        return Commands.instant(() -> setYaw(getYaw() + radians));
     }
 
     public static double normalizeAngle(double angleRadians) {
@@ -138,15 +139,15 @@ public class Turret {
         return Math.abs(getError()) < 30;
     }
 
-    public Instant left(boolean on) {
-        return new Instant(() -> {
+    public CommandBuilder left(boolean on) {
+        return Commands.instant(() -> {
             if (on)
                 manual(-0.5);
         });
     }
 
-    public Instant right(boolean on) {
-        return new Instant(() -> {
+    public CommandBuilder right(boolean on) {
+        return Commands.instant(() -> {
             if (on)
                 manual(0.5);
         });

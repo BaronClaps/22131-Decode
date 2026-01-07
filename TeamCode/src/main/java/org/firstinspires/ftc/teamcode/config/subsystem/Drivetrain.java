@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.ivy.commands.Instant;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.commands.Commands;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.config.pedro.Constants;
@@ -23,7 +24,7 @@ public class Drivetrain {
         f.startTeleopDrive();
     }
 
-    public Instant start() { return new Instant(this::startDrive); }
+    public CommandBuilder start() { return Commands.instant(this::startDrive); }
 
     public void resetDrive() {
         if (a.equals(Alliance.BLUE)) {
@@ -33,7 +34,7 @@ public class Drivetrain {
         }
     }
 
-    public Instant reset() { return new Instant(this::resetDrive); }
+    public CommandBuilder reset() { return Commands.instant(this::resetDrive); }
 
     public void periodic() {
         f.update();
@@ -67,20 +68,20 @@ public class Drivetrain {
             f.setPose(new Pose(8, 6.25, Math.toRadians(0)));
     }
 
-    public Instant toggleCentric() {
-        return new Instant(this::teleToggleCentric);
+    public CommandBuilder toggleCentric() {
+        return Commands.instant(this::teleToggleCentric);
     }
 
-    public Instant hold() {
-        return new Instant(this::holdCurrent);
+    public CommandBuilder hold() {
+        return Commands.instant(this::holdCurrent);
     }
 
-    public Instant release() {
-        return new Instant(this::releaseHold);
+    public CommandBuilder release() {
+        return Commands.instant(this::releaseHold);
     }
 
-    public Instant corner() {
-        return new Instant(this::cornerReset);
+    public CommandBuilder corner() {
+        return Commands.instant(this::cornerReset);
     }
 
     public void setStart(Pose start) {

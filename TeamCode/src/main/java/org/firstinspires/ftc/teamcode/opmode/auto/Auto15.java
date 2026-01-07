@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
-
-import com.pedropathing.ivy.commands.Infinite;
-import com.pedropathing.ivy.commands.Instant;
-import com.pedropathing.ivy.commands.Wait;
-import com.pedropathing.ivy.commands.WaitUntil;
-import com.pedropathing.ivy.groups.Sequential;
+import com.pedropathing.ivy.commands.Commands;
+import com.pedropathing.ivy.pedro.PedroCommands;
 import org.firstinspires.ftc.teamcode.config.Robot;
-import org.firstinspires.ftc.teamcode.config.command.FollowPath;
 import org.firstinspires.ftc.teamcode.config.paths.Fast15;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
+
+import static com.pedropathing.ivy.groups.Groups.sequential;
+
 
 public abstract class Auto15 extends CommandOpMode {
     Robot r;
@@ -25,12 +23,12 @@ public abstract class Auto15 extends CommandOpMode {
         Fast15 p = new Fast15(r);
         r.f.setStartingPose(p.start);
 
-        r.g.closeGate();
+        r.g.flipDown();
         r.t.resetTurret();
 
         schedule(
-                new Infinite(r::periodic),
-                new Infinite(() -> {
+                Commands.infinite(r::periodic),
+                Commands.infinite(() -> {
                     r.t.face(r.getShootTarget(), r.f.getPose());
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
@@ -42,13 +40,13 @@ public abstract class Auto15 extends CommandOpMode {
                     telemetry.addData("Shooter Target", r.s.getTarget());
                     telemetry.update();
                 }),
-                new Sequential(
-                        new Wait(1),
+                sequential(
+                        Commands.wait(1.0),
                         r.i.in(),
-                        new FollowPath(r, p.next())
+                        PedroCommands.follow(r.f, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        Commands.waitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
@@ -56,12 +54,12 @@ public abstract class Auto15 extends CommandOpMode {
                                 ),
                         r.intake()
                                 .with(
-                                        new FollowPath(r, p.next())
+                                        PedroCommands.follow(r.f, p.next())
                                 ),
-                        new FollowPath(r, p.next())
+                        PedroCommands.follow(r.f, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        Commands.waitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
@@ -69,43 +67,43 @@ public abstract class Auto15 extends CommandOpMode {
                                 ),
                         r.intake()
                                 .with(
-                                        new FollowPath(r, p.next())
+                                        PedroCommands.follow(r.f, p.next())
                                 ),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.i.idle(),
-                        new Wait(250),
-                        new FollowPath(r, p.next())
+                        Commands.wait(250.0),
+                        PedroCommands.follow(r.f, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        Commands.waitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
 
                                 ),
                         r.intake()
-                                .with(new FollowPath(r, p.next())),
-                        //new Instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
-                        new FollowPath(r, p.next())
+                                .with(PedroCommands.follow(r.f, p.next())),
+                        //Commands.instant(() -> r.t.face(r.getShootTarget(), p.scoreCorner)),
+                        PedroCommands.follow(r.f, p.next())
                                 .with(
 
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        Commands.waitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
-                                                        new Instant(() -> r.s.shootNear())
+                                                        Commands.instant(() -> r.s.shootNear())
                                                 )
 
                                 ),
-                        new WaitUntil(() -> r.t.isReady()),
+                        Commands.waitUntil(() -> r.t.isReady()),
                         r.shoot(),
                         r.intake()
-                                .with(new FollowPath(r, p.next())),
-                        new FollowPath(r, p.next())
+                                .with(PedroCommands.follow(r.f, p.next())),
+                        PedroCommands.follow(r.f, p.next())
                                 .with(
-                                        new WaitUntil(() -> r.f.getCurrentTValue() >= 0.5)
+                                        Commands.waitUntil(() -> r.f.getCurrentTValue() >= 0.5)
                                                 .then(
                                                         r.shoot()
                                                 )
                                 ),
-                        new FollowPath(r, p.next())
+                        PedroCommands.follow(r.f, p.next())
                 )
         );
     }

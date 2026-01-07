@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
-import com.pedropathing.ivy.commands.Infinite;
-import com.pedropathing.ivy.commands.Wait;
-import com.pedropathing.ivy.groups.Sequential;
+import com.pedropathing.ivy.commands.Commands;
+import com.pedropathing.ivy.pedro.PedroCommands;
 import org.firstinspires.ftc.teamcode.config.Robot;
-import org.firstinspires.ftc.teamcode.config.command.FollowPath;
 import org.firstinspires.ftc.teamcode.config.paths.Slow12;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
+
+import static com.pedropathing.ivy.groups.Groups.sequential;
 
 public abstract class Auto12 extends CommandOpMode {
     Robot r;
@@ -23,14 +23,14 @@ public abstract class Auto12 extends CommandOpMode {
         Slow12 p = new Slow12(r);
         r.f.setStartingPose(p.start);
 
-        r.g.closeGate();
+        r.g.flipDown();
         r.t.resetTurret();
 
         reset();
 
         schedule(
-                new Infinite(r::periodic),
-                new Infinite(() -> {
+                Commands.infinite(r::periodic),
+                Commands.infinite(() -> {
                     r.t.face(r.getShootTarget(), r.f.getPose());
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
@@ -42,40 +42,40 @@ public abstract class Auto12 extends CommandOpMode {
                     telemetry.addData("Shooter Target", r.s.getTarget());
                     telemetry.update();
                 }),
-                new Sequential(
-                        new Wait(1),
+                sequential(
+                        Commands.wait(1.0),
                         r.i.in(),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.shoot(),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.intake()
                                 .with(
-                                        new FollowPath(r, p.next())
+                                        PedroCommands.follow(r.f, p.next())
                                 ),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.i.idle(),
-                        new FollowPath(r, p.next()),
-                        new Wait(500),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
+                        Commands.wait(500.0),
+                        PedroCommands.follow(r.f, p.next()),
                         
                         r.shoot(),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.intake()
                                 .with(
-                                        new FollowPath(r, p.next())
+                                        PedroCommands.follow(r.f, p.next())
                                 ),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         
                         r.shoot(),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         r.intake()
                                 .with(
-                                        new FollowPath(r, p.next())
+                                        PedroCommands.follow(r.f, p.next())
                                 ),
-                        new FollowPath(r, p.next()),
+                        PedroCommands.follow(r.f, p.next()),
                         
                         r.shoot(),
-                        new FollowPath(r, p.next())
+                        PedroCommands.follow(r.f, p.next())
                 )
         );
     }

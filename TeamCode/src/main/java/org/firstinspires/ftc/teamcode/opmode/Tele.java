@@ -5,16 +5,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.ivy.commands.Infinite;
-import com.pedropathing.ivy.commands.Instant;
-import com.pedropathing.ivy.commands.Wait;
-import com.pedropathing.ivy.groups.Sequential;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.Robot;
-import org.firstinspires.ftc.teamcode.config.command.ButtonMapper;
 import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
-import org.firstinspires.ftc.teamcode.config.command.GamepadEx;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
 @Config
@@ -42,7 +35,7 @@ public class Tele extends CommandOpMode {
 
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
-        r.g.closeGate();
+        r.g.flipDown();
     }
 
     @Override
@@ -124,19 +117,25 @@ public class Tele extends CommandOpMode {
             }
 
         if (!manualFlip && autoFlipping) {
-            if (autoFlipTimer.getElapsedTimeSeconds() > 1.25) {
-                r.g.closeGate();
+            if (autoFlipTimer.getElapsedTimeSeconds() > 1.75) {
+                r.g.down();
                 autoFlipping = false;
-            } else if (autoFlipTimer.getElapsedTimeSeconds() > .25) {
-                r.i.spinIn();
-                intakeOn = 1;
-            }
-            else if (autoFlipTimer.getElapsedTimeSeconds() > 0) {
-                r.g.openGate();
-                intakeOn = 0;
-                r.i.spinOff();
-            }
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1.5)
+                r.g.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 1.25)
+                r.g.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
+                r.g.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .75)
+                r.g.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .5)
+                r.g.up();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 0.25)
+                r.g.down();
+            else if (autoFlipTimer.getElapsedTimeSeconds() > 0)
+                r.g.up();
         }
+
 
         if (gamepad1.leftStickButtonWasPressed())
             manualFlip = !manualFlip;

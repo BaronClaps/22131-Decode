@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode.config;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.ivy.commands.Wait;
-import com.pedropathing.ivy.commands.WaitUntil;
-import com.pedropathing.ivy.groups.Sequential;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.commands.Commands;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,16 +12,20 @@ import org.firstinspires.ftc.teamcode.config.subsystem.*;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 import org.firstinspires.ftc.teamcode.config.vision.Limelight;
 
+import java.util.List;
+
+import static com.pedropathing.ivy.groups.Groups.sequential;
+
 public class Robot {
     public final Intake i;
     public final Limelight l;
     public final Shooter s;
-    public final Gate g;
+    public final Flipper g;
     public final Turret t;
     public final Follower f;
     public Alliance a;
 
-    private final LynxModule hub;
+    private final List<LynxModule> hubs;
     private final Timer loop = new Timer();
     public double loops = 0, lastLoop = 0, loopTime = 0;
     public static Pose defaultPose = new Pose(8 + 24, 6.25 + 24, 0);
@@ -33,13 +36,15 @@ public class Robot {
         i = new Intake(h);
         l = new Limelight(h, a);
         s = new Shooter(h);
-        g = new Gate(h);
+        g = new Flipper(h);
         t = new Turret(h);
         f = Constants.createFollower(h);
         f.setStartingPose(a == Alliance.RED ? defaultPose : defaultPose.mirror());
 
-        hub = h.getAll(LynxModule.class).get(0);
-        hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        hubs = h.getAll(LynxModule.class);
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         loop.resetTimer();
         setShootTarget();
@@ -50,9 +55,9 @@ public class Robot {
     public void periodic() {
         setShootTarget();
 
-        if (loop.getElapsedTime() % 10 == 0) {
-            hub.clearBulkCache();
-        }
+//        if (loop.getElapsedTime() % 10 == 0) {
+//            hub.clearBulkCache();
+//        }
 
         loops++;
 
@@ -85,27 +90,34 @@ public class Robot {
         return shootTarget;
     }
 
-    public Sequential shoot() {
-        return new Sequential(
-                g.close(),
-                s.near(),
-                new WaitUntil(s::atTarget),
+    public CommandBuilder shoot() {
+        return sequential(
+                g.down(),
+                Commands.waitUntil(s::atTarget),
                 i.in(),
-                g.open(),
-                new Wait(800),
-                i.off(),
-                new Wait(200),
-                i.in(),
-                new Wait(400),
-                g.close()
+                g.up(),
+                Commands.wait(200.0),
+                g.down(),
+                Commands.wait(200.0),
+                g.up(),
+                Commands.wait(200.0),
+                g.down(),
+                Commands.wait(200.0),
+                g.up(),
+                Commands.wait(200.0),
+                g.down(),
+                Commands.wait(200.0),
+                g.up(),
+                Commands.wait(200.0),
+                g.down()
         );
     }
 
-    public Sequential intake() {
-        return new Sequential(
-                g.open(),
+    public CommandBuilder intake() {
+        return sequential(
+                g.down(),
                 i.in(),
-                new Wait(500)
+                Commands.wait(500.0)
         );
     }
 

@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.ivy.Command;
-import com.pedropathing.ivy.commands.Instant;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.commands.Commands;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -41,24 +42,24 @@ public class Intake {
         set(idle);
     }
 
-    public Command off() {
-        return new Instant(() -> set(off));
+    public CommandBuilder off() {
+        return Commands.instant(() -> set(off));
     }
 
-    public Command in() {
-        return new Instant(() -> set(in));
+    public CommandBuilder in() {
+        return Commands.instant(() -> set(in));
     }
 
-    public Command out() {
-        return new Instant(() -> set(out));
+    public CommandBuilder out() {
+        return Commands.instant(() -> set(out));
     }
 
-    public Command idle() {
-        return new Instant(this::spinIdle);
+    public CommandBuilder idle() {
+        return Commands.instant(this::spinIdle);
     }
 
-    public Instant toggleIn() {
-        return new Instant(() -> {
+    public CommandBuilder toggleIn() {
+        return Commands.instant(() -> {
             if (i.getPower() != 0)
                 spinOff();
             else
@@ -66,8 +67,8 @@ public class Intake {
         });
     }
 
-    public Instant toggleOut() {
-        return new Instant(() -> {
+    public CommandBuilder toggleOut() {
+        return Commands.instant(() -> {
             if (i.getPower() != 0)
                 spinOff();
             else

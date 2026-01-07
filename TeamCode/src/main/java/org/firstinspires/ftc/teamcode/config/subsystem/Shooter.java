@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.ivy.commands.Instant;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.commands.Commands;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -65,8 +66,8 @@ public class Shooter {
             setPower(0);
     }
 
-    public Instant toggle() {
-        return new Instant(this::shooterToggle);
+    public CommandBuilder toggle() {
+        return Commands.instant(this::shooterToggle);
     }
 
     public void shootFar() {
@@ -79,12 +80,12 @@ public class Shooter {
         on();
     }
 
-    public Instant near() {
-        return new Instant(this::shootNear);
+    public CommandBuilder near() {
+        return Commands.instant(this::shootNear);
     }
 
-    public Instant far() {
-        return new Instant(this::shootFar);
+    public CommandBuilder far() {
+        return Commands.instant(this::shootFar);
     }
 
     public void setTarget(double velocity) {
