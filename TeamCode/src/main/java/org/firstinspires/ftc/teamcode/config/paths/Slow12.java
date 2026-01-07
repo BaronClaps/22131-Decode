@@ -168,7 +168,7 @@ public class Slow12 {
 
     public PathChain score3() {
         return f.pathBuilder()
-                .addPath(new BezierCurve(intake3, score))
+                .addPath(new BezierLine(intake3, score))
                 .setLinearHeadingInterpolation(intake3.getHeading(), score.getHeading())
                 .build();
     }

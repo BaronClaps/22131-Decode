@@ -39,7 +39,6 @@ public class Robot {
         g = new Flipper(h);
         t = new Turret(h);
         f = Constants.createFollower(h);
-        f.setStartingPose(a == Alliance.RED ? defaultPose : defaultPose.mirror());
 
         hubs = h.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {

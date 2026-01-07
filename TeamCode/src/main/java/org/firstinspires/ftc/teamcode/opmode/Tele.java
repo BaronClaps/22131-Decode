@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.config.Robot;
 import org.firstinspires.ftc.teamcode.config.command.CommandOpMode;
 import org.firstinspires.ftc.teamcode.config.util.Alliance;
 
+import static org.firstinspires.ftc.teamcode.config.Robot.defaultPose;
+
 @Config
 public class Tele extends CommandOpMode {
 
@@ -23,7 +25,7 @@ public class Tele extends CommandOpMode {
     public boolean shoot = false, manual = false, field = true, hold = false, autoFlipping = false, manualFlip = false;
     public double intakeOn = 0, dist, speed = 1;
     public static double shootTarget = 1200;
-    private final Timer upTimer = new Timer(), autoFlipTimer = new Timer();
+    private final Timer flipUpTimer = new Timer(), autoFlipTimer = new Timer();
 
     public Tele(Alliance alliance) {
         a = alliance;
@@ -32,6 +34,7 @@ public class Tele extends CommandOpMode {
     @Override
     public void init() {
         r = new Robot(hardwareMap, a);
+        r.f.setStartingPose(r.a == Alliance.RED ? defaultPose : defaultPose.mirror());
 
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
@@ -51,7 +54,7 @@ public class Tele extends CommandOpMode {
         r.t.reset();
         r.f.startTeleopDrive();
 
-        upTimer.resetTimer();
+        flipUpTimer.resetTimer();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class Tele extends CommandOpMode {
             else
                 r.f.setTeleOpDrive(speed * -gamepad1.left_stick_y, speed * -gamepad1.left_stick_x, speed * -gamepad1.right_stick_x, true);
 
-        if (upTimer.getElapsedTimeSeconds() > 1 && !r.g.closed() && manualFlip)
+        if (flipUpTimer.getElapsedTimeSeconds() > 1 && !r.g.closed() && manualFlip)
             gamepad1.rumbleBlips(1);
 
         if (gamepad1.rightBumperWasPressed())
@@ -108,7 +111,7 @@ public class Tele extends CommandOpMode {
 
         if (gamepad1.aWasPressed())
             if (manualFlip) {
-                upTimer.resetTimer();
+                flipUpTimer.resetTimer();
                 r.g.toggle();
                 autoFlipping = false;
             } else {
@@ -118,22 +121,22 @@ public class Tele extends CommandOpMode {
 
         if (!manualFlip && autoFlipping) {
             if (autoFlipTimer.getElapsedTimeSeconds() > 1.75) {
-                r.g.down();
+                r.g.flipDown();
                 autoFlipping = false;
             } else if (autoFlipTimer.getElapsedTimeSeconds() > 1.5)
-                r.g.up();
+                r.g.flipUp();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 1.25)
-                r.g.down();
+                r.g.flipDown();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
-                r.g.up();
+                r.g.flipUp();
             else if (autoFlipTimer.getElapsedTimeSeconds() > .75)
-                r.g.down();
+                r.g.flipDown();
             else if (autoFlipTimer.getElapsedTimeSeconds() > .5)
-                r.g.up();
+                r.g.flipUp();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 0.25)
-                r.g.down();
+                r.g.flipDown();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 0)
-                r.g.up();
+                r.g.flipUp();
         }
 
 
@@ -189,6 +192,9 @@ public class Tele extends CommandOpMode {
         multipleTelemetry.addData("Turret Ticks", r.t.getTurret());
         multipleTelemetry.addData("Shooter On", shoot);
         multipleTelemetry.addData("Gate Closed", r.g.closed());
+        multipleTelemetry.addData("Automatic Flipping Running", autoFlipping);
+        multipleTelemetry.addData("Automatic Flipping Timer", autoFlipTimer.getElapsedTimeSeconds());
+        multipleTelemetry.addLine("Manual Flipper: " + manualFlip);
         multipleTelemetry.addData("Distance from Target", dist);
         multipleTelemetry.addData("Manual Shooter + Turret", manual);
         multipleTelemetry.addData("Field Centric", field);

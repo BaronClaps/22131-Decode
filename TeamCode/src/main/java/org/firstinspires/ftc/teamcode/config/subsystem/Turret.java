@@ -28,6 +28,7 @@ public class Turret {
         m = hardwareMap.get(DcMotorEx.class, "t");
         m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        m.setPower(0);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));

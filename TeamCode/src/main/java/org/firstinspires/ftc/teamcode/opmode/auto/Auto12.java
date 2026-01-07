@@ -32,6 +32,7 @@ public abstract class Auto12 extends CommandOpMode {
                 Commands.infinite(r::periodic),
                 Commands.infinite(() -> {
                     r.t.face(r.getShootTarget(), r.f.getPose());
+                    r.s.forPose(r.f.getPose(), r.getShootTarget(), true);
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
                     telemetry.addData("Shooter At Target: ", r.s.atTarget());
