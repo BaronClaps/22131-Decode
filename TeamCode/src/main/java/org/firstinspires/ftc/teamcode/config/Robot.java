@@ -92,23 +92,24 @@ public class Robot {
     public CommandBuilder shoot() {
         return sequential(
                 g.down(),
+                i.in(),
                 Commands.waitUntil(s::atTarget),
                 i.in(),
+                Commands.wait(200.0),
+                g.down(),
+                Commands.wait(400.0),
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),
-                Commands.wait(200.0),
+                Commands.wait(600.0),
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),
-                Commands.wait(200.0),
+                Commands.wait(600.0),
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),
-                Commands.wait(200.0),
-                g.up(),
-                Commands.wait(200.0),
-                g.down()
+                i.out()
         );
     }
 

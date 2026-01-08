@@ -115,6 +115,8 @@ public class Shooter {
 
         if (close)
             setTarget(closeInterpolation.interpolate(xDistance, yDistance));
+        else
+            setTarget(1550);
     }
 
     public String getLeftCurrent() {

@@ -13,12 +13,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 public class Turret {
-    public static double error = 0, power = 0, manualPower = 0;
+    private double error = 0, power = 0, manualPower = 0;
     public static double rpt = 0.0029919;
 
     public final DcMotorEx m;
     private PIDFController p, s; // pidf controller for turret
-    public static double t = 0;
+    private double t = 0;
     public static double pidfSwitch = 30; // target for turret
     public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
 
@@ -29,6 +29,8 @@ public class Turret {
         m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         m.setPower(0);
+        t = 0;
+        power = 0;
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));

@@ -12,6 +12,7 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 public abstract class Auto12 extends CommandOpMode {
     Robot r;
     final Alliance a;
+    boolean angle = false;
 
     public Auto12(Alliance alliance) {
         a = alliance;
@@ -31,7 +32,8 @@ public abstract class Auto12 extends CommandOpMode {
         schedule(
                 Commands.infinite(r::periodic),
                 Commands.infinite(() -> {
-                    r.t.face(r.getShootTarget(), r.f.getPose());
+                    if (angle)
+                        r.t.face(r.getShootTarget(), r.f.getPose());
                     r.s.forPose(r.f.getPose(), r.getShootTarget(), true);
                     telemetry.addData("Pose: ", r.f.getPose());
                     telemetry.addData("Follower Busy: ", r.f.isBusy());
@@ -46,6 +48,7 @@ public abstract class Auto12 extends CommandOpMode {
                 sequential(
                         Commands.wait(1.0),
                         r.i.in(),
+                        Commands.instant(() -> r.t.face(r.getShootTarget(), p.score)),
                         PedroCommands.follow(r.f, p.next()),
                         r.shoot(),
                         PedroCommands.follow(r.f, p.next()),
@@ -53,6 +56,7 @@ public abstract class Auto12 extends CommandOpMode {
                                 .with(
                                         PedroCommands.follow(r.f, p.next())
                                 ),
+                        Commands.instant(() -> angle = true),
                         PedroCommands.follow(r.f, p.next()),
                         r.i.idle(),
                         PedroCommands.follow(r.f, p.next()),

@@ -119,19 +119,19 @@ public class Tele extends CommandOpMode {
                 autoFlipTimer.resetTimer();
             }
 
-        if (!manualFlip && autoFlipping) {
-            if (autoFlipTimer.getElapsedTimeSeconds() > 1.75) {
+        if (!manualFlip && autoFlipping && shoot) {
+            if (autoFlipTimer.getElapsedTimeSeconds() > 1.9) {
                 r.g.flipDown();
                 autoFlipping = false;
-            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1.5)
+            } else if (autoFlipTimer.getElapsedTimeSeconds() > 1.6)
                 r.g.flipUp();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 1.25)
                 r.g.flipDown();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 1)
                 r.g.flipUp();
-            else if (autoFlipTimer.getElapsedTimeSeconds() > .75)
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .7)
                 r.g.flipDown();
-            else if (autoFlipTimer.getElapsedTimeSeconds() > .5)
+            else if (autoFlipTimer.getElapsedTimeSeconds() > .55)
                 r.g.flipUp();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 0.25)
                 r.g.flipDown();
