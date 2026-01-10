@@ -1,5 +1,6 @@
 repositories {
     mavenCentral()
+    mavenLocal()
     google() // Needed for androidx
     maven {
         url "https://repo.dairy.foundation/releases"
@@ -31,7 +32,7 @@ dependencies {
 
     implementation 'com.pedropathing:ftc:2.1.0-SNAPSHOT'
     implementation 'com.pedropathing:telemetry:1.0.0'
-    implementation 'com.pedropathing:ivy:0.0.1-SNAPSHOT'
+    implementation 'com.pedropathing:ivy:0.0.1-LOCAL'
     implementation 'com.bylazar:fullpanels:1.0.9'
 
     implementation 'dev.frozenmilk.sinister:Sloth:0.2.4'

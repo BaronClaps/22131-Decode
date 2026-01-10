@@ -21,11 +21,13 @@ public abstract class Auto12 extends CommandOpMode {
     @Override
     public void init() {
         r = new Robot(hardwareMap, a);
+        r.t.setYaw(0);
         Slow12 p = new Slow12(r);
         r.f.setStartingPose(p.start);
 
         r.g.flipDown();
         r.t.resetTurret();
+        r.t.setPowerZero();
 
         reset();
 
@@ -46,6 +48,7 @@ public abstract class Auto12 extends CommandOpMode {
                     telemetry.update();
                 }),
                 sequential(
+                        Commands.instant(() -> r.t.setPowerZero()),
                         Commands.wait(1.0),
                         r.i.in(),
                         Commands.instant(() -> r.t.face(r.getShootTarget(), p.score)),
@@ -79,8 +82,8 @@ public abstract class Auto12 extends CommandOpMode {
                                 ),
                         PedroCommands.follow(r.f, p.next()),
                         
-                        r.shoot(),
-                        PedroCommands.follow(r.f, p.next())
+                        r.shoot()//,
+                       // PedroCommands.follow(r.f, p.next())
                 )
         );
     }

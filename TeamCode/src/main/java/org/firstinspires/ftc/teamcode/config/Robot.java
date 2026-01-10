@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.CommandBuilder;
 import com.pedropathing.ivy.commands.Commands;
 import com.pedropathing.util.Timer;
@@ -101,11 +102,17 @@ public class Robot {
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),
-                Commands.wait(600.0),
+                //i.off(),
+                Commands.wait(300.0),
+                i.in(),
+                Commands.wait(300.0),
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),
-                Commands.wait(600.0),
+                //i.off(),
+                Commands.wait(300.0),
+                i.in(),
+                Commands.wait(300.0),
                 g.up(),
                 Commands.wait(200.0),
                 g.down(),

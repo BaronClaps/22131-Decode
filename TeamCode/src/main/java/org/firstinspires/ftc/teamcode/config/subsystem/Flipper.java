@@ -35,7 +35,7 @@ public class Flipper {
             flipUp();
     }
 
-    public boolean closed() {
+    public boolean isDown() {
         return g.getPosition() == down;
     }
 

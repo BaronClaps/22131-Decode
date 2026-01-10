@@ -35,6 +35,7 @@ public class Tele extends CommandOpMode {
     public void init() {
         r = new Robot(hardwareMap, a);
         r.f.setStartingPose(r.a == Alliance.RED ? defaultPose : defaultPose.mirror());
+        r.t.setPowerZero();
 
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
@@ -51,6 +52,7 @@ public class Tele extends CommandOpMode {
     public void start() {
         r.setShootTarget();
         r.periodic();
+        r.t.setPowerZero();
         r.t.reset();
         r.f.startTeleopDrive();
 
@@ -67,7 +69,7 @@ public class Tele extends CommandOpMode {
             else
                 r.f.setTeleOpDrive(speed * -gamepad1.left_stick_y, speed * -gamepad1.left_stick_x, speed * -gamepad1.right_stick_x, true);
 
-        if (flipUpTimer.getElapsedTimeSeconds() > 1 && !r.g.closed() && manualFlip)
+        if (flipUpTimer.getElapsedTimeSeconds() > 1 && !r.g.isDown() && manualFlip)
             gamepad1.rumbleBlips(1);
 
         if (gamepad1.rightBumperWasPressed())
@@ -137,6 +139,9 @@ public class Tele extends CommandOpMode {
                 r.g.flipDown();
             else if (autoFlipTimer.getElapsedTimeSeconds() > 0)
                 r.g.flipUp();
+        } else {
+            if (!r.g.isDown() && !manualFlip)
+                r.g.flipDown();
         }
 
 
@@ -191,7 +196,7 @@ public class Tele extends CommandOpMode {
         multipleTelemetry.addData("Turret Target", r.t.getTurretTarget());
         multipleTelemetry.addData("Turret Ticks", r.t.getTurret());
         multipleTelemetry.addData("Shooter On", shoot);
-        multipleTelemetry.addData("Gate Closed", r.g.closed());
+        multipleTelemetry.addData("Gate Closed", r.g.isDown());
         multipleTelemetry.addData("Automatic Flipping Running", autoFlipping);
         multipleTelemetry.addData("Automatic Flipping Timer", autoFlipTimer.getElapsedTimeSeconds());
         multipleTelemetry.addLine("Manual Flipper: " + manualFlip);

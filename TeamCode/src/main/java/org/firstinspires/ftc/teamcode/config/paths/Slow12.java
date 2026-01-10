@@ -11,17 +11,17 @@ import org.firstinspires.ftc.teamcode.config.util.Alliance;
 public class Slow12 {
     private final Follower f;
 
-    public Pose start = new Pose(24+6.25, 120+8+5.5, Math.toRadians(90));
+    public Pose start = new Pose(24+6.25, 120+8+6, Math.toRadians(90));
     public Pose scorePControl = new Pose(55.593, 94.779);
     public Pose score = new Pose(48, 96.0, Math.toRadians(135)); // score
-    public Pose intake1 = new Pose(17,88, Math.toRadians(180)); // intake\
+    public Pose intake1 = new Pose(17,88-1.5, Math.toRadians(180)); // intake\
     public Pose intake1Mid = intake1.withX(48);
-    public Pose intake2 = new Pose(10, 63.5, Math.toRadians(180)); // intake
+    public Pose intake2 = new Pose(10, 62-1, Math.toRadians(180)); // intake
     public Pose intake2Mid = intake2.withX(48);
     public Pose intake2Return = intake2.withX(40);
-    public Pose gate = new Pose(17.5, 75.5, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
+    public Pose gate = new Pose(16, 75, Math.toRadians(180)); //new Pose(144-132.781509, 61, Math.toRadians(28+90)); // gate
     public Pose gateMid = gate.withX(27);
-    public Pose intake3 = new Pose(10, 39.750+1.5, Math.toRadians(180));
+    public Pose intake3 = new Pose(10, 39.750+1.5-3-1, Math.toRadians(180));
     public Pose intake3Mid = intake3.withX(48);
     public Pose park = new Pose(48, 72, Math.toRadians(180));//new Pose(36, 12, Math.toRadians(180));
 

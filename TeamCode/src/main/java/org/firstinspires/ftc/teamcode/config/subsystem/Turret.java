@@ -159,4 +159,8 @@ public class Turret {
     public String getCurrent() {
         return "Turret Motor: " + m.getCurrent(CurrentUnit.AMPS);
     }
+
+    public void setPowerZero() {
+        m.setPower(0);
+    }
 }
