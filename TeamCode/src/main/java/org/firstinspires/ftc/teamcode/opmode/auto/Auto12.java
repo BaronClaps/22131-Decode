@@ -60,10 +60,10 @@ public abstract class Auto12 extends CommandOpMode {
                                         PedroCommands.follow(r.f, p.next())
                                 ),
                         Commands.instant(() -> angle = true),
-                        PedroCommands.follow(r.f, p.next()),
-                        r.i.idle(),
-                        PedroCommands.follow(r.f, p.next()),
-                        Commands.wait(500.0),
+//                        PedroCommands.follow(r.f, p.next()),
+//                        r.i.idle(),
+//                        PedroCommands.follow(r.f, p.next()),
+//                        Commands.wait(500.0),
                         PedroCommands.follow(r.f, p.next()),
                         
                         r.shoot(),

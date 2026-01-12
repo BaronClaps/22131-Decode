@@ -34,7 +34,7 @@ public class Tele extends CommandOpMode {
     @Override
     public void init() {
         r = new Robot(hardwareMap, a);
-        r.f.setStartingPose(r.a == Alliance.RED ? defaultPose : defaultPose.mirror());
+        r.f.setStartingPose(defaultPose);
         r.t.setPowerZero();
 
         multipleTelemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);

@@ -103,8 +103,8 @@ public class Slow12 {
 
     public PathChain score1() {
         return f.pathBuilder()
-                .addPath(new BezierLine(gate, score))
-                .setLinearHeadingInterpolation(gate.getHeading(), score.getHeading())
+                .addPath(new BezierLine(intake1, score))
+                .setLinearHeadingInterpolation(intake1.getHeading(), score.getHeading())
                 .build();
     }
 
@@ -185,16 +185,16 @@ public class Slow12 {
             case 0: return scoreP();
             case 1: return alignIntake1();
             case 2: return intake1();
-            case 3: return gateAlign();
-            case 4: return gate();
-            case 5: return score1();
-            case 6: return alignIntake2();
-            case 7: return intake2();
-            case 8: return score2();
-            case 9: return alignIntake3();
-            case 10: return intake3();
-            case 11: return score3();
-            case 12: return park();
+//            case 3: return gateAlign();
+//            case 4: return gate();
+            case 3: return score1();
+            case 4: return alignIntake2();
+            case 5: return intake2();
+            case 6: return score2();
+            case 7: return alignIntake3();
+            case 8: return intake3();
+            case 9: return score3();
+            case 10: return park();
             default: return null;
         }
     }
